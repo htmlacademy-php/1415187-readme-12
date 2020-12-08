@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Mark Morgunov](https://up.htmlacademy.ru/php/12/user/1415187).
-* Наставник: [Александр Смиркин](https://up.htmlacademy.ru/php/12/user/1411277).
+* Наставник: [Никита Колосов] (https://up.htmlacademy.ru/php/12/user/1186205).
 
 ---
 
