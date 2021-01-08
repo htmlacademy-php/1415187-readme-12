@@ -11,3 +11,5 @@ uploads/*
 !uploads/.gitkeep
 /*/_notes/*
 /_notes/*
+dwsync.xml
+*/dwsync.xml
