@@ -265,7 +265,7 @@ $popular_posts = [
                             </div>
                         <?php break; case 'post-photo': ?>
                             <div class="post-photo__image-wrapper">
-                                <img src="img/<?=$post['content']?>" alt="Фото от пользователя" width="360" height="240">
+                                <img src="img/<?=$post['content']?>" alt="Фото от пользователя к посту '<?=$post['title']?>'" width="360" height="240">
                             </div>
                         <?php break; case 'post-video': ?>
                             <div class="post-video__block">
