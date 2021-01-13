@@ -41,17 +41,14 @@ $popular_posts = [
 
 function cut_text (string $text, int $length = 300) {
     if (mb_strlen($text) > $length) {
-        // $text = mb_substr($text, 0, $length) . '...'; 
-        $words = explode(' ', $text);
-        $count = 0;
-        while ($current_length <= $length) {
-            $current_length += mb_strlen($words[$count]) + 1;
-            $count++;
+        $text = mb_substr($text, 0, $length + 1);
+        $end = mb_strlen(strrchr($text, ' '));
+        $text = mb_substr($text, 0, -$end) . '...';
         }
-        $text = implode(" ", array_slice($words, 0, $count - 1)) . '...';
+    return ($text);
     }
-    return $text;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
