@@ -254,7 +254,7 @@ $popular_posts = [
                                 <a class="post-link__external" href="http://<?=$post['content']?>" title="Перейти по ссылке">
                                     <div class="post-link__info-wrapper">
                                         <div class="post-link__icon-wrapper">
-                                            <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
+                                            <img src="https://www.google.com/s2/favicons?domain=<?=$post['content']?>" alt="Иконка">
                                         </div>
                                         <div class="post-link__info">
                                             <h3><?=$post['title']?></h3>
@@ -265,7 +265,7 @@ $popular_posts = [
                             </div>
                         <?php break; case 'post-photo': ?>
                             <div class="post-photo__image-wrapper">
-                                <img src="img/<?=$post['content']?>" alt="Фото от пользователя" width="360" height="240">
+                                <img src="img/<?=$post['content']?>" alt="Фото от пользователя <?=$post['author']?> к посту '<?=$post['title']?>'" width="360" height="240">
                             </div>
                         <?php break; case 'post-video': ?>
                             <div class="post-video__block">
