@@ -45,9 +45,8 @@ function cut_text (string $text, int $length = 300) {
         $end = mb_strlen(strrchr($text, ' '));
         $text = mb_substr($text, 0, -$end) . '...';
         }
-    return ($text);
+    return $text;
     }
-}
 
 ?>
 <!DOCTYPE html>
