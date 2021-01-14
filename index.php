@@ -44,8 +44,9 @@ require_once('helpers.php');
 require_once('functions.php');
 
 $page_content = include_template('main.php', ['popular_posts' => $popular_posts]);
-$layout_content = include_template('layout.php', ['content' => $page_content, 'user_name' => $user_name, 'page_title' => $page_title, 'is_auth' => $is_auth]);
+$layout_content = include_template('layout.php', ['content' => $page_content,
+                                                  'user_name' => $user_name,
+                                                  'page_title' => $page_title,
+                                                  'is_auth' => $is_auth]);
 
 print($layout_content);
-
-?>
