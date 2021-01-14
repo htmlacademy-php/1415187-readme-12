@@ -38,6 +38,16 @@ $popular_posts = [
         'avatar' => 'userpic.jpg'
     ],
 ];
+
+function cut_text (string $text, int $length = 300) {
+    if (mb_strlen($text) > $length) {
+        $text = mb_substr($text, 0, $length + 1);
+        $end = mb_strlen(strrchr($text, ' '));
+        $text = mb_substr($text, 0, -$end) . '...';
+        }
+    return $text;
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -281,7 +291,10 @@ $popular_posts = [
                                 </a>
                             </div>
                         <?php break; case 'post-text': ?>
-                            <p><?=$post['content']?></p>
+                            <p><?=cut_text($post['content'])?></p>
+                            <?php if (mb_strlen($post['content']) > 300): ?>
+                                <a class="post-text__more-link" href="#">Читать далее</a>
+                            <?php endif; ?>
                         <?php endswitch; ?>
                     </div>
                 <footer class="post__footer">
