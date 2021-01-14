@@ -40,16 +40,8 @@ $popular_posts = [
     ],
 ];
 
-function cut_text (string $text, int $length = 300) {
-    if (mb_strlen($text) > $length) {
-        $text = mb_substr($text, 0, $length + 1);        
-        $end = mb_strlen(strrchr($text, ' '));
-        $text = mb_substr($text, 0, -$end) . '...';
-        }
-    return $text;
-}
-
 require_once('helpers.php');
+require_once('functions.php');
 
 $page_content = include_template('main.php', ['popular_posts' => $popular_posts]);
 $layout_content = include_template('layout.php', ['content' => $page_content, 'user_name' => $user_name, 'page_title' => $page_title, 'is_auth' => $is_auth]);
