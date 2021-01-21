@@ -18,9 +18,9 @@ function random_date_func () {
 function time_difference ($date) {
     date_default_timezone_set('Europe/Moscow');
     
-    $current_time = new DateTime('NOW');
+    $current_time = new DateTime('now');
     $post_time = new DateTime(gmdate('Y-m-d H:i:s', $date));
-    $diff = date_diff($current_time , $post_time);
+    $diff = date_diff($current_time, $post_time);
 
     if ($diff->y > 0) {
         $relative_time = $diff->y . ' ' .
