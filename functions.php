@@ -9,17 +9,11 @@ function cut_text (string $text, int $length = 300) {
     return $text;
 }
 
-function random_date_func () {
-    $start = strtotime('10.11.2020');
-    $random_date = mt_rand($start, time());
-    return $random_date;
-}
-
 function time_difference ($date) {
     date_default_timezone_set('Europe/Moscow');
     
     $current_time = new DateTime('now');
-    $post_time = new DateTime(gmdate('Y-m-d H:i:s', $date));
+    $post_time = new DateTime($date);
     $diff = date_diff($current_time, $post_time);
 
     if ($diff->y > 0) {
