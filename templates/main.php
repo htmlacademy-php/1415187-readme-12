@@ -84,7 +84,7 @@
             </div>
         </div>
         <div class="popular__posts">
-            <?php foreach($popular_posts as $post): ?>
+            <?php foreach($popular_posts as $post_index => $post): ?>
                 <article class="popular__post post <?=$post['type']?>">
                     <header class="post__header">
                         <h2><?=htmlspecialchars($post['title'])?></h2>
@@ -141,7 +141,8 @@
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name"><?=htmlspecialchars($post['author'])?></b>
-                                <time class="post__time" datetime="">дата</time>
+                                <?php $post_time = new DateTime(generate_random_date($post_index)) ?>
+                                <time class="post__time" datetime="<?=$post_time->format('Y-m-d H:i:s')?>" title="<?=$post_time->format('d.m.Y H:i')?>"><?=time_difference($post_time)?></time>
                             </div>
                         </a>
                     </div>
