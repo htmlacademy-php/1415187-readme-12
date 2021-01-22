@@ -141,8 +141,8 @@
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name"><?=htmlspecialchars($post['author'])?></b>
-                                <?php $post_time = generate_random_date($post_index) ?>
-                                <time class="post__time" datetime="<?=$post_time?>" title="<?=$post_time?>"><?=time_difference($post_time)?></time>
+                                <?php $post_time = new DateTime(generate_random_date($post_index)) ?>
+                                <time class="post__time" datetime="<?=$post_time->format('Y-m-d H:i:s')?>" title="<?=$post_time->format('d.m.Y H:i')?>"><?=time_difference($post_time)?></time>
                             </div>
                         </a>
                     </div>
