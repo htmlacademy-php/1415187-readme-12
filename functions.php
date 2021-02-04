@@ -9,10 +9,9 @@ function cut_text (string $text, int $length = 300) {
     return $text;
 }
 
-function time_difference ($post_time) {
+function time_difference ($post_time, $current_time) {
     date_default_timezone_set('Europe/Moscow');
     
-    $current_time = new DateTime('now');
     $diff = date_diff($current_time, $post_time);
 
     if ($diff->y > 0) {
