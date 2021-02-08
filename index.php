@@ -2,46 +2,35 @@
 $is_auth = rand(0, 1);
 $user_name = 'Mark';
 $page_title = 'readme: популярное';
-$popular_posts = [
-    [
-        'title' => 'Цитата',
-        'type' => 'post-quote',
-        'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
-        'author' => 'Лариса',
-        'avatar' => 'userpic-larisa-small.jpg'
-    ],
-    [
-        'title' => 'Игра престолов',
-        'type' => 'post-text',
-        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
-        'author' => 'Владик',
-        'avatar' => 'userpic.jpg'
-    ],
-    [
-        'title' => 'Наконец, обработал фотки!',
-        'type' => 'post-photo',
-        'content' => 'rock-medium.jpg',
-        'author' => 'Виктор',
-        'avatar' => 'userpic-mark.jpg'
-    ],
-    [
-        'title' => 'Моя мечта',
-        'type' => 'post-photo',
-        'content' => 'coast-medium.jpg',
-        'author' => 'Лариса',
-        'avatar' => 'userpic-larisa-small.jpg'
-    ],
-    [
-        'title' => 'Лучшие курсы',
-        'type' => 'post-link',
-        'content' => 'www.htmlacademy.ru',
-        'author' => 'Владик',
-        'avatar' => 'userpic.jpg'
-    ],
-];
+
+$sql_select_content_types = "SELECT * FROM content_types;";
+$sql_select_posts_users = 
+    "SELECT
+        users.username,
+        users.avatar,
+        heading,
+        content,
+        view_count,
+        content_types.type_class        
+    FROM posts
+    INNER JOIN users ON posts.author_id=users.id
+    INNER JOIN content_types ON posts.post_type=content_types.id
+    ORDER  BY view_count DESC;";
 
 require_once('helpers.php');
 require_once('functions.php');
+require_once('debug.php');
+
+$con = mysqli_connect("localhost", "mysql", "mysql", "readme");
+
+if ($con == false) {
+    $error = mysqli_connect_error();
+    print($error);
+} else {
+    mysqli_set_charset($con, "utf8");
+    $content_types = mysqli_query($con, $sql_select_content_types);
+    $popular_posts = mysqli_query($con, $sql_select_posts_users);
+}
 
 $page_content = include_template('main.php', ['popular_posts' => $popular_posts]);
 $layout_content = include_template('layout.php', ['content' => $page_content,

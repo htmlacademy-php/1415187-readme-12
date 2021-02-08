@@ -39,3 +39,12 @@ function time_difference ($post_time, $current_time) {
     }
     return $relative_time;
 }
+
+function select_query($connection, $sql): ?array
+{
+    $result = mysqli_query($connection, $sql);
+    if (!$result) {
+        return null;
+    };
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
