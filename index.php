@@ -22,13 +22,13 @@ require_once('functions.php');
 
 $con = mysqli_connect("localhost", "mysql", "mysql", "readme");
 
-if ($con == false) {
-    $error = mysqli_connect_error();
+if (!$con) {
+    $error = mysqli_connect_errno($con) . ": " . mysqli_connect_error($con) . "\n";
     print($error);
 } else {
     mysqli_set_charset($con, "utf8");
-    $content_types = mysqli_query($con, $sql_select_content_types);
-    $popular_posts = mysqli_query($con, $sql_select_posts_users);
+    $content_types = select_query($con, $sql_select_content_types);
+    $popular_posts = select_query($con, $sql_select_posts_users);
 }
 
 $page_content = include_template('main.php', ['popular_posts' => $popular_posts]);
