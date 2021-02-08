@@ -19,7 +19,6 @@ $sql_select_posts_users =
 
 require_once('helpers.php');
 require_once('functions.php');
-require_once('debug.php');
 
 $con = mysqli_connect("localhost", "mysql", "mysql", "readme");
 
