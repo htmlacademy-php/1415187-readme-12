@@ -136,7 +136,7 @@
                     </div>
                 <footer class="post__footer">
                     <div class="post__author">
-                        <a class="post__author-link" href="#" title="<?=$post['username']?>">
+                        <a class="post__author-link" href="#" title="Профиль <?=$post['username']?>">
                             <div class="post__avatar-wrapper">
                                 <img class="post__author-avatar" src="img/<?=$post['avatar']?>" alt="Аватар пользователя">
                             </div>
