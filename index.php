@@ -6,11 +6,11 @@ $page_title = 'readme: популярное';
 $sql_select_content_types = "SELECT * FROM content_types;";
 $sql_select_posts_users = 
     "SELECT
-        users.username,
-        users.avatar,
         heading,
         content,
         view_count,
+        users.username,
+        users.avatar,
         content_types.type_class        
     FROM posts
     INNER JOIN users ON posts.author_id=users.id
