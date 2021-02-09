@@ -86,17 +86,17 @@
         <div class="popular__posts">
             <?php $now_time = new DateTime('now'); ?>
             <?php foreach($popular_posts as $post_index => $post): ?>
-                <article class="popular__post post <?=$post['type']?>">
+                <article class="popular__post post post-<?=$post['type_class']?>">
                     <header class="post__header">
-                        <h2><?=htmlspecialchars($post['title'])?></h2>
+                        <h2><?=htmlspecialchars($post['heading'])?></h2>
                     </header>
                     <div class="post__main">
-                        <?php switch($post['type']): case 'post-quote': ?>
+                        <?php switch($post['type_class']): case 'quote': ?>
                             <blockquote>
                                 <p><?=htmlspecialchars($post['content'])?></p>
                                 <cite>Неизвестный Автор</cite>
                             </blockquote>
-                        <?php break; case 'post-link': ?>
+                        <?php break; case 'link': ?>
                             <div class="post-link__wrapper">
                                 <a class="post-link__external" href="http://<?=htmlspecialchars($post['content'])?>" title="Перейти по ссылке">
                                     <div class="post-link__info-wrapper">
@@ -104,17 +104,17 @@
                                             <img src="https://www.google.com/s2/favicons?domain=<?=htmlspecialchars($post['content'])?>" alt="Иконка">
                                         </div>
                                         <div class="post-link__info">
-                                            <h3><?=htmlspecialchars($post['title'])?></h3>
+                                            <h3><?=htmlspecialchars($post['heading'])?></h3>
                                         </div>
                                     </div>
                                     <span><?=htmlspecialchars($post['content'])?></span>
                                 </a>
                             </div>
-                        <?php break; case 'post-photo': ?>
+                        <?php break; case 'photo': ?>
                             <div class="post-photo__image-wrapper">
-                                <img src="img/<?=htmlspecialchars($post['content'])?>" alt="Фото от пользователя <?=htmlspecialchars($post['author'])?> к посту '<?=htmlspecialchars($post['title'])?>'" width="360" height="240">
+                                <img src="img/<?=htmlspecialchars($post['content'])?>" alt="Фото от пользователя <?=htmlspecialchars($post['username'])?> к посту '<?=htmlspecialchars($post['heading'])?>'" width="360" height="240">
                             </div>
-                        <?php break; case 'post-video': ?>
+                        <?php break; case 'video': ?>
                             <div class="post-video__block">
                                 <div class="post-video__preview">
                                     <?=embed_youtube_cover(/* вставьте ссылку на видео */); ?>
@@ -127,7 +127,7 @@
                                     <span class="visually-hidden">Запустить проигрыватель</span>
                                 </a>
                             </div>
-                        <?php break; case 'post-text': ?>
+                        <?php break; case 'text': ?>
                             <p><?=htmlspecialchars(cut_text($post['content']))?></p>
                             <?php if (mb_strlen(htmlspecialchars($post['content'])) > 300): ?>
                                 <a class="post-text__more-link" href="#">Читать далее</a>
@@ -136,12 +136,12 @@
                     </div>
                 <footer class="post__footer">
                     <div class="post__author">
-                        <a class="post__author-link" href="#" title="Автор">
+                        <a class="post__author-link" href="#" title="Профиль <?=$post['username']?>">
                             <div class="post__avatar-wrapper">
                                 <img class="post__author-avatar" src="img/<?=$post['avatar']?>" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
-                                <b class="post__author-name"><?=htmlspecialchars($post['author'])?></b>
+                                <b class="post__author-name"><?=htmlspecialchars($post['username'])?></b>
                                 <?php $post_time = new DateTime(generate_random_date($post_index)) ?>
                                 <time class="post__time" datetime="<?=$post_time->format('Y-m-d H:i:s')?>" title="<?=$post_time->format('d.m.Y H:i')?>"><?=time_difference($post_time, $now_time)?></time>
                             </div>
@@ -156,7 +156,7 @@
                                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                                     <use xlink:href="#icon-heart-active"></use>
                                 </svg>
-                                <span>0</span>
+                                <span><?=$post['view_count']?></span>
                                 <span class="visually-hidden">количество лайков</span>
                             </a>
                             <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
