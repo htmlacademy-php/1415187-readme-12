@@ -42,7 +42,7 @@
                     </li>
                     <?php foreach($content_types as $content_type): ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--<?=$content_type['type_class']?> button <?php if ($post_type == $content_type['type_class']):?>filters__button--active <?php endif; ?>" href="index.php?post_type=<?=$content_type['type_class']?>">
+                        <a class="filters__button filters__button--<?=$content_type['type_class']?> button <?php if ($post_type == $content_type['id']):?>filters__button--active <?php endif; ?>" href="index.php?post_type=<?=$content_type['id']?>">
                             <span class="visually-hidden"><?=$content_type['type_name']?></span>
                             <?php $size_ico = filter_size_ico($content_type['type_class']);?>
                             <svg class="filters__icon" width="<?=$size_ico['w']?>" height="<?=$size_ico['h']?>">
@@ -68,7 +68,7 @@
                     <div class="post__author">
                         <a class="post__author-link" href="#" title="Профиль <?=$post['username']?>">
                             <div class="post__avatar-wrapper">
-                                <img class="post__author-avatar" src="img/<?=$post['avatar']?>" alt="Аватар пользователя">
+                                <img class="post__author-avatar" src="img/<?=$post['avatar']?>" width="40" height="40" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name"><?=htmlspecialchars($post['username'])?></b>

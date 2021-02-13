@@ -10,13 +10,13 @@ $con = mysqli_connect("localhost", "mysql", "mysql", "readme");
 $sql_select_content_types = "SELECT * FROM content_types;";
 $sql_select_posts = 
     "SELECT
-        *,
+        posts.*,
         users.username,
         users.avatar,
-        content_types.type_class        
+        content_types.type_class       
     FROM posts
     INNER JOIN users ON posts.author_id=users.id
-    INNER JOIN content_types ON content_types.id=posts.post_type ";
+    INNER JOIN content_types ON posts.post_type=content_types.id ";
 
 if (!$con) {
     http_response_code(500);
@@ -27,8 +27,8 @@ mysqli_set_charset($con, "utf8");
 
 if (isset($_GET['post_type'])) {
     $post_type = $_GET['post_type'];
-    $sql_select_posts .= "WHERE content_types.type_class = ? ORDER BY view_count DESC;";
-    $posts_mysqli = secure_query($con, $sql_select_posts, 's', $post_type);
+    $sql_select_posts .= "WHERE content_types.id = ? ORDER BY view_count DESC;";
+    $posts_mysqli = secure_query($con, $sql_select_posts, 'i', $post_type);
     $popular_posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
 } else {
     $sql_select_posts .= "ORDER BY view_count DESC;";
@@ -37,7 +37,6 @@ if (isset($_GET['post_type'])) {
 }
 $content_types_mysqli = mysqli_query($con, $sql_select_content_types);
 $content_types = mysqli_fetch_all($content_types_mysqli, MYSQLI_ASSOC);
-
 
 $page_content = include_template('main.php', [
                                                  'popular_posts' => $popular_posts,
