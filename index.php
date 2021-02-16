@@ -31,6 +31,7 @@ if (isset($_GET['post_type'])) {
     $posts_mysqli = secure_query($con, $sql_select_posts, 'i', $post_type);
     $popular_posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
 } else {
+    $post_type='';
     $sql_select_posts .= "ORDER BY view_count DESC;";
     $posts_mysqli = mysqli_query($con, $sql_select_posts);
     $popular_posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
@@ -41,7 +42,8 @@ $content_types = mysqli_fetch_all($content_types_mysqli, MYSQLI_ASSOC);
 $page_content = include_template('main.php', [
                                                  'popular_posts' => $popular_posts,
                                                  'now_time' => $now_time,
-                                                 'content_types' => $content_types
+                                                 'content_types' => $content_types,
+                                                 'post_type' => $post_type
                                              ]);
 $layout_content = include_template('layout.php', [
                                                      'content' => $page_content,

@@ -60,7 +60,7 @@
                 <img class="header__profile-avatar" src="img/userpic-medium.jpg" alt="Аватар профиля">
               </div>
               <div class="header__profile-name">
-                <span>Антон Глуханько</span>
+                <span>?????Антон Глуханько</span>
                 <svg class="header__link-arrow" width="10" height="6">
                   <use xlink:href="#icon-arrow-right-ad"></use>
                 </svg>
@@ -103,17 +103,19 @@
     </div>
   </div>
 </header>
-
 <main class="page__main page__main--publication">
   <div class="container">
-    <h1 class="page__title page__title--publication">Наконец, обработала фотки!</h1>
+    <h1 class="page__title page__title--publication"><?=$post['heading']?></h1>
     <section class="post-details">
       <h2 class="visually-hidden">Публикация</h2>
-      <div class="post-details__wrapper post-photo">
-        <div class="post-details__main-block post post--details">
-          <div class="post-details__image-wrapper post-photo__image-wrapper">
-            <img src="img/rock-default.jpg" alt="Фото от пользователя" width="760" height="507">
-          </div>
+      <div class="post-details__wrapper">
+        <div class="post-details__main-block post post--details"> 
+            <div class="post-<?=$post['type_class']?>">
+                <?php
+                $post_content = include_template($post['type_class'].'-details.php', ['post' => $post]);
+                print($post_content);
+                ?>
+            </div>
           <div class="post__indicators">
             <div class="post__buttons">
               <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
@@ -123,25 +125,25 @@
                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                   <use xlink:href="#icon-heart-active"></use>
                 </svg>
-                <span>250</span>
+                <span>?????250</span>
                 <span class="visually-hidden">количество лайков</span>
               </a>
               <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                 <svg class="post__indicator-icon" width="19" height="17">
                   <use xlink:href="#icon-comment"></use>
                 </svg>
-                <span>25</span>
+                <span>?????25</span>
                 <span class="visually-hidden">количество комментариев</span>
               </a>
               <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
                 <svg class="post__indicator-icon" width="19" height="17">
                   <use xlink:href="#icon-repost"></use>
                 </svg>
-                <span>5</span>
+                <span>?????5</span>
                 <span class="visually-hidden">количество репостов</span>
               </a>
             </div>
-            <span class="post__view">500 просмотров</span>
+            <span class="post__view"><?=$post['view_count']?> просмотров</span>
           </div>
           <div class="comments">
             <form class="comments__form form" action="#" method="post">
@@ -209,24 +211,24 @@
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
               <a class="post-details__avatar-link user__avatar-link" href="#">
-                <img class="post-details__picture user__picture" src="img/userpic-elvira.jpg" alt="Аватар пользователя">
+                <img class="post-details__picture user__picture" src="img/<?=$post['avatar']?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">
               <a class="post-details__name user__name" href="#">
-                <span>Эльвира Хайпулинова</span>
+                <span><?= $post['username'] ?></span>
               </a>
-              <time class="post-details__time user__time" datetime="2014-03-20">5 лет на сайте</time>
+              <time class="post-details__time user__time" datetime="2014-03-20">????5 лет на сайте</time>
             </div>
           </div>
           <div class="post-details__rating user__rating">
             <p class="post-details__rating-item user__rating-item user__rating-item--subscribers">
-              <span class="post-details__rating-amount user__rating-amount">1856</span>
-              <span class="post-details__rating-text user__rating-text">подписчиков</span>
+              <span class="post-details__rating-amount user__rating-amount"><?= $author_followers_count ?></span>
+              <span class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($author_followers_count,'подписчик','подписчика','подписчиков'); ?></span>
             </p>
             <p class="post-details__rating-item user__rating-item user__rating-item--publications">
-              <span class="post-details__rating-amount user__rating-amount">556</span>
-              <span class="post-details__rating-text user__rating-text">публикаций</span>
+              <span class="post-details__rating-amount user__rating-amount"><?= $author_posts_count ?></span>
+              <span class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($author_posts_count,'публикация','публикации','публикаций'); ?></span>
             </p>
           </div>
           <div class="post-details__user-buttons user__buttons">
@@ -238,7 +240,6 @@
     </section>
   </div>
 </main>
-
 <footer class="footer">
   <div class="footer__wrapper">
     <div class="footer__container container">
