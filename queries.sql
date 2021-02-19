@@ -22,8 +22,8 @@ VALUES
 ('Цитата', 4,  'Мы в жизни любим только раз, а после ищем лишь похожих', 3, 10),
 ('Игра престолов', 3, 'Не могу дождаться начала финального сезона своего любимого сериала!', 4, 3),
 ('Наконец, обработал фотки!', 1, 'rock', 3, 49),
-('Моя мечта', 1, 'coast', 3, 25),
-('Лучшие курсы', 5, 'www.htmlacademy.ru', 5, 13);
+('Моя мечта', 1, 'coast', 5, 25),
+('Лучшие курсы', 5, 'www.htmlacademy.ru', 4, 13);
 
 UPDATE posts SET quote_author = 'Неизвестный автор' WHERE id=1;
 
@@ -50,3 +50,10 @@ INSERT INTO likes SET user_id=3, post_id=3;
 
 /* подписаться на пользователя */
 INSERT INTO subscribe SET follower_id=4, author_id=5;
+
+
+
+UPDATE posts SET content = NULL WHERE id BETWEEN 3 AND 5;
+UPDATE posts SET img_url = 'img/rock.jpg' WHERE id = 3;
+UPDATE posts SET img_url = 'img/coast.jpg' WHERE id = 4;
+UPDATE posts SET url = 'www.htmlacademy.ru' WHERE id = 5;
