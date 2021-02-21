@@ -18,7 +18,7 @@ $validation_rules = [
     'heading' => ['validateFilled'],
     'content' => ['validateFilled'],
     'link-url' => ['validateFilled', 'validateURL'],
-    'photo-url' => ['validateFilled', 'validateURL', 'validateImageURLContent'],
+    'photo-url' => ['validateImageFields'],
     'video-url' => ['validateFilled', 'validateURL', 'check_youtube_url'],
     'quote-author' => ['validateFilled']
 ];
@@ -48,7 +48,7 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
         }
     }
     if  ($form_type == 'photo') {
-        $fields['errors'][$form_type]['photo-file'] = validateImageFile($_FILES['photo-file']);
+        $fields['errors'][$form_type]['photo-file'] = validateImageFields($_FILES['photo-file']);
     }
     if (!empty($fields['errors'][$form_type]['photo-file']) && empty($fields['errors'][$form_type]['photo-url'])) {
         unset($fields['errors'][$form_type]['photo-file']);
@@ -75,9 +75,10 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
             case 'photo':
                 if ($_FILES['photo-file']['error'] != 0) {
                     $file_url = $_POST['photo-url'];
-                } else {
+                } 
+                else {
                     $file_name = $_FILES['photo-file']['name'];
-                    $file_path = __DIR__ . '/uploads/' . '<br>';
+                    $file_path = $_SERVER['DOCUMENT_ROOT'] . '/uploads/';
                     $file_url = '/uploads/' . $file_name;
                     move_uploaded_file($_FILES['photo-file']['tmp_name'], $file_path . $file_name);
                 }

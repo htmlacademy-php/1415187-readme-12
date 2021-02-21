@@ -106,20 +106,20 @@ function validateImageURLContent($var) {
 
 
 function validateImageFields($var) {
-    if ((filter_var($_POST[$var], FILTER_VALIDATE_URL)) || ($var['error'] != 0)) {
-        exit;
-    }
-    if (!$content = @file_get_contents($_POST[$var])) {
+    if (isset($_GET['photo-url']) || (isset($_GET['photo-file']))) {
+       if ((!$content = @file_get_contents($_POST[$var]))&&(isset($_GET['photo-url']))) {
         return 'По ссылке отсутствует изображение';
     }
-    if ($file['error'] != 0) {
+        if (($file['error'] != 0) && (isset($_GET['photo-file']))) {
         return 'Ошибка загрузки файла / файл не получен';
-    } else {
-        $file_info = finfo_open(FILEINFO_MIME_TYPE);
-        $file_name = $file['tmp_name'];
-        $file_type = finfo_file($file_info, $file_name);
-        if (!in_array($file_type, ['image/png','image/jpeg', 'image/gif'])) {
-            return 'Недопустимый тип изображения';
+    } 
+        elseif (isset($_GET['photo-file'])) {
+            $file_info = finfo_open(FILEINFO_MIME_TYPE);
+            $file_name = $file['tmp_name'];
+            $file_type = finfo_file($file_info, $file_name);
+            if (!in_array($file_type, ['image/png','image/jpeg', 'image/gif'])) {
+                return 'Недопустимый тип изображения';
+            }
         }
     }
 }
