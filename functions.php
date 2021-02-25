@@ -98,28 +98,22 @@ function validateURL($var) {
 function validateImageFields() {
     if (($_POST['photo-url'] == '') && (!file_exists($_FILES['photo-file']['tmp_name']))) {
         return 'Пожалуйста, выберите ссылку или файл';
-        exit;
     }
-    if (($_POST['photo-url'] != '') && (file_exists($_FILES['photo-file']['tmp_name']))) {
+    elseif (($_POST['photo-url'] != '') && (file_exists($_FILES['photo-file']['tmp_name']))) {
         return 'Пожалуйста, выберите ссылку !ИЛИ! файл';
-        exit;
     }
-    if (($_POST['photo-url'] != '') || (file_exists($_FILES['photo-file']['tmp_name']))) {
-        
+    elseif (($_POST['photo-url'] != '') || (file_exists($_FILES['photo-file']['tmp_name']))) {    
         if ($_POST['photo-url'] != '') {
             if (!filter_var($_POST['photo-url'], FILTER_VALIDATE_URL)) {
                 return 'Некорретный URL-адрес';
-                exit;
             }
-            if (!exif_imagetype($_POST['photo-url'])) {
+            elseif (!exif_imagetype($_POST['photo-url'])) {
                 return 'По ссылке отсутствует изображение';
-                exit;
             } 
             elseif (!in_array(exif_imagetype($_POST['photo-url']), [1, 2, 3])) {
                 return 'Недопустимый тип изображения';
             }
-        }
-        
+        }      
         if ($_FILES['error'] != 0) {
         return 'Ошибка загрузки файла / файл не получен';
         }
