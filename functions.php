@@ -107,7 +107,7 @@ function validateImageFields() {
             if (!filter_var($_POST['photo-url'], FILTER_VALIDATE_URL)) {
                 return 'Некорретный URL-адрес';
             }
-            elseif (!exif_imagetype($_POST['photo-url'])) {
+            elseif (!@exif_imagetype($_POST['photo-url'])) {
                 return 'По ссылке отсутствует изображение';
             } 
             elseif (!in_array(exif_imagetype($_POST['photo-url']), [1, 2, 3])) {
