@@ -113,12 +113,14 @@ function validateImageFields() {
             elseif (!in_array(exif_imagetype($_POST['photo-url']), [1, 2, 3])) {
                 return 'Недопустимый тип изображения';
             }
-        }      
-        if ($_FILES['error'] != 0) {
-        return 'Ошибка загрузки файла / файл не получен';
         }
-        elseif (!in_array(exif_imagetype($_POST['photo-url']), [1, 2, 3])) {
-            return 'Недопустимый тип изображения';
+        if (file_exists($_FILES['photo-file']['tmp_name'])) {
+            if ($_FILES['error'] != 0) {
+                return 'Ошибка загрузки файла / файл не получен';
+            }
+            elseif (!in_array(exif_imagetype($_POST['photo-url']), [1, 2, 3])) {
+                return 'Недопустимый тип изображения';
+            }
         }
     }
 }
