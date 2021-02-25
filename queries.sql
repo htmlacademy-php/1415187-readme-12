@@ -53,7 +53,6 @@ INSERT INTO subscribe SET follower_id=4, author_id=5;
 
 
 
-UPDATE posts SET content = NULL WHERE id BETWEEN 3 AND 5;
+UPDATE posts SET content = NULL WHERE id BETWEEN 3 AND 4;
 UPDATE posts SET img_url = 'img/rock.jpg' WHERE id = 3;
 UPDATE posts SET img_url = 'img/coast.jpg' WHERE id = 4;
-UPDATE posts SET url = 'www.htmlacademy.ru' WHERE id = 5;

@@ -5,19 +5,39 @@ require_once('db.php');
 
 $select_content_types_query = 'SELECT * FROM content_types;';
 
-$add_text_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0";
-$add_quote_post_query = $add_text_post_query . ", quote_author = ?";
-$add_photo_post_query = $add_text_post_query . ", img_url = ?";
-$add_link_post_query = $add_text_post_query;
-$add_video_post_query = $add_text_post_query . ", youtube_url = ?";
-
 $add_tag_query = "INSERT into hashtags SET tag_name = ?";
 $add_post_tag_query = "INSERT into post_tags SET post_id = ?, hashtag_id = ?";
+
+$validation_rules = [
+    'text' => [
+        'heading' => 'filled',
+        'content' => 'filled'
+    ],
+    'photo' => [
+        'heading' => 'filled',
+        'photo-url' => 'filled|correctURL|ImageURLContent',
+        'photo-file' => 'imgloaded'
+    ],
+    'link' => [
+        'heading' => 'filled',
+        'link-url' => 'filled|correctURL'
+    ],
+    'quote' => [
+        'heading' => 'filled',
+        'content' => 'filled',
+        'quote-author' => 'filled'
+    ],
+    'video' => [
+        'heading' => 'filled',
+        'video-url' => 'filled|correctURL|youtubeurl'
+    ],
+];
 
 $validation_rules = [
     'heading' => ['validateFilled'],
     'content' => ['validateFilled'],
     'link-url' => ['validateFilled', 'validateURL'],
+    'photo-file' => ['validateImageFields'],
     'photo-url' => ['validateImageFields'],
     'video-url' => ['validateFilled', 'validateURL', 'check_youtube_url'],
     'quote-author' => ['validateFilled']
@@ -47,12 +67,6 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
             $fields['errors'][$form_type][$field_name] = validate($field_name, $validation_rules[$field_name]);
         }
     }
-    if  ($form_type == 'photo') {
-        $fields['errors'][$form_type]['photo-file'] = validateImageFields($_FILES['photo-file']);
-    }
-    if (!empty($fields['errors'][$form_type]['photo-file']) && empty($fields['errors'][$form_type]['photo-url'])) {
-        unset($fields['errors'][$form_type]['photo-file']);
-    }
     $fields['errors'][$form_type] = array_filter($fields['errors'][$form_type]);
     if (empty($fields['errors'][$form_type])) {
         switch ($form_type) {
@@ -78,9 +92,10 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
                 } 
                 else {
                     $file_name = $_FILES['photo-file']['name'];
-                    $file_path = $_SERVER['DOCUMENT_ROOT'] . '/uploads/';
+                    $file_path = __DIR__ . '/uploads/';
                     $file_url = '/uploads/' . $file_name;
                     move_uploaded_file($_FILES['photo-file']['tmp_name'], $file_path . $file_name);
+                    print("<a href='$file_url'>$file_name</a>");
                 }
                 secure_query($con, $add_photo_post_query, 'siss', $_POST['heading'], $post_types[$form_type], $_POST['content'], $file_url);
                 $post_id = mysqli_insert_id($con);
@@ -114,3 +129,7 @@ $page_content = include_template('adding-post.php', [
                                                     ]);
 
 print($page_content);
+
+var_export(empty($_FILES));
+var_export($_FILES);
+var_export($_POST);

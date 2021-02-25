@@ -95,57 +95,45 @@ function validateURL($var) {
     }
 }
 
-function validateImageURLContent($var) {
-    if (!$content = @file_get_contents($_POST[$var])) {
-        return 'По ссылке отсутствует изображение';
+function validateImageFields() {
+    if (($_POST['photo-url'] == '') && (!file_exists($_FILES['photo-file']['tmp_name']))) {
+        return 'Пожалуйста, выберите ссылку или файл';
+        exit;
     }
-}
-
-
-
-
-
-function validateImageFields($var) {
-    if (isset($_GET['photo-url']) || (isset($_GET['photo-file']))) {
-       if ((!$content = @file_get_contents($_POST[$var]))&&(isset($_GET['photo-url']))) {
-        return 'По ссылке отсутствует изображение';
+    if (($_POST['photo-url'] != '') && (file_exists($_FILES['photo-file']['tmp_name']))) {
+        return 'Пожалуйста, выберите ссылку !ИЛИ! файл';
+        exit;
     }
-        if (($file['error'] != 0) && (isset($_GET['photo-file']))) {
-        return 'Ошибка загрузки файла / файл не получен';
-    } 
-        elseif (isset($_GET['photo-file'])) {
-            $file_info = finfo_open(FILEINFO_MIME_TYPE);
-            $file_name = $file['tmp_name'];
-            $file_type = finfo_file($file_info, $file_name);
-            if (!in_array($file_type, ['image/png','image/jpeg', 'image/gif'])) {
+    if (($_POST['photo-url'] != '') || (file_exists($_FILES['photo-file']['tmp_name']))) {
+        
+        if ($_POST['photo-url'] != '') {
+            if (!filter_var($_POST['photo-url'], FILTER_VALIDATE_URL)) {
+                return 'Некорретный URL-адрес';
+                exit;
+            }
+            if (!exif_imagetype($_POST['photo-url'])) {
+                return 'По ссылке отсутствует изображение';
+                exit;
+            } 
+            elseif (!in_array(exif_imagetype($_POST['photo-url']), [1, 2, 3])) {
                 return 'Недопустимый тип изображения';
             }
         }
-    }
-}
-
-
-
-
-
-
-function validateImageFile($file) {
-    if ($file['error'] != 0) {
+        
+        if ($_FILES['error'] != 0) {
         return 'Ошибка загрузки файла / файл не получен';
-    } else {
-        $file_info = finfo_open(FILEINFO_MIME_TYPE);
-        $file_name = $file['tmp_name'];
-        $file_type = finfo_file($file_info, $file_name);
-        if (!in_array($file_type, ['image/png','image/jpeg', 'image/gif'])) {
+        }
+        elseif (!in_array(exif_imagetype($_POST['photo-url']), [1, 2, 3])) {
             return 'Недопустимый тип изображения';
         }
     }
 }
 
+
 function validate($field, $validation_rules) {
     foreach ($validation_rules as $validation_rule) {
         if (!function_exists($validation_rule)) {
-            return 'Функции валидации ' . $validation_rule. ' не существует';
+            return 'Функции валидации ' . $validation_rule . ' не существует';
         }
         return $validation_rule($field);
     }
