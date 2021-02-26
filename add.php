@@ -3,36 +3,6 @@ require_once('helpers.php');
 require_once('functions.php');
 require_once('db.php');
 
-$select_content_types_query = 'SELECT * FROM content_types;';
-
-$add_tag_query = "INSERT into hashtags SET tag_name = ?";
-$add_post_tag_query = "INSERT into post_tags SET post_id = ?, hashtag_id = ?";
-
-$validation_rules = [
-    'text' => [
-        'heading' => 'filled',
-        'content' => 'filled'
-    ],
-    'photo' => [
-        'heading' => 'filled',
-        'photo-url' => 'filled|correctURL|ImageURLContent',
-        'photo-file' => 'imgloaded'
-    ],
-    'link' => [
-        'heading' => 'filled',
-        'link-url' => 'filled|correctURL'
-    ],
-    'quote' => [
-        'heading' => 'filled',
-        'content' => 'filled',
-        'quote-author' => 'filled'
-    ],
-    'video' => [
-        'heading' => 'filled',
-        'video-url' => 'filled|correctURL|youtubeurl'
-    ],
-];
-
 $validation_rules = [
     'heading' => ['validateFilled'],
     'content' => ['validateFilled'],
