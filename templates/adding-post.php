@@ -96,7 +96,7 @@
                 </div>
               </li>
               <li>
-                <a class="header__post-button header__post-button--active button button--transparent" href="#">Закрыть</a>
+                <a class="header__post-button header__post-button--active button button--transparent" href="javascript:history.back()">Закрыть</a>
               </li>
             </ul>
           </nav>

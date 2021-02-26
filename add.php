@@ -95,7 +95,6 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
                     $file_path = __DIR__ . '/uploads/';
                     $file_url = '/uploads/' . $file_name;
                     move_uploaded_file($_FILES['photo-file']['tmp_name'], $file_path . $file_name);
-                    print("<a href='$file_url'>$file_name</a>");
                 }
                 secure_query($con, $add_photo_post_query, 'siss', $_POST['heading'], $post_types[$form_type], $_POST['content'], $file_url);
                 $post_id = mysqli_insert_id($con);
@@ -130,6 +129,5 @@ $page_content = include_template('adding-post.php', [
 
 print($page_content);
 
-var_export(empty($_FILES));
 var_export($_FILES);
 var_export($_POST);
