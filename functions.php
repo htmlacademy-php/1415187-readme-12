@@ -87,6 +87,12 @@ function validateFilled($var) {
     if (empty($_POST[$var])) {
         return 'Это поле должно быть заполнено';
     }
+    if (($_POST[$var] < 80 or $_POST[$var] > 2000) && ($var != 'content')) {
+           return 'Длина поля должна быть от 80 до 2000 символов';
+    }
+    elseif (($_POST[$var] < 80 or $_POST[$var] > 20000) && ($var == 'content')) {
+        return 'Длина поля должна быть от 80 до 20000 символов';
+    }
 }
 
 function validateURL($var) {
@@ -102,14 +108,14 @@ function validateImageFields() {
     elseif (($_POST['photo-url'] != '') && (file_exists($_FILES['photo-file']['tmp_name']))) {
         return 'Пожалуйста, выберите ссылку !ИЛИ! файл';
     }
-    elseif (($_POST['photo-url'] != '') || (file_exists($_FILES['photo-file']['tmp_name']))) {    
+    elseif (($_POST['photo-url'] != '') || (file_exists($_FILES['photo-file']['tmp_name']))) {
         if ($_POST['photo-url'] != '') {
             if (!filter_var($_POST['photo-url'], FILTER_VALIDATE_URL)) {
                 return 'Некорретный URL-адрес';
             }
             elseif (!@exif_imagetype($_POST['photo-url'])) {
                 return 'По ссылке отсутствует изображение';
-            } 
+            }
             elseif (!in_array(exif_imagetype($_POST['photo-url']), [1, 2, 3])) {
                 return 'Недопустимый тип изображения';
             }
@@ -124,7 +130,6 @@ function validateImageFields() {
         }
     }
 }
-
 
 function validate($field, $validation_rules) {
     foreach ($validation_rules as $validation_rule) {
