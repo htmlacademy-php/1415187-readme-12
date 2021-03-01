@@ -179,6 +179,7 @@ function validateFilled(array $inputArray, string $parameterName): ?string {
     if (empty($inputArray[$parameterName])) {
         return 'Это поле должно быть заполнено';
     }
+    return null;
 }
 
 /**
@@ -192,7 +193,8 @@ function validateFilled(array $inputArray, string $parameterName): ?string {
 function validateLengthHeading(array $inputArray, string $parameterName): ?string {
     if ($inputArray[$parameterName] < 10 or $inputArray[$parameterName] > 50) {
            return 'Длина поля должна быть от 10 до 50 символов';
-        }
+    }
+    return null;
 }
 
 /**
@@ -206,7 +208,8 @@ function validateLengthHeading(array $inputArray, string $parameterName): ?strin
 function validateLengthContent(array $inputArray, string $parameterName): ?string {
     if ($inputArray[$parameterName] < 50 or $inputArray[$parameterName] > 500) {
            return 'Длина поля должна быть от 50 до 500 символов';
-        }
+    }
+    return null;
 }
 
 /**
@@ -221,6 +224,7 @@ function validateCorrectURL(array $inputArray, string $parameterName): ?string {
     if (!filter_var($inputArray[$parameterName], FILTER_VALIDATE_URL)) {
         return 'Некорретный URL-адрес';
     }
+    return null;
 }
 
 /**
@@ -245,6 +249,7 @@ function validateExists(array $validationArray, string $parameterName, $tableNam
     if ($amount > 0) {
         return "Запись с таким $parameterName уже присутствует в базе данных";
     }
+    return null;
 }
 
 /**
@@ -264,6 +269,7 @@ function validateImgLoaded(array $inputArray, string $parameterName): ?string {
             return 'Недопустимый тип изображения';
         }
     }
+    return null;
 }
 
 /**
@@ -302,6 +308,7 @@ function validateImageURLContent(array $inputArray, string $parameterName): ?str
             return 'Недопустимый тип изображения';
         }
     }
+    return null;
 }
 
 /**
@@ -312,7 +319,6 @@ function validateImageURLContent(array $inputArray, string $parameterName): ?str
  */
 
 function validateYoutubeURL(array $inputArray, string $parameterName): ?string {
-    $res = false;
     $id = extract_youtube_id($inputArray[$parameterName]);
 
     if ($id) {
@@ -325,6 +331,7 @@ function validateYoutubeURL(array $inputArray, string $parameterName): ?string {
             return 'Видео по ссылке не найдено';
         }
     }
+    return null;
 }
 
 /**
@@ -369,6 +376,7 @@ function validateRepeatPassword(array $inputArray): ?string {
     if ($inputArray['password'] !== $inputArray['password-repeat']) {
         return 'Пароли не совпадают';
     }
+    return null;
 }
 
 /**
@@ -383,4 +391,5 @@ function validateCorrectEmail(array $inputArray, string $parameterName): ?string
     if (!filter_var($inputArray[$parameterName], FILTER_VALIDATE_EMAIL)) {
         return 'Некорретный email';
     }
+    return null;
 }
