@@ -98,6 +98,3 @@ $page_content = include_template('adding-post.php', [
                                                     ]);
 
 print($page_content);
-
-var_export($_FILES);
-var_export($_POST);

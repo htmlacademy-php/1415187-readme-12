@@ -58,11 +58,10 @@
             <?php foreach($popular_posts as $post_index => $post): ?>
                 <article class="popular__post post post-<?=$post['type_class']?>">
                     <header class="post__header">
-                        <h2><a href="post.php?id=<?=$post['id']?>" title="Открыть страницу поста <?=$post['heading'];?>"><?=$post['heading'];?></a></h2>
+                        <h2><a href="post.php?id=<?=htmlspecialchars($post['id'])?>" title="Открыть страницу поста <?=$post['heading'];?>"><?=$post['heading'];?></a></h2>
                     </header>
                     <div class="post__main">
-                    <?php $content = include_template($post['type_class'] . '-post.php', ['post' => $post]);
-                        print($content); ?>
+                    <?=include_template($post['type_class'] . '-post.php', ['post' => $post])?>
                     </div>
                 <footer class="post__footer">
                     <div class="post__author">
@@ -86,7 +85,7 @@
                                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                                     <use xlink:href="#icon-heart-active"></use>
                                 </svg>
-                                <span><?=$post['view_count']?></span>
+                                <span>0</span>
                                 <span class="visually-hidden">количество лайков</span>
                             </a>
                             <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
