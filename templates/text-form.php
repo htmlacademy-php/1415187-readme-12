@@ -6,43 +6,43 @@
             <div class="form__text-inputs">
             <div class="adding-post__input-wrapper form__input-wrapper">
                 <label class="adding-post__label form__label" for="text-heading">Заголовок <span class="form__input-required">*</span></label>
-                <div class="form__input-section <?php if (!empty($field_error['heading'])):?>form__input-section--error<?php endif; ?>">
-                <input class="adding-post__input form__input" id="text-heading" type="text" name="heading" placeholder="Введите заголовок" value=<?= $field_value['heading'] ?>>
+                <div class="form__input-section <?= !empty($form_errors['heading']) ? 'form__input-section--error' : '' ?>">
+                <input class="adding-post__input form__input" id="text-heading" type="text" name="heading" placeholder="Введите заголовок" value=<?= $form_values['heading'] ?? $form_values['heading'] ?>>
                 <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                 <div class="form__error-text">
                     <h3 class="form__error-title">Ошибка</h3>
-                    <p class="form__error-desc"><?= $field_error['heading'] ?></p>
+                    <p class="form__error-desc"><?= $form_errors['heading'] ?? '' ?></p>
                 </div>
             </div>
         </div>
         <div class="adding-post__textarea-wrapper form__textarea-wrapper">
             <label class="adding-post__label form__label" for="post-text">Текст поста <span class="form__input-required">*</span></label>
-            <div class="form__input-section <?php if (!empty($field_error['content'])):?>form__input-section--error<?php endif; ?>">
-            <textarea class="adding-post__textarea form__textarea form__input" id="post-text" placeholder="Введите текст публикации" name="content"><?= $field_value['content'] ?></textarea>
+            <div class="form__input-section <?= !empty($form_errors['content']) ? 'form__input-section--error' : '' ?>">
+            <textarea class="adding-post__textarea form__textarea form__input" id="post-text" placeholder="Введите текст публикации" name="content"><?= $form_values['content'] ?? $form_values['content'] ?></textarea>
             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
             <div class="form__error-text">
                 <h3 class="form__error-title">Ошибка</h3>
-                <p class="form__error-desc"> <?= $field_error['content'] ?> </p>
+                <p class="form__error-desc"> <?= $form_errors['content'] ?? '' ?> </p>
             </div>
             </div>
         </div>
         <div class="adding-post__input-wrapper form__input-wrapper">
             <label class="adding-post__label form__label" for="post-tags">Теги</label>
-            <div class="form__input-section <?php if (!empty($field_error['tags'])):?>form__input-section--error<?php endif; ?>">
-            <input class="adding-post__input form__input" id="post-tags" type="text" name="tags" placeholder="Введите теги" value=<?= $field_value['tags'] ?>>
+            <div class="form__input-section  <?= !empty($form_errors['tags']) ? 'form__input-section--error' : '' ?>">
+            <input class="adding-post__input form__input" id="post-tags" type="text" name="tags" placeholder="Введите теги" value=<?= $form_values['tags'] ?? $form_values['tags'] ?>>
             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
             <div class="form__error-text">
                 <h3 class="form__error-title">Ошибка</h3>
-                <p class="form__error-desc"><?= $field_error['tags'] ?></p>
+                <p class="form__error-desc"><?= $form_errors['tags'] ?? '' ?></p>
             </div>
             </div>
         </div>
         </div>
-        <?php if (!empty($field_error)):?>
+        <?php if (!empty($form_errors)):?>
             <div class="form__invalid-block">
                 <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                 <ul class="form__invalid-list">
-                    <?php foreach($field_error as $field => $error): ?>
+                    <?php foreach($form_errors as $field => $error): ?>
                         <li class="form__invalid-item"><?= $field_error_codes[$field] ?>. <?= $error ?></li>
                     <?php endforeach; ?>
                 </ul>

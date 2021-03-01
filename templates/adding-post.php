@@ -127,7 +127,11 @@
             </div>
             <div class="adding-post__tab-content">
             <?php foreach($content_types as $content_type) {
-                $form = include_template($content_type['type_class'].'-form.php', ['field_value' => $fields_values[$content_type['type_class']], 'field_error' => $fields_errors[$content_type['type_class']], 'field_error_codes' => $field_error_codes, 'form_type' => $form_type]);
+                if ($form_type == $content_type['type_class']) {
+                    $form = include_template($content_type['type_class'].'-form.php', ['form_values' => $form_values, 'form_errors' => $form_errors, 'field_error_codes' => $field_error_codes, 'form_type' => $form_type]);
+                } else {
+                    $form = include_template($content_type['type_class'].'-form.php', ['form_values' => [], 'form_errors' => [], 'field_error_codes' => $field_error_codes, 'form_type' => $form_type]);
+                }
                 print($form);
             } ?>
             </div>

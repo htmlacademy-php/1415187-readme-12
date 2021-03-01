@@ -36,6 +36,7 @@ if (isset($_GET['post_type'])) {
     $posts_mysqli = mysqli_query($con, $sql_select_posts);
     $popular_posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
 }
+
 $content_types_mysqli = mysqli_query($con, $sql_select_content_types);
 $content_types = mysqli_fetch_all($content_types_mysqli, MYSQLI_ASSOC);
 
@@ -45,6 +46,7 @@ $page_content = include_template('main.php', [
                                                  'content_types' => $content_types,
                                                  'post_type' => $post_type
                                              ]);
+
 $layout_content = include_template('layout.php', [
                                                      'content' => $page_content,
                                                      'user_name' => $user_name,

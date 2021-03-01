@@ -21,8 +21,8 @@ INSERT INTO posts (heading, post_type, content, author_id, view_count)
 VALUES
 ('Цитата', 4,  'Мы в жизни любим только раз, а после ищем лишь похожих', 3, 10),
 ('Игра престолов', 3, 'Не могу дождаться начала финального сезона своего любимого сериала!', 4, 3),
-('Наконец, обработал фотки!', 1, 'rock', 3, 49),
-('Моя мечта', 1, 'coast', 5, 25),
+('Наконец, обработал фотки!', 1, 'img/rock.jpg', 3, 49),
+('Моя мечта', 1, 'img/coast.jpg', 5, 25),
 ('Лучшие курсы', 5, 'www.htmlacademy.ru', 4, 13);
 
 UPDATE posts SET quote_author = 'Неизвестный автор' WHERE id=1;
@@ -50,9 +50,3 @@ INSERT INTO likes SET user_id=3, post_id=3;
 
 /* подписаться на пользователя */
 INSERT INTO subscribe SET follower_id=4, author_id=5;
-
-
-
-UPDATE posts SET content = NULL WHERE id BETWEEN 3 AND 4;
-UPDATE posts SET img_url = 'img/rock.jpg' WHERE id = 3;
-UPDATE posts SET img_url = 'img/coast.jpg' WHERE id = 4;

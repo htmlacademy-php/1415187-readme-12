@@ -6,43 +6,44 @@
             <div class="form__text-inputs">
                 <div class="adding-post__input-wrapper form__input-wrapper">
                     <label class="adding-post__label form__label" for="photo-heading">Заголовок <span class="form__input-required">*</span></label>
-                    <div class="form__input-section <?php if (!empty($field_error['heading'])):?>form__input-section--error<?php endif; ?>">
-                        <input class="adding-post__input form__input" id="photo-heading" type="text" name="heading" placeholder="Введите заголовок" value=<?= $field_value['heading'] ?>>
+                    <div class="form__input-section  <?= !empty($form_errors['heading']) ? 'form__input-section--error' : '' ?>">
+                        <input class="adding-post__input form__input" id="photo-heading" type="text" name="heading" placeholder="Введите заголовок" value=<?= $form_values['heading'] ?? $form_values['heading'] ?>>
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Ошибка</h3>
-                            <p class="form__error-desc"><?= $field_error['heading'] ?></p>
+                            <p class="form__error-desc"><?= $form_errors['heading'] ?? '' ?></p>
                         </div>
                     </div>
                 </div>
                 <div class="adding-post__input-wrapper form__input-wrapper">
                     <label class="adding-post__label form__label" for="photo-url">Ссылка из интернета</label>
-                    <div class="form__input-section <?php if (!empty($field_error['photo-url'])):?>form__input-section--error<?php endif; ?>">
-                        <input class="adding-post__input form__input" id="photo-url" type="text" name="photo-url" placeholder="Введите ссылку" value=<?= $field_value['photo-url'] ?>>
+                    <div class="form__input-section  <?= !empty($form_errors['photo-url']) ? 'form__input-section--error' : '' ?>">
+                        <input class="adding-post__input form__input" id="photo-url" type="text" name="photo-url" placeholder="Введите ссылку" value=<?= $form_values['photo-url'] ?? $form_values['photo-url'] ?>>
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Ошибка</h3>
-                            <p class="form__error-desc"><?= $field_error['photo-url'] ?></p>
+                            <p class="form__error-desc"><?= $form_errors['photo-url'] ?? '' ?></p>
                         </div>
                     </div>
                 </div>
+                <?php $form_errors['tags'] ?? 'form__input-section--error' ?>
                 <div class="adding-post__input-wrapper form__input-wrapper">
                     <label class="adding-post__label form__label" for="photo-tags">Теги</label>
-                    <div class="form__input-section <?php if (!empty($field_error['tags'])):?>form__input-section--error<?php endif; ?>">
-                        <input class="adding-post__input form__input" id="photo-tags" type="text" name="tags" placeholder="Введите теги" value=<?= $field_value['tags'] ?>>
+                    <div class="form__input-section  <?= !empty($form_errors['tags']) ? 'form__input-section--error' : '' ?>">
+                        <input class="adding-post__input form__input" id="photo-tags" type="text" name="tags" placeholder="Введите теги" value=<?= $form_values['tags'] ?? $form_values['tags'] ?>>
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Ошибка</h3>
-                            <p class="form__error-desc"><?= $field_error['tags'] ?></p>
+                            <p class="form__error-desc"><?= $form_errors['tags'] ?? '' ?></p>
                         </div>
                     </div>
                 </div>
             </div>
-            <?php if (!empty($field_error)):?>
+            <?php if (!empty($form_errors)):?>
                 <div class="form__invalid-block">
                     <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                     <ul class="form__invalid-list">
-                        <?php foreach($field_error as $field => $error): ?>
+                        <?php foreach($form_errors as $field => $error): ?>
                             <li class="form__invalid-item"><?= $field_error_codes[$field] ?> . <?= $error ?></li>
                         <?php endforeach; ?>
                     </ul>
