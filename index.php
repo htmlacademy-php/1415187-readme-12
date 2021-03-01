@@ -23,7 +23,7 @@ if (!$con) {
     exit();
 }
 
-mysqli_set_charset($con, "utf8");
+mysqli_set_charset($con, "utf8mb4");
 
 if (isset($_GET['post_type'])) {
     $post_type = $_GET['post_type'];
@@ -53,4 +53,3 @@ $layout_content = include_template('layout.php', [
                                                  ]);
 
 print($layout_content);
-require_once('debug.php');
