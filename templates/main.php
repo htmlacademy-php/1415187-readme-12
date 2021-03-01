@@ -58,7 +58,7 @@
             <?php foreach($popular_posts as $post_index => $post): ?>
                 <article class="popular__post post post-<?=$post['type_class']?>">
                     <header class="post__header">
-                        <h2><a href="post.php?id=<?=htmlspecialchars($post['id'])?>" title="Открыть страницу поста <?=$post['heading'];?>"><?=$post['heading'];?></a></h2>
+                        <h2><a href="post.php?id=<?=$post['id']?>" title="Открыть страницу поста <?=htmlspecialchars($post['heading'])?>"><?=htmlspecialchars($post['heading'])?></a></h2>
                     </header>
                     <div class="post__main">
                     <?=include_template($post['type_class'] . '-post.php', ['post' => $post])?>
