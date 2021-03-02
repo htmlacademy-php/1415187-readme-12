@@ -87,11 +87,12 @@ function validateFilled($var) {
     if (empty($_POST[$var])) {
         return 'Это поле должно быть заполнено';
     }
-    if (($_POST[$var] < 80 or $_POST[$var] > 2000) && ($var != 'content')) {
-           return 'Длина поля должна быть от 80 до 2000 символов';
+    $len = strlen($_POST[$var]);
+    if (($len < 10 or $len > 50) && ($var != 'content')) {
+           return 'Длина поля должна быть от 10 до 50 символов';
     }
-    elseif (($_POST[$var] < 80 or $_POST[$var] > 20000) && ($var == 'content')) {
-        return 'Длина поля должна быть от 80 до 20000 символов';
+    elseif (($len < 50 or $len > 500) && ($var == 'content')) {
+        return 'Длина поля должна быть от 50 до 500 символов';
     }
 }
 
