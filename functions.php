@@ -123,6 +123,13 @@ function filter_size_ico($type) {
     return($result);
 }
 
+/**
+ * Создает список типов поста
+ *
+ * @param mysqli $con Соединение с базой
+ * @return array Список типов
+ */
+
 function get_content_types($con) {
     $result = mysqli_query($con, "SELECT * FROM content_types");
     $content_types = mysqli_fetch_all($result, MYSQLI_ASSOC);
