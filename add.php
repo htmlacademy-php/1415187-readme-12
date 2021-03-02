@@ -3,6 +3,11 @@ require_once('helpers.php');
 require_once('functions.php');
 require_once('db.php');
 
+if ($con == false) {
+    http_response_code(500);
+    exit();
+}
+
 $validation_rules = [
     'text' => [
         'heading' => 'filled|lengthHeading',
@@ -39,7 +44,7 @@ $field_error_codes = [
 ];
 
 $form_type = 'photo';
-$con = db_connect("localhost", "mysql", "mysql", "readme");
+$select_content_types_query = 'SELECT * FROM content_types';
 $content_types_mysqli = mysqli_query($con, $select_content_types_query);
 $content_types = mysqli_fetch_all($content_types_mysqli, MYSQLI_ASSOC);
 $post_types = array_column($content_types, 'id', 'type_class');
@@ -68,57 +73,28 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
     if (empty($form['errors'])) {
         switch ($form_type) {
             case 'quote':
-                secure_query($con, $add_quote_post_query, 'siss', $_POST['heading'], $post_types[$form_type], $_POST['content'], $_POST['quote-author']);
-                $post_id = mysqli_insert_id($con);
+                form_add_post_quote($con, $_POST['heading'], $post_types[$form_type], $_POST['content'], $_POST['quote-author']);
                 break;
             case 'text':
-                secure_query($con, $add_text_post_query, 'sis', $_POST['heading'], $post_types[$form_type], $_POST['content']);
-                $post_id = mysqli_insert_id($con);
+                form_add_post_text($con, $_POST['heading'], $post_types[$form_type], $_POST['content']);
                 break;
             case 'link':
-                secure_query($con, $add_link_post_query, 'sis', $_POST['heading'], $post_types[$form_type], $_POST['link-url']);
-                $post_id = mysqli_insert_id($con);
+                form_add_post_link($con, $_POST['heading'], $post_types[$form_type], $_POST['link-url']);
                 break;
             case 'video':
-                secure_query($con, $add_video_post_query, 'siss', $_POST['heading'], $post_types[$form_type], $_POST['content'], $_POST['youtube_url']);
-                $post_id = mysqli_insert_id($con);
+                form_add_post_video($con, $_POST['heading'], $post_types[$form_type], $_POST['content'], $_POST['youtube_url']);
                 break;
             case 'photo':
-                if (isset($form['values']['photo-file'])) {
-                    $file_name = $form['values']['photo-file']['name'];
-                    $file_path = __DIR__ . '/uploads/';
-                    $file_url = '/uploads/' . $file_name;
-                    move_uploaded_file($_FILES['photo-file']['tmp_name'], $file_path . $file_name);
-                }
-                else {
-                    $file_url = $_POST['photo-url'];
-                }
-                
-                secure_query($con, $add_photo_post_query, 'siss', $_POST['heading'], $post_types[$form_type], $_POST['content'], $file_url);
-                $post_id = mysqli_insert_id($con);
+                form_add_post_photo($con, $_POST['heading'], $post_types[$form_type], $_POST['content']);
         }
         
-        $new_tags = array_unique(explode(' ', $_POST['tags']));
-        $select_tags_query = "SELECT * FROM hashtags WHERE tag_name in ('".implode("','",$new_tags)."')";
-        $tags_mysqli = mysqli_query($con, $select_tags_query);
-        $tags = mysqli_fetch_all($tags_mysqli, MYSQLI_ASSOC);
+        $post_id = mysqli_insert_id($con);
         
-        foreach ($new_tags as $new_tag) {
-            $index = array_search($new_tag, array_column($tags, 'tag_name'));
-            
-            if ($index !== false) {
-                unset($new_tags[$new_tag]);
-                $tag_id = $tags[$index]['id'];
-            }
-            else {
-                secure_query($con, $add_tag_query, 's', $new_tag);
-                $tag_id = mysqli_insert_id($con);
-            }
-            
-            secure_query($con, $add_post_tag_query, 'ii', $post_id, $tag_id);
+        if (!empty($_POST['tags'])) {
+            form_add_post_tags($con, $post_id, array_unique(explode(' ', $_POST['tags'])));
         }
-        
-        $URL = '/post.php?id='.$post_id;
+           
+        $URL = '/post.php?id=' . $post_id;
         header("Location: $URL");
     }
 }

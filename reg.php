@@ -1,9 +1,13 @@
 <?php
+
 require_once('helpers.php');
 require_once('functions.php');
 require_once('db.php');
 
-$add_user_query = "INSERT into users SET username = ?, email = ?, password = ?, avatar = ?";
+if ($con == false) {
+    http_response_code(500);
+    exit();
+}
 
 $validation_rules = [
     'email' => 'filled|correctemail|exists:users,email',
@@ -19,8 +23,6 @@ $form_error_codes = [
     'password-repeat' => 'Подтверждение пароля'
 ];
 
-$con = db_connect("localhost", "mysql", "mysql", "readme");
-
 if (count($_POST) > 0) {
     foreach ($_POST as $field_name => $field_value) {
         $form['values'][$field_name] = $field_value;
@@ -30,6 +32,7 @@ if (count($_POST) > 0) {
     if (empty($form['errors'])) {
         $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $avatar = save_image('userpic-file');
+        $add_user_query = "INSERT into users SET username = ?, email = ?, password = ?, avatar = ?";
         secure_query($con, $add_user_query, 'ssss', $_POST['login'], $_POST['email'], $password_hash, $avatar);
         $post_id = mysqli_insert_id($con);
         $URL = '/';

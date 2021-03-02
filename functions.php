@@ -123,6 +123,128 @@ function filter_size_ico($type) {
     return($result);
 }
 
+function get_content_types($con) {
+    $result = mysqli_query($con, "SELECT * FROM content_types");
+    $content_types = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $content_types;
+}
+
+/**
+ * Добавляет новый пост из списка постов. Версия для цитаты
+ *
+ * @param mysqli $con Параметры соединения с БД
+ * @param string $heading Заголовок поста
+ * @param int $form_type Тип поста
+ * @param string $content Основное одержимое поста
+ * @param string $author Автор цитаты
+ *
+ */
+
+function form_add_post_quote ($con, $heading, $form_type, $content, $author) {
+    $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0, quote_author = ?";
+    secure_query($con, $add_post_query, 'siss', $heading, $form_type, $content, $author);
+}
+
+/**
+ * Добавляет новый пост из списка постов. Версия для текста
+ *
+ * @param mysqli $con Параметры соединения с БД
+ * @param string $heading Заголовок поста
+ * @param int $form_type Тип поста
+ * @param string $content Основное одержимое поста
+ *
+ */
+
+function form_add_post_text ($con, $heading, $form_type, $content) {
+    $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0";
+    secure_query($con, $add_post_query, 'sis', $heading, $form_type, $content);
+}
+
+/**
+ * Добавляет новый пост из списка постов. Версия для ссылки
+ *
+ * @param mysqli $con Параметры соединения с БД
+ * @param string $heading Заголовок поста
+ * @param int $form_type Тип поста
+ * @param string $link Ссылка на внешний ресурс
+ *
+ */
+
+function form_add_post_link ($con, $heading, $form_type, $link) {
+    $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0";
+    secure_query($con, $add_post_query, 'sis', $heading, $form_type, $link);
+}
+
+/**
+ * Добавляет новый пост из списка постов. Версия для видео
+ *
+ * @param mysqli $con Параметры соединения с БД
+ * @param string $heading Заголовок поста
+ * @param int $form_type Тип поста
+ * @param string $content Основное одержимое поста
+ * @param string $youtube_link Ссылка на видео с youtube
+ *
+ */
+
+function form_add_post_video ($con, $heading, $form_type, $content, $youtube_link) {
+    $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0, youtube_url = ?";
+    secure_query($con, $add_post_query, 'siss', $heading, $form_type, $content, $youtube_link);
+}
+
+/**
+ * Добавляет новый пост из списка постов. Версия для фото
+ *
+ * @param mysqli $con Параметры соединения с БД
+ * @param string $heading Заголовок поста
+ * @param int $form_type Тип поста
+ * @param string $content Основное одержимое поста
+ *
+ */
+
+function form_add_post_photo ($con, $heading, $form_type, $content) {
+    if (isset($form['values']['photo-file'])) {
+        $file_name = $form['values']['photo-file']['name'];
+        $file_path = __DIR__ . '/uploads/';
+        $file_url = '/uploads/' . $file_name;
+        move_uploaded_file($_FILES['photo-file']['tmp_name'], $file_path . $file_name);
+    }
+    else {
+        $file_url = $_POST['photo-url'];
+    }
+    $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0, img_url = ?";
+    secure_query($con, $add_post_query, 'siss', $heading, $form_type, $content, $file_url);
+}
+
+/**
+ * Добавляет новый пост из списка постов. Версия для цитаты
+ *
+ * @param mysqli $con Параметры соединения с БД
+ * @param array $new_tags Массив из тегов, указанных при создании поста
+ * @param int $post_id ID поста, к которому добавляются теги
+ */
+
+function form_add_post_tags ($con, $post_id, $new_tags) {
+    $select_tags_query = "SELECT * FROM hashtags WHERE tag_name in ('".implode("','",$new_tags)."')";
+    $tags_mysqli = mysqli_query($con, $select_tags_query);
+    $tags = mysqli_fetch_all($tags_mysqli, MYSQLI_ASSOC);
+
+    foreach ($new_tags as $new_tag) {
+        $index = array_search($new_tag, array_column($tags, 'tag_name'));
+
+        if ($index !== false) {
+            unset($new_tags[$new_tag]);
+            $tag_id = $tags[$index]['id'];
+        }
+        else {
+            $add_tag_query = "INSERT into hashtags SET tag_name = ?";
+            secure_query($con, $add_tag_query, 's', $new_tag);
+            $tag_id = mysqli_insert_id($con);
+        }
+        $add_post_tag_query = "INSERT INTO post_tags SET post_id = ?, hashtag_id = ?";
+        secure_query($con, $add_post_tag_query, 'ii', $post_id, $tag_id);
+    }
+}
+
 /**
  * Разделяет строку с правилами валидации на отдельные првила
  *
@@ -191,7 +313,8 @@ function validateFilled(array $inputArray, string $parameterName): ?string {
  */
 
 function validateLengthHeading(array $inputArray, string $parameterName): ?string {
-    if ($inputArray[$parameterName] < 10 or $inputArray[$parameterName] > 50) {
+    $len = strlen($inputArray[$parameterName]);
+    if ($len < 10 or $len > 50) {
            return 'Длина поля должна быть от 10 до 50 символов';
     }
     return null;
@@ -206,7 +329,8 @@ function validateLengthHeading(array $inputArray, string $parameterName): ?strin
  */
 
 function validateLengthContent(array $inputArray, string $parameterName): ?string {
-    if ($inputArray[$parameterName] < 50 or $inputArray[$parameterName] > 500) {
+    $len = strlen($inputArray[$parameterName]);
+    if ($len < 50 or $len > 500) {
            return 'Длина поля должна быть от 50 до 500 символов';
     }
     return null;
@@ -392,4 +516,26 @@ function validateCorrectEmail(array $inputArray, string $parameterName): ?string
         return 'Некорретный email';
     }
     return null;
+}
+
+/**
+ * Проверяет корректность введенного email-адреса
+ *
+ * @param  array $inputArray Массив, полученный методом POST (из формы)
+ * @param  string $parameterName Проверяемый параметр, email
+ * @return string Ошибка или null
+ */
+
+function db_connect($host, $user, $pass, $db) {
+    $con = mysqli_connect($host, $user, $pass, $db);
+
+    if ($con == false) {
+        $error = mysqli_connect_error();
+        print($error);
+        http_response_code(500);
+        exit();
+    }
+
+    mysqli_set_charset($con, "utf8mb4");
+    return $con;
 }

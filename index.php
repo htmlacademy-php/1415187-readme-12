@@ -1,13 +1,19 @@
 <?php
+
 require_once('helpers.php');
 require_once('functions.php');
+require_once('db.php');
 
 $is_auth = rand(0, 1);
 $user_name = 'Mark';
 $page_title = 'readme: популярное';
 $now_time = new DateTime('now');
-$con = mysqli_connect("localhost", "mysql", "mysql", "readme");
-$sql_select_content_types = "SELECT * FROM content_types;";
+
+if (!$con) {
+    http_response_code(500);
+    exit();
+}
+
 $sql_select_posts = 
     "SELECT
         posts.*,
@@ -17,13 +23,6 @@ $sql_select_posts =
     FROM posts
     INNER JOIN users ON posts.author_id=users.id
     INNER JOIN content_types ON posts.post_type=content_types.id ";
-
-if (!$con) {
-    http_response_code(500);
-    exit();
-}
-
-mysqli_set_charset($con, "utf8mb4");
 
 if (isset($_GET['post_type'])) {
     $post_type = $_GET['post_type'];
@@ -37,8 +36,7 @@ if (isset($_GET['post_type'])) {
     $popular_posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
 }
 
-$content_types_mysqli = mysqli_query($con, $sql_select_content_types);
-$content_types = mysqli_fetch_all($content_types_mysqli, MYSQLI_ASSOC);
+$content_types = get_content_types($con);
 
 $page_content = include_template('main.php', [
                                                  'popular_posts' => $popular_posts,
