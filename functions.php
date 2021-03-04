@@ -552,6 +552,8 @@ function validateCorrectPassword(array $validationArray, string $parameterName, 
 }
 
 /**
+ * альтернативное подключение, пока не используется в проекте
+ *
  * Проводит подключение к БД, если неудачно - выдает ошибку 500
  *
  * @param  string Хост подключения
