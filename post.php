@@ -3,11 +3,6 @@ require_once('helpers.php');
 require_once('functions.php');
 require_once('db.php');
 
-if ($con == false) {
-    http_response_code(500);
-    exit();
-}
-
 if (!isset($_GET['id'])) {
     display_404_page();
     exit();

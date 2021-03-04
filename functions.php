@@ -475,6 +475,7 @@ function validateYoutubeURL(array $inputArray, string $parameterName): ?string {
  */
 
 function validate($fields, $validationArray, $db_connection) {
+    $db_functions = ['validateExists', 'validateCorrectpassword'];
     $validations = getValidationRules($validationArray);
     $errors = [];
     foreach ($validations as $field => $rules) {
@@ -485,7 +486,7 @@ function validate($fields, $validationArray, $db_connection) {
             if (!function_exists($methodName)) {
                 return 'Функции валидации ' . $methodName . ' не существует';
             }
-            if ($methodName == 'validateExists') {
+            if (in_array($methodName, $db_functions)) {
                 array_push($methodParameters, $db_connection);
             }
             if ($errors[$field] = call_user_func_array($methodName, $methodParameters)) {
@@ -526,23 +527,48 @@ function validateCorrectEmail(array $inputArray, string $parameterName): ?string
 }
 
 /**
- * Проверяет корректность введенного email-адреса
+ * Проверяет корректность введенного пароля
  *
  * @param  array $inputArray Массив, полученный методом POST (из формы)
  * @param  string $parameterName Проверяемый параметр, email
  * @return string Ошибка или null
  */
 
+function validateCorrectPassword(array $validationArray, string $parameterName, $tableName, $usersColumnName, $passwordColumnName, mysqli $dbConnection): ?string {
+    $sql = "select password as dbpassword from $tableName where $usersColumnName = ?";
+    $prepared_sql = mysqli_prepare($dbConnection, $sql);
+    
+    mysqli_stmt_bind_param($prepared_sql, 's', $validationArray['login']);
+    mysqli_stmt_execute($prepared_sql);
+    mysqli_stmt_bind_result($prepared_sql, $dbpassword);
+    mysqli_stmt_fetch($prepared_sql);
+    mysqli_stmt_close($prepared_sql);
+    
+    if (!password_verify($validationArray[$parameterName], $dbpassword)) {
+        return "Вы ввели неверный email/пароль";
+    }
+    
+    return null;
+}
+
+/**
+ * Проводит подключение к БД, если неудачно - выдает ошибку 500
+ *
+ * @param  string Хост подключения
+ * @param  string Пользователь
+ * @param  string Пароль пользователя
+ * @param  string Название БД
+ * @return mysql врзвращает результат подключения к БД           
+ */
+
 function db_connect($host, $user, $pass, $db) {
     $con = mysqli_connect($host, $user, $pass, $db);
-
     if ($con == false) {
         $error = mysqli_connect_error();
         print($error);
         http_response_code(500);
         exit();
     }
-
     mysqli_set_charset($con, "utf8mb4");
     return $con;
 }

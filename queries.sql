@@ -50,3 +50,9 @@ INSERT INTO likes SET user_id=3, post_id=3;
 
 /* подписаться на пользователя */
 INSERT INTO subscribe SET follower_id=4, author_id=5;
+
+UPDATE users SET password = 'd6a9a933c8aafc51e55ac0662b6e4d4a' WHERE id = 1;
+UPDATE users SET password = 'e10adc3949ba59abbe56e057f20f883e' WHERE id = 2;
+UPDATE users SET password = '508df4cb2f4d8f80519256258cfb975f' WHERE id = 3;
+UPDATE users SET password = '5bd2026f128662763c532f2f4b6f2476' WHERE id = 4;
+UPDATE users SET password = 'e35cf7b66449df565f93c607d5a81d09' WHERE id = 5;
