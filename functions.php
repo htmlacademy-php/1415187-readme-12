@@ -5,13 +5,13 @@ function cut_text (string $text, int $length = 300) {
         $text = mb_substr($text, 0, $length + 1);
         $end = mb_strlen(strrchr($text, ' '));
         $text = mb_substr($text, 0, -$end) . '...';
-        }
+    }
     return $text;
 }
 
 function time_difference ($post_time, $current_time) {
     date_default_timezone_set('Europe/Moscow');
-    
+
     $diff = date_diff($current_time, $post_time);
 
     if ($diff->y > 0) {
@@ -89,7 +89,7 @@ function validateFilled($var) {
     }
     $len = strlen($_POST[$var]);
     if (($len < 10 or $len > 50) && ($var != 'content')) {
-           return 'Длина поля должна быть от 10 до 50 символов';
+        return 'Длина поля должна быть от 10 до 50 символов';
     }
     elseif (($len < 50 or $len > 500) && ($var == 'content')) {
         return 'Длина поля должна быть от 50 до 500 символов';
@@ -125,7 +125,7 @@ function validateImageFields() {
             if ($_FILES['error'] != 0) {
                 return 'Ошибка загрузки файла / файл не получен';
             }
-            elseif (!in_array(exif_imagetype($_POST['photo-url']), [1, 2, 3])) {
+            elseif (!in_array(exif_imagetype($_FILES['photo-file']['tmp_name']), [1, 2, 3])) {
                 return 'Недопустимый тип изображения';
             }
         }

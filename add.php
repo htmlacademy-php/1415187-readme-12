@@ -7,7 +7,6 @@ $validation_rules = [
     'heading' => ['validateFilled'],
     'content' => ['validateFilled'],
     'link-url' => ['validateFilled', 'validateURL'],
-    'photo-file' => ['validateImageFields'],
     'photo-url' => ['validateImageFields'],
     'video-url' => ['validateFilled', 'validateURL', 'check_youtube_url'],
     'quote-author' => ['validateFilled']
@@ -17,9 +16,8 @@ $field_error_codes = [
     'heading' => 'Заголовок',
     'content' => 'Контент',
     'link-url' => 'Ссылка',
-    'photo-url' => 'Ссылка из интернета',
+    'photo-url' => 'Изображение',
     'video-url' => 'Ссылка YOUTUBE',
-    'photo-file' => 'Файл фото',
     'quote-author' => 'Автор'
 ];
 
@@ -59,7 +57,7 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
             case 'photo':
                 if ($_FILES['photo-file']['error'] != 0) {
                     $file_url = $_POST['photo-url'];
-                } 
+                }
                 else {
                     $file_name = $_FILES['photo-file']['name'];
                     $file_path = __DIR__ . '/uploads/';
