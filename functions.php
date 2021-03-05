@@ -205,15 +205,13 @@ function form_add_post_video ($con, $heading, $form_type, $content, $youtube_lin
  * @param string $heading Заголовок поста
  * @param int $form_type Тип поста
  * @param string $content Основное одержимое поста
+ * @param array $file Массив с содержанием файла
  *
  */
 
-function form_add_post_photo ($con, $heading, $form_type, $content) {
-    if (isset($form['values']['photo-file'])) {
-        $file_name = $form['values']['photo-file']['name'];
-        $file_path = __DIR__ . '/uploads/';
-        $file_url = '/uploads/' . $file_name;
-        move_uploaded_file($_FILES['photo-file']['tmp_name'], $file_path . $file_name);
+function form_add_post_photo ($con, $heading, $form_type, $content, $file) {
+    if (file_exists($file['tmp_name'])) {
+        $file_url = save_image('photo-file');        
     }
     else {
         $file_url = $_POST['photo-url'];
@@ -393,7 +391,7 @@ function validateExists(array $validationArray, string $parameterName, $tableNam
 
 function validateImgLoaded(array $inputArray, string $parameterName): ?string {
     if ($inputArray[$parameterName]['error'] != 0) {
-        return 'Код ошибки:' . $inputArray[$parameterName]['error'];
+        return 'Код ошибки: ' . $inputArray[$parameterName]['error'];
     }
     else {
         if (!in_array(exif_imagetype($inputArray[$parameterName]['tmp_name']), [1, 2, 3])) {
@@ -416,8 +414,8 @@ function save_image($img) {
     } else {
         $file_name = $_FILES[$img]['name'];
         $file_path = __DIR__ . '/uploads/';
-        $file_url = '/uploads/' . $file_name;
         move_uploaded_file($_FILES[$img]['tmp_name'], $file_path . $file_name);
+        $file_url = '/uploads/' . $file_name;
         return $file_url;
     }
 }

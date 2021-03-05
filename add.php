@@ -51,14 +51,14 @@ $post_types = array_column($content_types, 'id', 'type_class');
 
 if ((count($_POST) > 0) && isset($_POST['form-type'])){
     $form_type = $_POST['form-type'];
-    
+
     foreach ($_POST as $field_name => $field_value) {
         $form['values'][$field_name] = $field_value;
     }
-    
+
     $form['values']['photo-file'] = $_FILES['photo-file'];
     $form['errors'] = validate($form['values'], $validation_rules[$form_type], $con);
-    
+
     if (empty($form['errors']['photo-file'])) {
         unset($form['errors']['photo-url']);
         unset($form['values']['photo-url']);
@@ -67,9 +67,9 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
         unset($form['errors']['photo-file']);
         unset($form['values']['photo-file']);
     }
-    
+
     $form['errors'] = array_filter($form['errors']);
-    
+
     if (empty($form['errors'])) {
         switch ($form_type) {
             case 'quote':
@@ -85,15 +85,15 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
                 form_add_post_video($con, $_POST['heading'], $post_types[$form_type], $_POST['content'], $_POST['youtube_url']);
                 break;
             case 'photo':
-                form_add_post_photo($con, $_POST['heading'], $post_types[$form_type], $_POST['content']);
+                form_add_post_photo($con, $_POST['heading'], $post_types[$form_type], $_POST['content'], $_FILES['photo-file']);
         }
-        
+
         $post_id = mysqli_insert_id($con);
-        
+
         if (!empty($_POST['tags'])) {
             form_add_post_tags($con, $post_id, array_unique(explode(' ', $_POST['tags'])));
         }
-           
+
         $URL = '/post.php?id=' . $post_id;
         header("Location: $URL");
     }
@@ -108,3 +108,5 @@ $page_content = include_template('adding-post.php', [
                                                     ]);
 
 print($page_content);
+
+var_export(file_exists($_FILES['photo-file']['tmp_name']));
