@@ -14,3 +14,5 @@ uploads/*
 dwsync.xml
 */dwsync.xml
 debug.php
+css/beauty-css.css
+js/beauty-js.js
