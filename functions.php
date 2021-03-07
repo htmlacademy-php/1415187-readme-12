@@ -27,7 +27,7 @@ function cut_text (string $text, int $length = 300) {
  * @return string Относительное время в общем формате (прим.: "4 дня назад", "3 недели назад")
  */
 
-function time_difference ($time, $current_time) {
+function time_difference (DateTime $time, DateTime $current_time) {
     date_default_timezone_set('Europe/Moscow');
 
     $diff = date_diff($current_time, $time);
@@ -68,9 +68,10 @@ function time_difference ($time, $current_time) {
 /**
  * Подготавливает и выполняет "безопасный" запрос
  *
- * @param  mysqli $con Данные для соединения с БД
- * @param  string $sql Исходный запрос с плейсхолдерами
- * @param  mixed  $params Типы параметров в формате 'i' - integer,'s' - string
+ * @param mysqli $con Данные для соединения с БД
+ * @param string $sql Исходный запрос с плейсхолдерами
+ * @param string $type Типы параметров в формате 'i' - integer,'s' - string
+ * @param mixed $params Передаваемые параметры
  *
  * @return false|mysqli_result  Результат выполнения подготовленного запроса
  */
@@ -96,12 +97,12 @@ function display_404_page() {
 /**
  * Выбирает размер иконки "Тип контента" (размеры взяты из разметки)
  *
- * @param  string $type Тип контента
+ * @param string $type Тип контента
  *
  * @return array Массив из двух значений: ширина и высота иконки.
  */
 
-function filter_size_ico($type) {
+function filter_size_ico(string $type) {
     if ($type == 'photo') {
         $result = ['w' => 22, 'h' => 18];
     }
@@ -130,10 +131,9 @@ function filter_size_ico($type) {
  * @return array Список типов
  */
 
-function get_content_types($con) {
+function get_content_types(mysqli $con) {
     $result = mysqli_query($con, "SELECT * FROM content_types");
-    $content_types = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    return $content_types;
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 /**
@@ -144,10 +144,9 @@ function get_content_types($con) {
  * @param int $form_type Тип поста
  * @param string $content Основное одержимое поста
  * @param string $author Автор цитаты
- *
  */
 
-function form_add_post_quote ($con, $heading, $form_type, $content, $author) {
+function form_add_post_quote (mysqli $con, string $heading, int $form_type, string $content, string $author) {
     $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0, quote_author = ?";
     secure_query($con, $add_post_query, 'siss', $heading, $form_type, $content, $author);
 }
@@ -159,10 +158,9 @@ function form_add_post_quote ($con, $heading, $form_type, $content, $author) {
  * @param string $heading Заголовок поста
  * @param int $form_type Тип поста
  * @param string $content Основное одержимое поста
- *
  */
 
-function form_add_post_text ($con, $heading, $form_type, $content) {
+function form_add_post_text (mysqli $con, string $heading, int $form_type, string $content) {
     $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0";
     secure_query($con, $add_post_query, 'sis', $heading, $form_type, $content);
 }
@@ -174,10 +172,9 @@ function form_add_post_text ($con, $heading, $form_type, $content) {
  * @param string $heading Заголовок поста
  * @param int $form_type Тип поста
  * @param string $link Ссылка на внешний ресурс
- *
  */
 
-function form_add_post_link ($con, $heading, $form_type, $link) {
+function form_add_post_link (mysqli $con, string $heading, int $form_type, string $link) {
     $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0";
     secure_query($con, $add_post_query, 'sis', $heading, $form_type, $link);
 }
@@ -190,10 +187,9 @@ function form_add_post_link ($con, $heading, $form_type, $link) {
  * @param int $form_type Тип поста
  * @param string $content Основное одержимое поста
  * @param string $youtube_link Ссылка на видео с youtube
- *
  */
 
-function form_add_post_video ($con, $heading, $form_type, $content, $youtube_link) {
+function form_add_post_video (mysqli $con, string $heading, int $form_type, string $content, string $youtube_link) {
     $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0, youtube_url = ?";
     secure_query($con, $add_post_query, 'siss', $heading, $form_type, $content, $youtube_link);
 }
@@ -206,12 +202,11 @@ function form_add_post_video ($con, $heading, $form_type, $content, $youtube_lin
  * @param int $form_type Тип поста
  * @param string $content Основное одержимое поста
  * @param array $file Массив с содержанием файла
- *
  */
 
-function form_add_post_photo ($con, $heading, $form_type, $content, $file) {
+function form_add_post_photo (mysqli $con, string $heading, int $form_type, string $content, array $file) {
     if (file_exists($file['tmp_name'])) {
-        $file_url = save_image('photo-file');        
+        $file_url = save_image('photo-file');
     }
     else {
         $file_url = $_POST['photo-url'];
@@ -224,11 +219,11 @@ function form_add_post_photo ($con, $heading, $form_type, $content, $file) {
  * Добавляет новый пост из списка постов. Версия для цитаты
  *
  * @param mysqli $con Параметры соединения с БД
- * @param array $new_tags Массив из тегов, указанных при создании поста
  * @param int $post_id ID поста, к которому добавляются теги
+ * @param array $new_tags Массив из тегов, указанных при создании поста
  */
 
-function form_add_post_tags ($con, $post_id, $new_tags) {
+function form_add_post_tags (mysqli $con, int $post_id, array $new_tags) {
     $select_tags_query = "SELECT * FROM hashtags WHERE tag_name in ('".implode("','",$new_tags)."')";
     $tags_mysqli = mysqli_query($con, $select_tags_query);
     $tags = mysqli_fetch_all($tags_mysqli, MYSQLI_ASSOC);
@@ -257,10 +252,10 @@ function form_add_post_tags ($con, $post_id, $new_tags) {
  * @return array Массив, в котором каждая связка правило-параметры - отдельный элемент
  */
 
-function getValidationRules(array $rules): array {
+function get_validation_rules(array $rules): array {
     $result = [];
-    foreach ($rules as $fieldName => $rule) {
-        $result[$fieldName] = explode('|', $rule);
+    foreach ($rules as $field_name => $rule) {
+        $result[$field_name] = explode('|', $rule);
     }
     return $result;
 }
@@ -272,9 +267,9 @@ function getValidationRules(array $rules): array {
  * @return string Имя функции валидации
  */
 
-function getValidationMethodName(string $name): string {
-    $studlyWords = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $name)));
-    return "validate{$studlyWords}";
+function get_validation_method_name(string $name): string {
+    $studly_words = str_replace(['-', ' '], '_', $name);
+    return "validate_{$studly_words}";
 }
 
 /**
@@ -284,12 +279,12 @@ function getValidationMethodName(string $name): string {
  * @return array Массив из названия и массива параметров
  */
 
-function getValidationNameAndParameters(string $rule): array {
-    $nameParams = explode(':', $rule);
+function get_validation_name_and_parameters(string $rule): array {
+    $name_params = explode(':', $rule);
     $parameters = [];
-    $name = $nameParams[0];
-    if (isset($nameParams[1])) {
-        $parameters = explode(',', $nameParams[1]);
+    $name = $name_params[0];
+    if (isset($name_params[1])) {
+        $parameters = explode(',', $name_params[1]);
     }
     return [$name, $parameters];
 }
@@ -297,13 +292,13 @@ function getValidationNameAndParameters(string $rule): array {
 /**
  * Валидация заполненого поля
  *
- * @param  array $inputArray Массив, полученный методом POST (из формы)
- * @param  string $parameterName Параметр, по которому будет проводиться валидация
+ * @param  array $input_array Массив, полученный методом POST (из формы)
+ * @param  string $parameter_name Параметр, по которому будет проводиться валидация
  * @return string Ошибка или null
  */
 
-function validateFilled(array $inputArray, string $parameterName): ?string {
-    if (empty($inputArray[$parameterName])) {
+function validate_filled(array $input_array, string $parameter_name): ?string {
+    if (empty($input_array[$parameter_name])) {
         return 'Это поле должно быть заполнено';
     }
     return null;
@@ -312,13 +307,13 @@ function validateFilled(array $inputArray, string $parameterName): ?string {
 /**
  * Валидация длины поля заголовка
  *
- * @param  array $inputArray Массив, полученный методом POST (из формы)
- * @param  string $parameterName Имя поля
+ * @param  array $input_array Массив, полученный методом POST (из формы)
+ * @param  string $parameter_name Имя поля
  * @return string Ошибка или null
  */
 
-function validateLengthHeading(array $inputArray, string $parameterName): ?string {
-    $len = strlen($inputArray[$parameterName]);
+function validate_length_heading(array $input_array, string $parameter_name): ?string {
+    $len = strlen($input_array[$parameter_name]);
     if ($len < 10 or $len > 50) {
            return 'Длина поля должна быть от 10 до 50 символов';
     }
@@ -328,13 +323,13 @@ function validateLengthHeading(array $inputArray, string $parameterName): ?strin
 /**
  * Валидация длины текстового поля
  *
- * @param  array $inputArray Массив, полученный методом POST (из формы)
- * @param  string $parameterName Имя текстового поля
+ * @param  array $input_array Массив, полученный методом POST (из формы)
+ * @param  string $parameter_name Имя текстового поля
  * @return string Ошибка или null
  */
 
-function validateLengthContent(array $inputArray, string $parameterName): ?string {
-    $len = strlen($inputArray[$parameterName]);
+function validate_length_content(array $input_array, string $parameter_name): ?string {
+    $len = strlen($input_array[$parameter_name]);
     if ($len < 50 or $len > 500) {
            return 'Длина поля должна быть от 50 до 500 символов';
     }
@@ -344,13 +339,13 @@ function validateLengthContent(array $inputArray, string $parameterName): ?strin
 /**
  * Проверяет корректность URL-адреса
  *
- * @param array $inputArray Массив, полученный методом POST (из формы)
- * @param string $parameterName Параметр, по которому будет проводиться валидация
+ * @param array $input_array Массив, полученный методом POST (из формы)
+ * @param string $parameter_name Параметр, по которому будет проводиться валидация
  * @return string Ошибка либо Null
  */
 
-function validateCorrectURL(array $inputArray, string $parameterName): ?string {
-    if (!filter_var($inputArray[$parameterName], FILTER_VALIDATE_URL)) {
+function validate_correct_url(array $input_array, string $parameter_name): ?string {
+    if (!filter_var($input_array[$parameter_name], FILTER_VALIDATE_URL)) {
         return 'Некорретный URL-адрес';
     }
     return null;
@@ -359,24 +354,24 @@ function validateCorrectURL(array $inputArray, string $parameterName): ?string {
 /**
  * Проверяет отсутствие значения в БД
  *
- * @param  array $validationArray Проверяемый массив
- * @param  string $parameterName Имя искомого параметра
- * @param  string $tableName Имя таблицы БД
- * @param  string $columnName Имя столбца таблицы
- * @param  mysqli $dbConnection Параметры подключения к БД
+ * @param  array $validation_array Проверяемый массив
+ * @param  string $parameter_name Имя искомого параметра
+ * @param  string $table_name Имя таблицы БД
+ * @param  string $column_name Имя столбца таблицы
+ * @param  mysqli $db_connection Параметры подключения к БД
  * @return string Сообщение об ошибке, если нет ошибки - null
  */
 
-function validateExists(array $validationArray, string $parameterName, $tableName, $columnName, mysqli $dbConnection): ?string {
-    $sql = "SELECT COUNT(*) AS amount FROM $tableName WHERE $columnName = ?";
-    $prepared_sql = mysqli_prepare($dbConnection, $sql);
-    mysqli_stmt_bind_param($prepared_sql, 's', $validationArray[$parameterName]);
+function validate_exist(array $validation_array, string $parameter_name, $table_name, $column_name, mysqli $db_connection): ?string {
+    $sql = "SELECT COUNT(*) AS amount FROM $table_name WHERE $column_name = ?";
+    $prepared_sql = mysqli_prepare($db_connection, $sql);
+    mysqli_stmt_bind_param($prepared_sql, 's', $validation_array[$parameter_name]);
     mysqli_stmt_execute($prepared_sql);
     mysqli_stmt_bind_result($prepared_sql, $amount);
     mysqli_stmt_fetch($prepared_sql);
     mysqli_stmt_close($prepared_sql);
     if ($amount > 0) {
-        return "Запись с таким $parameterName уже присутствует в базе данных";
+        return "Запись с таким $parameter_name уже присутствует в базе данных";
     }
     return null;
 }
@@ -384,17 +379,17 @@ function validateExists(array $validationArray, string $parameterName, $tableNam
 /**
  * Проверяет загружен ли файл и является ли он изображением
  *
- * @param  array $inputArray Массив, полученный методом POST (из формы)
- * @param  string $parameterName Имя поля, через которое загружен файл
+ * @param  array $input_array Массив, полученный методом POST (из формы)
+ * @param  string $parameter_name Имя поля, через которое загружен файл
  * @return string Ошибка либо null
  */
 
-function validateImgLoaded(array $inputArray, string $parameterName): ?string {
-    if ($inputArray[$parameterName]['error'] != 0) {
-        return 'Код ошибки: ' . $inputArray[$parameterName]['error'];
+function validate_img_loaded(array $input_array, string $parameter_name): ?string {
+    if ($input_array[$parameter_name]['error'] != 0) {
+        return 'Файл не получен';
     }
     else {
-        if (!in_array(exif_imagetype($inputArray[$parameterName]['tmp_name']), [1, 2, 3])) {
+        if (!in_array(exif_imagetype($input_array[$parameter_name]['tmp_name']), [1, 2, 3])) {
             return 'Недопустимый тип изображения';
         }
     }
@@ -404,36 +399,35 @@ function validateImgLoaded(array $inputArray, string $parameterName): ?string {
 /**
  * Сохраняет файл в папку "@host/uploads/"
  *
- * @param  string $img Название поля с изображением
+ * @param string $img Название поля с изображением
  * @return string Путь к сохраненному файлу
  */
 
-function save_image($img) {
+function save_image(string $img) {
     if ($_FILES[$img]['error'] != 0) {
         return $file_name = $_POST[$img];
     } else {
         $file_name = $_FILES[$img]['name'];
         $file_path = __DIR__ . '/uploads/';
         move_uploaded_file($_FILES[$img]['tmp_name'], $file_path . $file_name);
-        $file_url = '/uploads/' . $file_name;
-        return $file_url;
+        return '/uploads/' . $file_name;
     }
 }
 
 /**
  * Проверяет наличие по ссылке изображения
  *
- * @param  array $inputArray Массив, полученный методом POST (из формы)
- * @param  string $parameterName Имя поля, содержащего ссылку на изображение
+ * @param  array $input_array Массив, полученный методом POST (из формы)
+ * @param  string $parameter_name Имя поля, содержащего ссылку на изображение
  * @return string Ошибка либо null
  */
 
-function validateImageURLContent(array $inputArray, string $parameterName): ?string {
-    if (!file_get_contents($inputArray[$parameterName])) {
+function validate_image_url_content(array $input_array, string $parameter_name): ?string {
+    if (!file_get_contents($input_array[$parameter_name])) {
         return 'По ссылке отсутствует изображение';
     }
     else {
-        if (!in_array(@exif_imagetype($inputArray[$parameterName]), [1, 2, 3])) {
+        if (!in_array(@exif_imagetype($input_array[$parameter_name]), [1, 2, 3])) {
             return 'Недопустимый тип изображения';
         }
     }
@@ -442,13 +436,13 @@ function validateImageURLContent(array $inputArray, string $parameterName): ?str
 
 /**
  * Проверяет, что переданная ссылка ведет на доступное видео с youtube
- * @param  array $inputArray Массив, полученный методом POST (из формы)
- * @param string $parameterName Ссылка на youtube видео
+ * @param  array $input_array Массив, полученный методом POST (из формы)
+ * @param string $parameter_name Ссылка на youtube видео
  * @return string Доступна или недоступна ссылка
  */
 
-function validateYoutubeURL(array $inputArray, string $parameterName): ?string {
-    $id = extract_youtube_id($inputArray[$parameterName]);
+function validate_youtube_url(array $input_array, string $parameter_name): ?string {
+    $id = extract_youtube_id($input_array[$parameter_name]);
 
     if ($id) {
         $api_data = ['id' => $id, 'part' => 'id,status', 'key' => 'AIzaSyD24lsJ4BL-azG188tHxXtbset3ehKXeJg'];
@@ -466,27 +460,27 @@ function validateYoutubeURL(array $inputArray, string $parameterName): ?string {
 /**
  * Валидация массива значений из форм
  *
- * @param  mysqli $db_connection Соединение с БД
- * @param  array $fields Проверяемый массив связками поле - значение
- * @param  array $validationArray Массив правил валидации вида поле - список правил валидации
- * @return array Массив со списком ошибок
+ * @param array $fields Проверяемый массив связками поле - значение
+ * @param array $validation_array Массив правил валидации вида поле - список правил валидации
+ * @param mysqli $db_connection Соединение с БД
+ * @return array|string Массив со списком ошибок | Строка с ошибкой
  */
 
-function validate($fields, $validationArray, $db_connection) {
-    $validations = getValidationRules($validationArray);
+function validate(array $fields, array $validation_array, mysqli $db_connection) {
+    $validations = get_validation_rules($validation_array);
     $errors = [];
     foreach ($validations as $field => $rules) {
         foreach ($rules as $rule) {
-            [$name, $parameters] = getValidationNameAndParameters($rule);
-            $methodName = getValidationMethodName($name);
-            $methodParameters = array_merge([$fields, $field], $parameters);
-            if (!function_exists($methodName)) {
-                return 'Функции валидации ' . $methodName . ' не существует';
+            [$name, $parameters] = get_validation_name_and_parameters($rule);
+            $method_name = get_validation_method_name($name);
+            $method_parameters = array_merge([$fields, $field], $parameters);
+            if (!function_exists($method_name)) {
+                return 'Функции валидации ' . $method_name . ' не существует';
             }
-            if ($methodName == 'validateExists') {
-                array_push($methodParameters, $db_connection);
+            if ($method_name == 'validate_exist') {
+                array_push($method_parameters, $db_connection);
             }
-            if ($errors[$field] = call_user_func_array($methodName, $methodParameters)) {
+            if ($errors[$field] = call_user_func_array($method_name, $method_parameters)) {
                 break;
             }
         }
@@ -497,12 +491,12 @@ function validate($fields, $validationArray, $db_connection) {
 /**
  * Проверяет совпадение вводов пароля
  *
- * @param  array $inputArray Массив, полученный методом POST (из формы)
+ * @param  array $input_array Массив, полученный методом POST (из формы)
  * @return string Ошибка или null
  */
 
-function validateRepeatPassword(array $inputArray): ?string {
-    if ($inputArray['password'] !== $inputArray['password-repeat']) {
+function validate_repeat_password(array $input_array): ?string {
+    if ($input_array['password'] !== $input_array['password-repeat']) {
         return 'Пароли не совпадают';
     }
     return null;
@@ -511,27 +505,30 @@ function validateRepeatPassword(array $inputArray): ?string {
 /**
  * Проверяет корректность введенного email-адреса
  *
- * @param  array $inputArray Массив, полученный методом POST (из формы)
- * @param  string $parameterName Проверяемый параметр, email
+ * @param  array $input_array Массив, полученный методом POST (из формы)
+ * @param  string $parameter_name Проверяемый параметр, email
  * @return string Ошибка или null
  */
 
-function validateCorrectEmail(array $inputArray, string $parameterName): ?string {
-    if (!filter_var($inputArray[$parameterName], FILTER_VALIDATE_EMAIL)) {
+function validate_correct_email(array $input_array, string $parameter_name): ?string {
+    if (!filter_var($input_array[$parameter_name], FILTER_VALIDATE_EMAIL)) {
         return 'Некорретный email';
     }
     return null;
 }
 
 /**
- * Проверяет корректность введенного email-адреса
+ * Производит подключение к БД. Если доступ не получен - возвращает ошибку 500
  *
- * @param  array $inputArray Массив, полученный методом POST (из формы)
- * @param  string $parameterName Проверяемый параметр, email
- * @return string Ошибка или null
+ * @param string $host Местоположение БД
+ * @param string $user Логин
+ * @param string $pass Пароль
+ * @param string $db Имя БД
+ *
+ * @return mysqli Результат подключения или null
  */
 
-function db_connect($host, $user, $pass, $db) {
+function db_connect(string $host,string $user,string $pass,string $db) {
     $con = mysqli_connect($host, $user, $pass, $db);
 
     if ($con == false) {

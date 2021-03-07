@@ -1,35 +1,31 @@
 <?php
+
 require_once('helpers.php');
 require_once('functions.php');
 require_once('db.php');
 
-if ($con == false) {
-    http_response_code(500);
-    exit();
-}
-
 $validation_rules = [
     'text' => [
-        'heading' => 'filled|lengthHeading',
-        'content' => 'filled|lengthContent'
+        'heading' => 'filled|length_heading',
+        'content' => 'filled|length_content'
     ],
     'photo' => [
-        'heading' => 'filled|lengthHeading',
-        'photo-url' => 'filled|correctURL|ImageURLContent',
-        'photo-file' => 'imgloaded'
+        'heading' => 'filled|length_heading',
+        'photo-url' => 'filled|correct_url|image_url_content',
+        'photo-file' => 'img_loaded'
     ],
     'link' => [
-        'heading' => 'filled|lengthHeading',
-        'link-url' => 'filled|correctURL'
+        'heading' => 'filled|length_eading',
+        'link-url' => 'filled|correct_url'
     ],
     'quote' => [
-        'heading' => 'filled|lengthHeading',
+        'heading' => 'filled|length_heading',
         'content' => 'filled',
         'quote-author' => 'filled'
     ],
     'video' => [
-        'heading' => 'filled|lengthHeading',
-        'video-url' => 'filled|correctURL|youtubeurl'
+        'heading' => 'filled|length_heading',
+        'video-url' => 'filled|correct_url|youtube_url'
     ],
 ];
 
@@ -108,5 +104,3 @@ $page_content = include_template('adding-post.php', [
                                                     ]);
 
 print($page_content);
-
-var_export(file_exists($_FILES['photo-file']['tmp_name']));
