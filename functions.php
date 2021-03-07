@@ -477,7 +477,7 @@ function validate(array $fields, array $validation_array, mysqli $db_connection)
             if (!function_exists($method_name)) {
                 return 'Функции валидации ' . $method_name . ' не существует';
             }
-            if ($method_name == 'validate_exist') {
+            if ($method_name == 'validate_exists') {
                 array_push($method_parameters, $db_connection);
             }
             if ($errors[$field] = call_user_func_array($method_name, $method_parameters)) {
@@ -515,6 +515,44 @@ function validate_correct_email(array $input_array, string $parameter_name): ?st
         return 'Некорретный email';
     }
     return null;
+}
+
+/**
+ * Подготавливает и выполняет "безопасный" запрос со связыванием (bind)
+ *
+ * @param mysqli $connection Данные для подключения к БД
+ * @param string $sql Исходный запрос сплейсхолдерами
+ * @param mixed $params Типы параметров 'i' - int,'s' - string
+ * @return mixed Результат выполнения подготовленного запроса
+ */
+function secure_query_bind_result(mysqli $connection, string $sql, ...$params) {
+    $param_types = '';
+    foreach ($params as $param) {
+        $param_types .= (gettype($param) == 'integer') ? 'i' : 's';
+    }
+    $prepared_sql = mysqli_prepare($connection, $sql);
+    mysqli_stmt_bind_param($prepared_sql, $param_types, ...$params);
+    mysqli_stmt_execute($prepared_sql);
+    mysqli_stmt_bind_result($prepared_sql, $bind);
+    mysqli_stmt_fetch($prepared_sql);
+    mysqli_stmt_close($prepared_sql);
+    return $bind;
+}
+
+/**
+ * Проверяет отсутствие значения в БД
+ *
+ * @param  array $validation_array Валидируемый массив
+ * @param  string $parameter_name Имя искомого параметра
+ * @param  string $table_name Имя таблицы БД
+ * @param  string $column_name Имя столбца таблицы
+ * @param  mysqli $db_connection Данные для подключения к БД
+ * @return string Сообщение об ошибке или null
+ */
+function validate_exists(array $validation_array, string $parameter_name, $table_name, $column_name, mysqli $db_connection): ?string {
+    $sql = "SELECT COUNT(*) AS amount FROM $table_name WHERE $column_name = ?";
+    $amount = secure_query_bind_result($db_connection, $sql, $validation_array[$parameter_name]);
+    return $amount > 0 ? "Запись с таким $parameter_name уже присутствует в базе данных" : null;
 }
 
 /**
