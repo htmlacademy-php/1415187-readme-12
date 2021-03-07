@@ -2,6 +2,7 @@
 require_once('helpers.php');
 require_once('functions.php');
 require_once('db.php');
+
 session_start();
 
 $form_error_codes = [
@@ -12,7 +13,7 @@ $form_error_codes = [
 
 $validation_rules = [
     'login' => 'filled',
-    'password' => 'filled|correctpassword:users,username,password'
+    'password' => 'filled|correct_password:users,username,password'
 ];
 
 if (count($_POST) > 0) {

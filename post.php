@@ -1,4 +1,5 @@
 <?php
+
 require_once('helpers.php');
 require_once('functions.php');
 require_once('db.php');
@@ -8,7 +9,7 @@ if (!isset($_GET['id'])) {
     exit();
 }
 
-$select_post_by_id = 
+$select_post_by_id =
     "SELECT
         posts.*,
         users.username,

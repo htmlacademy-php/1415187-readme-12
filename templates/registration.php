@@ -43,7 +43,7 @@
         </ul>
         <ul class="header__user-nav">
           <li class="header__authorization">
-            <a class="header__user-button header__authorization-button button" href="index.php">Вход</a>
+            <a class="header__user-button header__authorization-button button" href="login.html">Вход</a>
           </li>
           <li>
             <a class="header__user-button header__user-button--active header__register-button button">Регистрация</a>
@@ -113,7 +113,7 @@
           <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
           <ul class="form__invalid-list">
             <?php foreach($form_errors as $field => $error): ?>
-                <li class="form__invalid-item"><?= $form_error_codes[$field] ?> . <?= $error ?></li>
+                <li class="form__invalid-item"><?= $form_error_codes[$field] ?>: <?= $error ?></li>
             <?php endforeach; ?>
           </ul>
         </div>
