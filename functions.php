@@ -14,7 +14,7 @@ function cut_text (string $text, int $length = 300) {
         $text = mb_substr($text, 0, $length + 1);
         $end = mb_strlen(strrchr($text, ' '));
         $text = mb_substr($text, 0, -$end) . '...';
-    }
+        }
     return $text;
 }
 
@@ -315,7 +315,7 @@ function validate_filled(array $input_array, string $parameter_name): ?string {
 function validate_length_heading(array $input_array, string $parameter_name): ?string {
     $len = strlen($input_array[$parameter_name]);
     if ($len < 10 or $len > 50) {
-        return 'Длина поля должна быть от 10 до 50 символов';
+           return 'Длина поля должна быть от 10 до 50 символов';
     }
     return null;
 }
@@ -331,7 +331,7 @@ function validate_length_heading(array $input_array, string $parameter_name): ?s
 function validate_length_content(array $input_array, string $parameter_name): ?string {
     $len = strlen($input_array[$parameter_name]);
     if ($len < 50 or $len > 500) {
-        return 'Длина поля должна быть от 50 до 500 символов';
+           return 'Длина поля должна быть от 50 до 500 символов';
     }
     return null;
 }
@@ -347,31 +347,6 @@ function validate_length_content(array $input_array, string $parameter_name): ?s
 function validate_correct_url(array $input_array, string $parameter_name): ?string {
     if (!filter_var($input_array[$parameter_name], FILTER_VALIDATE_URL)) {
         return 'Некорретный URL-адрес';
-    }
-    return null;
-}
-
-/**
- * Проверяет отсутствие значения в БД
- *
- * @param  array $validation_array Проверяемый массив
- * @param  string $parameter_name Имя искомого параметра
- * @param  string $table_name Имя таблицы БД
- * @param  string $column_name Имя столбца таблицы
- * @param  mysqli $db_connection Параметры подключения к БД
- * @return string Сообщение об ошибке, если нет ошибки - null
- */
-
-function validate_exist(array $validation_array, string $parameter_name, $table_name, $column_name, mysqli $db_connection): ?string {
-    $sql = "SELECT COUNT(*) AS amount FROM $table_name WHERE $column_name = ?";
-    $prepared_sql = mysqli_prepare($db_connection, $sql);
-    mysqli_stmt_bind_param($prepared_sql, 's', $validation_array[$parameter_name]);
-    mysqli_stmt_execute($prepared_sql);
-    mysqli_stmt_bind_result($prepared_sql, $amount);
-    mysqli_stmt_fetch($prepared_sql);
-    mysqli_stmt_close($prepared_sql);
-    if ($amount > 0) {
-        return "Запись с таким $parameter_name уже присутствует в базе данных";
     }
     return null;
 }
@@ -474,7 +449,8 @@ function validate(array $fields, array $validation_array, mysqli $db_connection)
         foreach ($rules as $rule) {
             [$name, $parameters] = get_validation_name_and_parameters($rule);
             $method_name = get_validation_method_name($name);
-            $method_parameters = array_merge([$fields, $field], $parameters);
+            $method_parameters = [];
+            array_push($method_parameters, $fields, $field, $parameters);
             if (!function_exists($method_name)) {
                 return 'Функции валидации ' . $method_name . ' не существует';
             }
@@ -541,43 +517,47 @@ function secure_query_bind_result(mysqli $connection, string $sql, ...$params) {
 }
 
 /**
- * Проверяет отсутствие значения в БД
+ * Проверяет отсутствие|наличие значения в БД
  *
- * @param  array $validation_array Валидируемый массив
- * @param  string $parameter_name Имя искомого параметра
- * @param  string $table_name Имя таблицы БД
- * @param  string $column_name Имя столбца таблицы
- * @param  mysqli $db_connection Данные для подключения к БД
- * @return string Сообщение об ошибке или null
+ * @param array $validation_array Проверяемый массив
+ * @param string $parameter_name Имя искомого параметра
+ * @param array $parameter_settings Установки параметров (где искать, и ищем отсутствие или наличие)
+ * @param mysqli $db_connection Параметры подключения к БД
+ * @return string Сообщение об ошибке, если нет ошибки - null
  */
 
-function validate_exists(array $validation_array, string $parameter_name, $table_name, $column_name, mysqli $db_connection): ?string {
+function validate_exists(array $validation_array, string $parameter_name, array $parameter_settings, mysqli $db_connection): ?string {
+    $table_name = $parameter_settings[0];
+    $column_name = $parameter_settings[1];
+    $not = $parameter_settings[2];
     $sql = "SELECT COUNT(*) AS amount FROM $table_name WHERE $column_name = ?";
     $amount = secure_query_bind_result($db_connection, $sql, $validation_array[$parameter_name]);
-    return $amount > 0 ? "Запись с таким $parameter_name уже присутствует в базе данных" : null;
+    if (($amount > 0) && (!in_array('not', $parameter_settings))) {
+        return "Запись с таким $parameter_name уже присутствует в базе данных";
+    }
+    elseif (($amount === 0) && (in_array('not', $parameter_settings))) {
+        return "Записи с таким $parameter_name нет в базе данных";
+    }
+    return null;
 }
 
 /**
- * Проверяет отсутствие значения в БД
+ * Проверяет правильность введенного пароля
  *
- * @param array $validation_array
- * @param string $parameter_name
- * @param $table_name
- * @param $users_column_name
- * @param $password_column_name
- * @param mysqli $db_connection
+ * @param array $validation_array Валидируемый массив
+ * @param string $parameter_name Имя искомого параметра
+ * @param $parameter_settings
+ * @param mysqli $db_connection Данные для подключения к БД
  * @return string Сообщение об ошибке или null
  */
 
-function validate_correct_password(array $validation_array, string $parameter_name, $table_name, $users_column_name, $password_column_name, mysqli $db_connection): ?string {
-    $sql = "SELECT password AS dbpassword FROM $table_name WHERE $users_column_name = ?";
-    $dbpassword = secure_query_bind_result($db_connection, $sql, $validation_array[$parameter_name]);
-    if (!password_verify($validation_array[$parameter_name], $dbpassword)) {
-        return "Вы ввели неверный email/пароль";
-    }
-    else {
-        return null;
-    }
+function validate_correct_password(array $validation_array, string $parameter_name, $parameter_settings, mysqli $db_connection): ?string {
+    $table_name = $parameter_settings[0];
+    $users_column_name = $parameter_settings[1];
+    $password_column_name = $parameter_settings[2];
+    $sql = "SELECT $password_column_name AS db_password FROM $table_name WHERE $users_column_name = ?";
+    $db_password = secure_query_bind_result($db_connection, $sql, $validation_array[$parameter_name]);
+    return !password_verify($validation_array[$parameter_name], $db_password) ? "Вы ввели неверный email/пароль" : null;
 }
 
 /**
@@ -603,4 +583,10 @@ function db_connect(string $host,string $user,string $pass,string $db) {
 
     mysqli_set_charset($con, "utf8mb4");
     return $con;
+}
+
+function get_user_data($db_connection, $email) {
+    $result = mysqli_query($db_connection, "SELECT username, avatar FROM users WHERE email = '$email'");
+    $users_name = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $users_name[0];
 }

@@ -3,8 +3,6 @@ require_once('helpers.php');
 require_once('functions.php');
 require_once('db.php');
 
-$add_user_query = "INSERT into users SET username = ?, email = ?, password = ?, avatar = ?";
-
 $validation_rules = [
     'email' => 'filled|correct_email|exists:users,email',
     'login' => 'filled',
@@ -27,6 +25,7 @@ if (count($_POST) > 0) {
     if (empty($form['errors'])) {
         $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $avatar = save_image('userpic-file');
+        $add_user_query = "INSERT into users SET username = ?, email = ?, password = ?, avatar = ?";
         secure_query($con, $add_user_query, 'ssss', $_POST['login'], $_POST['email'], $password_hash, $avatar);
         $post_id = mysqli_insert_id($con);
         $URL = '/';
@@ -34,5 +33,9 @@ if (count($_POST) > 0) {
     }
 }
 
-$page_content = include_template('registration.php', ['form_values' => $form['values'], 'form_errors' => $form['errors'], 'form_error_codes' => $form_error_codes]);
+$page_content = include_template('registration.php', [
+                                                        'form_values' => $form['values'],
+                                                        'form_errors' => $form['errors'],
+                                                        'form_error_codes' => $form_error_codes
+                                                        ]);
 print($page_content);

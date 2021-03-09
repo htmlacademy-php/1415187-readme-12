@@ -9,12 +9,12 @@ $user_name = 'Mark';
 $page_title = 'readme: популярное';
 $now_time = new DateTime('now');
 
-$sql_select_posts = 
+$sql_select_posts =
     "SELECT
         posts.*,
         users.username,
         users.avatar,
-        content_types.type_class       
+        content_types.type_class
     FROM posts
     INNER JOIN users ON posts.author_id=users.id
     INNER JOIN content_types ON posts.post_type=content_types.id ";

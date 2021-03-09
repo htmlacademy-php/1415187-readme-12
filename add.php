@@ -65,6 +65,7 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
     }
 
     $form['errors'] = array_filter($form['errors']);
+    
 
     if (empty($form['errors'])) {
         switch ($form_type) {
