@@ -121,12 +121,7 @@
       </div>
       <div class="registration__input-file-container form__input-container form__input-container--file">
         <div class="registration__input-file-wrapper form__input-file-wrapper">
-          <div class="registration__file-zone form__file-zone dropzone">
-            <input class="registration__input-file form__input-file" id="userpic-file" type="file" name="userpic-file" title=" ">
-            <div class="form__file-zone-text">
-              <span>Перетащите фото сюда</span>
-            </div>
-          </div>
+          <input class="registration__input-file form__input-file" id="userpic-file" type="file" name="userpic-file" title=" ">
           <button class="registration__input-file-button form__input-file-button button" type="button">
             <span>Выбрать фото</span>
             <svg class="registration__attach-icon form__attach-icon" width="10" height="20">
@@ -197,9 +192,6 @@
     </div>
   </div>
 </footer>
-
-<script src="libs/dropzone.js"></script>
-<script src="js/dropzone-settings.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

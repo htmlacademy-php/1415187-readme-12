@@ -27,7 +27,7 @@ if (count($_POST) > 0) {
     if (empty($form['errors'])) {
         $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $avatar = save_image('userpic-file');
-        secure_query($con, $add_user_query, 'ssss', $_POST['login'], $_POST['email'], $password_hash, $avatar);
+        secure_query_bind_result($con, $add_user_query, false, $_POST['login'], $_POST['email'], $password_hash, $avatar);
         $post_id = mysqli_insert_id($con);
         $URL = '/';
         header("Location: $URL");
@@ -35,9 +35,8 @@ if (count($_POST) > 0) {
 }
 
 $page_content = include_template('registration.php', [
-                                                        'form_values' => $form['values'], 
-                                                        'form_errors' => $form['errors'], 
+                                                        'form_values' => $form['values'],
+                                                        'form_errors' => $form['errors'],
                                                         'form_error_codes' => $form_error_codes
                                                         ]);
 print($page_content);
-var_dump($_FILES['userpic-file']);
