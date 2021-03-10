@@ -575,8 +575,6 @@ function db_connect(string $host,string $user,string $pass,string $db) {
     $con = mysqli_connect($host, $user, $pass, $db);
 
     if ($con == false) {
-        $error = mysqli_connect_error();
-        print($error);
         http_response_code(500);
         exit();
     }
