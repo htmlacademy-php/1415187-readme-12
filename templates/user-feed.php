@@ -57,7 +57,7 @@
               <li class="header__profile">
                 <a class="header__profile-link" href="#">
                   <div class="header__avatar-wrapper">
-                    <?php if (empty($avatar)): ?>
+                    <?php if (isset($avatar)): ?>
                     <?php else: ?>
                     <img class="header__profile-avatar" src="img/<?=$avatar?>" alt="Аватар пользователя">
                     <?php endif; ?>

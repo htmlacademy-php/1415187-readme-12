@@ -14,7 +14,7 @@ function cut_text (string $text, int $length = 300) {
         $text = mb_substr($text, 0, $length + 1);
         $end = mb_strlen(strrchr($text, ' '));
         $text = mb_substr($text, 0, -$end) . '...';
-        }
+    }
     return $text;
 }
 
@@ -63,24 +63,6 @@ function time_difference (DateTime $time, DateTime $current_time) {
         $relative_time = '';
     }
     return $relative_time;
-}
-
-/**
- * Подготавливает и выполняет "безопасный" запрос
- *
- * @param mysqli $con Данные для соединения с БД
- * @param string $sql Исходный запрос с плейсхолдерами
- * @param string $type Типы параметров в формате 'i' - integer,'s' - string
- * @param mixed $params Передаваемые параметры
- *
- * @return false|mysqli_result  Результат выполнения подготовленного запроса
- */
-
-function secure_query(mysqli $con, string $sql, string $type, ...$params) {
-    $prepared_sql = mysqli_prepare($con, $sql);
-    mysqli_stmt_bind_param($prepared_sql, $type, ...$params);
-    mysqli_stmt_execute($prepared_sql);
-    return mysqli_stmt_get_result($prepared_sql);
 }
 
 /**
@@ -148,7 +130,7 @@ function get_content_types(mysqli $con) {
 
 function form_add_post_quote (mysqli $con, string $heading, int $form_type, string $content, string $author) {
     $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0, quote_author = ?";
-    secure_query($con, $add_post_query, 'siss', $heading, $form_type, $content, $author);
+    secure_query_bind_result($con, $add_post_query, false, $heading, $form_type, $content, $author);
 }
 
 /**
@@ -162,7 +144,7 @@ function form_add_post_quote (mysqli $con, string $heading, int $form_type, stri
 
 function form_add_post_text (mysqli $con, string $heading, int $form_type, string $content) {
     $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0";
-    secure_query($con, $add_post_query, 'sis', $heading, $form_type, $content);
+    secure_query_bind_result($con, $add_post_query, false, $heading, $form_type, $content);
 }
 
 /**
@@ -176,7 +158,7 @@ function form_add_post_text (mysqli $con, string $heading, int $form_type, strin
 
 function form_add_post_link (mysqli $con, string $heading, int $form_type, string $link) {
     $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0";
-    secure_query($con, $add_post_query, 'sis', $heading, $form_type, $link);
+    secure_query_bind_result($con, $add_post_query, false, $heading, $form_type, $link);
 }
 
 /**
@@ -191,7 +173,7 @@ function form_add_post_link (mysqli $con, string $heading, int $form_type, strin
 
 function form_add_post_video (mysqli $con, string $heading, int $form_type, string $content, string $youtube_link) {
     $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0, youtube_url = ?";
-    secure_query($con, $add_post_query, 'siss', $heading, $form_type, $content, $youtube_link);
+    secure_query_bind_result($con, $add_post_query, false, $heading, $form_type, $content, $youtube_link);
 }
 
 /**
@@ -204,7 +186,7 @@ function form_add_post_video (mysqli $con, string $heading, int $form_type, stri
  * @param array $file Массив с содержанием файла
  */
 
-function form_add_post_photo (mysqli $con, string $heading, int $form_type, string $content, array $file) {
+function form_add_post_photo (mysqli $con, string $heading, int $form_type, $content, $file) {
     if (file_exists($file['tmp_name'])) {
         $file_url = save_image('photo-file');
     }
@@ -212,7 +194,7 @@ function form_add_post_photo (mysqli $con, string $heading, int $form_type, stri
         $file_url = $_POST['photo-url'];
     }
     $add_post_query = "INSERT INTO posts SET heading = ?, post_type = ?, content = ?, author_id = 1, view_count = 0, img_url = ?";
-    secure_query($con, $add_post_query, 'siss', $heading, $form_type, $content, $file_url);
+    secure_query_bind_result($con, $add_post_query, false, $heading, $form_type, $content, $file_url);
 }
 
 /**
@@ -237,11 +219,11 @@ function form_add_post_tags (mysqli $con, int $post_id, array $new_tags) {
         }
         else {
             $add_tag_query = "INSERT into hashtags SET tag_name = ?";
-            secure_query($con, $add_tag_query, 's', $new_tag);
+            secure_query_bind_result($con, $add_tag_query, false, $new_tag);
             $tag_id = mysqli_insert_id($con);
         }
         $add_post_tag_query = "INSERT INTO post_tags SET post_id = ?, hashtag_id = ?";
-        secure_query($con, $add_post_tag_query, 'ii', $post_id, $tag_id);
+        secure_query_bind_result($con, $add_post_tag_query, false, $post_id, $tag_id);
     }
 }
 
@@ -315,7 +297,7 @@ function validate_filled(array $input_array, string $parameter_name): ?string {
 function validate_length_heading(array $input_array, string $parameter_name): ?string {
     $len = strlen($input_array[$parameter_name]);
     if ($len < 10 or $len > 50) {
-           return 'Длина поля должна быть от 10 до 50 символов';
+        return 'Длина поля должна быть от 10 до 50 символов';
     }
     return null;
 }
@@ -331,7 +313,7 @@ function validate_length_heading(array $input_array, string $parameter_name): ?s
 function validate_length_content(array $input_array, string $parameter_name): ?string {
     $len = strlen($input_array[$parameter_name]);
     if ($len < 50 or $len > 500) {
-           return 'Длина поля должна быть от 50 до 500 символов';
+        return 'Длина поля должна быть от 50 до 500 символов';
     }
     return null;
 }
@@ -347,6 +329,31 @@ function validate_length_content(array $input_array, string $parameter_name): ?s
 function validate_correct_url(array $input_array, string $parameter_name): ?string {
     if (!filter_var($input_array[$parameter_name], FILTER_VALIDATE_URL)) {
         return 'Некорретный URL-адрес';
+    }
+    return null;
+}
+
+/**
+ * Проверяет отсутствие значения в БД
+ *
+ * @param  array $validation_array Проверяемый массив
+ * @param  string $parameter_name Имя искомого параметра
+ * @param  string $table_name Имя таблицы БД
+ * @param  string $column_name Имя столбца таблицы
+ * @param  mysqli $db_connection Параметры подключения к БД
+ * @return string Сообщение об ошибке, если нет ошибки - null
+ */
+
+function validate_exist(array $validation_array, string $parameter_name, $table_name, $column_name, mysqli $db_connection): ?string {
+    $sql = "SELECT COUNT(*) AS amount FROM $table_name WHERE $column_name = ?";
+    $prepared_sql = mysqli_prepare($db_connection, $sql);
+    mysqli_stmt_bind_param($prepared_sql, 's', $validation_array[$parameter_name]);
+    mysqli_stmt_execute($prepared_sql);
+    mysqli_stmt_bind_result($prepared_sql, $amount);
+    mysqli_stmt_fetch($prepared_sql);
+    mysqli_stmt_close($prepared_sql);
+    if ($amount > 0) {
+        return "Запись с таким $parameter_name уже присутствует в базе данных";
     }
     return null;
 }
@@ -495,14 +502,15 @@ function validate_correct_email(array $input_array, string $parameter_name): ?st
 }
 
 /**
- * Подготавливает и выполняет "безопасный" запрос со связыванием (bind)
+ * Подготавливает и выполняет "безопасный" запрос (и производит сравнение $check)
  *
  * @param mysqli $connection Данные для подключения к БД
  * @param string $sql Исходный запрос сплейсхолдерами
+ * @param bool $check Сравнение с базой (true|false)
  * @param mixed $params Типы параметров 'i' - int,'s' - string
  * @return mixed Результат выполнения подготовленного запроса
  */
-function secure_query_bind_result(mysqli $connection, string $sql, ...$params) {
+function secure_query_bind_result(mysqli $connection, string $sql, bool $check, ...$params) {
     $param_types = '';
     foreach ($params as $param) {
         $param_types .= (gettype($param) == 'integer') ? 'i' : 's';
@@ -510,10 +518,15 @@ function secure_query_bind_result(mysqli $connection, string $sql, ...$params) {
     $prepared_sql = mysqli_prepare($connection, $sql);
     mysqli_stmt_bind_param($prepared_sql, $param_types, ...$params);
     mysqli_stmt_execute($prepared_sql);
-    mysqli_stmt_bind_result($prepared_sql, $bind);
-    mysqli_stmt_fetch($prepared_sql);
-    mysqli_stmt_close($prepared_sql);
-    return $bind;
+    if ($check) {
+        mysqli_stmt_bind_result($prepared_sql, $bind);
+        mysqli_stmt_fetch($prepared_sql);
+        mysqli_stmt_close($prepared_sql);
+        return $bind;
+    }
+    else {
+        return mysqli_stmt_get_result($prepared_sql);
+    }
 }
 
 /**
@@ -529,9 +542,8 @@ function secure_query_bind_result(mysqli $connection, string $sql, ...$params) {
 function validate_exists(array $validation_array, string $parameter_name, array $parameter_settings, mysqli $db_connection): ?string {
     $table_name = $parameter_settings[0];
     $column_name = $parameter_settings[1];
-    $not = $parameter_settings[2];
     $sql = "SELECT COUNT(*) AS amount FROM $table_name WHERE $column_name = ?";
-    $amount = secure_query_bind_result($db_connection, $sql, $validation_array[$parameter_name]);
+    $amount = secure_query_bind_result($db_connection, $sql, true, $validation_array[$parameter_name]);
     if (($amount > 0) && (!in_array('not', $parameter_settings))) {
         return "Запись с таким $parameter_name уже присутствует в базе данных";
     }
@@ -556,7 +568,7 @@ function validate_correct_password(array $validation_array, string $parameter_na
     $users_column_name = $parameter_settings[1];
     $password_column_name = $parameter_settings[2];
     $sql = "SELECT $password_column_name AS db_password FROM $table_name WHERE $users_column_name = ?";
-    $db_password = secure_query_bind_result($db_connection, $sql, $validation_array[$parameter_name]);
+    $db_password = secure_query_bind_result($db_connection, $sql, true, $validation_array[$parameter_name]);
     return !password_verify($validation_array[$parameter_name], $db_password) ? "Вы ввели неверный email/пароль" : null;
 }
 
@@ -575,6 +587,7 @@ function db_connect(string $host,string $user,string $pass,string $db) {
     $con = mysqli_connect($host, $user, $pass, $db);
 
     if ($con == false) {
+        file_put_contents(__DIR__ . '/log.txt', mysqli_connect_error() . PHP_EOL, FILE_APPEND);
         http_response_code(500);
         exit();
     }

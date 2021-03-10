@@ -10,11 +10,11 @@ VALUES
 /* придумайте пару пользователей*/
 INSERT INTO users (username, email, avatar, password)
 VALUES
-('Эльвира', 'elvira@mail.ru', 'userpic-elvira.jpg', '012345'),
-('Петро', 'petro@rambler.ru', 'userpic-petro.jpg', '123456'),
-('Лариса', 'larisa@gmail.ru', 'userpic-larisa.jpg', '234567'),
-('Владик', 'vladik@ya.ru', 'userpic-big.jpg', '345678'),
-('Виктор', 'viktor@bk.ru', 'userpic-mark.jpg', '456789');
+('Эльвира', 'elvira@mail.ru', 'img/userpic-elvira.jpg', '012345'),
+('Петро', 'petro@rambler.ru', 'img/userpic-petro.jpg', '123456'),
+('Лариса', 'larisa@gmail.ru', 'img/userpic-larisa.jpg', '234567'),
+('Владик', 'vladik@ya.ru', 'img/userpic-big.jpg', '345678'),
+('Виктор', 'viktor@bk.ru', 'img/userpic-mark.jpg', '456789');
 
 /*существующий список постов */
 INSERT INTO posts (heading, post_type, content, author_id, view_count)
@@ -54,3 +54,9 @@ INSERT INTO subscribe SET follower_id=4, author_id=5;
 UPDATE posts SET content = NULL WHERE id BETWEEN 3 AND 4;
 UPDATE posts SET img_url = 'img/rock.jpg' WHERE id = 3;
 UPDATE posts SET img_url = 'img/coast.jpg' WHERE id = 4;
+
+UPDATE users SET password = 'd6a9a933c8aafc51e55ac0662b6e4d4a' WHERE id = 1;
+UPDATE users SET password = 'e10adc3949ba59abbe56e057f20f883e' WHERE id = 2;
+UPDATE users SET password = '508df4cb2f4d8f80519256258cfb975f' WHERE id = 3;
+UPDATE users SET password = '5bd2026f128662763c532f2f4b6f2476' WHERE id = 4;
+UPDATE users SET password = 'e35cf7b66449df565f93c607d5a81d09' WHERE id = 5;

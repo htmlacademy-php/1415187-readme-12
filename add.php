@@ -15,7 +15,7 @@ $validation_rules = [
         'photo-file' => 'img_loaded'
     ],
     'link' => [
-        'heading' => 'filled|length_eading',
+        'heading' => 'filled|length_heading',
         'link-url' => 'filled|correct_url'
     ],
     'quote' => [
@@ -51,7 +51,7 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
     foreach ($_POST as $field_name => $field_value) {
         $form['values'][$field_name] = $field_value;
     }
-
+    
     $form['values']['photo-file'] = $_FILES['photo-file'];
     $form['errors'] = validate($form['values'], $validation_rules[$form_type], $con);
 
@@ -65,7 +65,6 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
     }
 
     $form['errors'] = array_filter($form['errors']);
-    
 
     if (empty($form['errors'])) {
         switch ($form_type) {
@@ -76,6 +75,7 @@ if ((count($_POST) > 0) && isset($_POST['form-type'])){
                 form_add_post_text($con, $_POST['heading'], $post_types[$form_type], $_POST['content']);
                 break;
             case 'link':
+                var_dump($form['values']);
                 form_add_post_link($con, $_POST['heading'], $post_types[$form_type], $_POST['link-url']);
                 break;
             case 'video':
