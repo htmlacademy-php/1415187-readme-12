@@ -34,5 +34,10 @@ if (count($_POST) > 0) {
     }
 }
 
-$page_content = include_template('registration.php', ['form_values' => $form['values'], 'form_errors' => $form['errors'], 'form_error_codes' => $form_error_codes]);
+$page_content = include_template('registration.php', [
+                                                        'form_values' => $form['values'], 
+                                                        'form_errors' => $form['errors'], 
+                                                        'form_error_codes' => $form_error_codes
+                                                        ]);
 print($page_content);
+var_dump($_FILES['userpic-file']);
