@@ -59,7 +59,7 @@
                   <div class="header__avatar-wrapper">
                     <?php if (isset($avatar)): ?>
                     <?php else: ?>
-                    <img class="header__profile-avatar" src="img/<?=$avatar?>" alt="Аватар пользователя">
+                    <img class="header__profile-avatar" src="<?=$avatar?>" alt="Аватар пользователя">
                     <?php endif; ?>
                   </div>
                   <div class="header__profile-name">

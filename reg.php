@@ -27,7 +27,7 @@ if (count($_POST) > 0) {
     if (empty($form['errors'])) {
         $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $avatar = save_image('userpic-file');
-        secure_query_bind_result($con, $add_user_query, flase, $_POST['login'], $_POST['email'], $password_hash, $avatar);
+        secure_query_bind_result($con, $add_user_query, false, $_POST['login'], $_POST['email'], $password_hash, $avatar);
         $post_id = mysqli_insert_id($con);
         $URL = '/';
         header("Location: $URL");

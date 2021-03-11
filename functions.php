@@ -569,6 +569,10 @@ function validate_correct_password(array $validation_array, string $parameter_na
     $password_column_name = $parameter_settings[2];
     $sql = "SELECT $password_column_name AS db_password FROM $table_name WHERE $users_column_name = ?";
     $db_password = secure_query_bind_result($db_connection, $sql, true, $validation_array[$parameter_name]);
+    var_dump($sql);
+    var_dump($db_connection);
+    var_dump($validation_array[$parameter_name]);
+    var_dump($db_password);
     return !password_verify($validation_array[$parameter_name], $db_password) ? "Вы ввели неверный email/пароль" : null;
 }
 
