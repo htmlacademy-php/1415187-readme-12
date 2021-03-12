@@ -85,7 +85,7 @@
                     </a>
                   </li>
                   <li class="header__profile-nav-item">
-                    <a class="header__profile-nav-link" href="#">
+                        <a class="header__profile-nav-link" href="logout.php">
                           <span class="header__profile-nav-text">
                             Выход
                           </span>
@@ -109,7 +109,7 @@
     <section class="post-details">
       <h2 class="visually-hidden">Публикация</h2>
       <div class="post-details__wrapper">
-        <div class="post-details__main-block post post--details"> 
+        <div class="post-details__main-block post post--details">
             <div class="post-<?=$post['type_class']?>">
                 <?php
                 $post_content = include_template($post['type_class'].'-details.php', ['post' => $post]);

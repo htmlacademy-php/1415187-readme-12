@@ -9,7 +9,7 @@ session_start();
 
 $validation_rules = [
     'login' => 'filled|exists:users,email,not',
-    'password' => 'filled|correct_password:users,username,password'
+    'password' => 'filled|correct_password:users,email,password'
 ];
 $form_error_codes = [
     'login' => 'Логин',
@@ -23,6 +23,10 @@ if (count($_POST) > 0) {
     
     $form['errors'] = validate($form['values'], $validation_rules, $con);
     $form['errors'] = array_filter($form['errors']);
+    
+    if (!empty($form['errors']['login'])) {
+        unset($form['errors']['password']);
+    }
 
     if (empty($form['errors'])) {
         $user_data = get_user_data($con, $form['values']['login']);

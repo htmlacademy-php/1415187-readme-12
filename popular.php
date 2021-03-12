@@ -38,13 +38,13 @@ $page_content = include_template('main.php', [
                                                  'now_time' => $now_time,
                                                  'content_types' => $content_types,
                                                  'post_type' => $post_type
-                                             ]);
+                                                    ]);
 
 $layout_content = include_template('layout.php', [
                                                      'content' => $page_content,
                                                      'user_name' => $user_name,
                                                      'page_title' => $page_title,
                                                      'is_auth' => $is_auth
-                                                 ]);
+                                                        ]);
 
 print($layout_content);

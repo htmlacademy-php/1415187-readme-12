@@ -567,9 +567,11 @@ function validate_correct_password(array $validation_array, string $parameter_na
     $table_name = $parameter_settings[0];
     $users_column_name = $parameter_settings[1];
     $password_column_name = $parameter_settings[2];
-    $sql = "SELECT $password_column_name AS db_password FROM $table_name WHERE $users_column_name = ?";
-    $db_password = secure_query_bind_result($db_connection, $sql, true, $validation_array[$parameter_name]);
-    return !password_verify($validation_array[$parameter_name], $db_password) ? "Вы ввели неверный email/пароль" : null;
+    $email = $validation_array['login'];
+    $sql = "SELECT $password_column_name FROM $table_name WHERE $users_column_name = '$email'";
+    $db_password = mysqli_query($db_connection, $sql);
+    $password = mysqli_fetch_all($db_password, MYSQLI_ASSOC)[0]['password'];
+    return !password_verify($validation_array[$parameter_name], $password) ? "Вы ввели неверный пароль" : null;
 }
 
 /**
@@ -598,6 +600,6 @@ function db_connect(string $host,string $user,string $pass,string $db) {
 
 function get_user_data($db_connection, $email) {
     $result = mysqli_query($db_connection, "SELECT username, avatar FROM users WHERE email = '$email'");
-    $users_name = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    return $users_name[0];
+    $user_data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $user_data[0];
 }
