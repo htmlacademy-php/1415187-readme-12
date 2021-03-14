@@ -17,7 +17,7 @@ $sql_select_posts =
         content_types.type_class
     FROM posts
     INNER JOIN users ON posts.author_id=users.id
-    INNER JOIN content_types ON posts.post_type=content_types.id ";
+    INNER JOIN content_types ON posts.post_type=content_types.id";
 
 if (isset($_GET['post_type'])) {
     $post_type = $_GET['post_type'];
