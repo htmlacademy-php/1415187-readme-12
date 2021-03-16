@@ -119,6 +119,34 @@ function get_content_types(mysqli $con) {
 }
 
 /**
+ * Подготавливает и выполняет "безопасный" запрос (и производит сравнение $check)
+ *
+ * @param mysqli $connection Данные для подключения к БД
+ * @param string $sql Исходный запрос сплейсхолдерами
+ * @param bool $check Сравнение с базой (true|false)
+ * @param mixed $params Типы параметров 'i' - int,'s' - string
+ * @return mixed Результат выполнения подготовленного запроса
+ */
+function secure_query_bind_result(mysqli $connection, string $sql, bool $check, ...$params) {
+    $param_types = '';
+    foreach ($params as $param) {
+        $param_types .= (gettype($param) == 'integer') ? 'i' : 's';
+    }
+    $prepared_sql = mysqli_prepare($connection, $sql);
+    mysqli_stmt_bind_param($prepared_sql, $param_types, ...$params);
+    mysqli_stmt_execute($prepared_sql);
+    if ($check) {
+        mysqli_stmt_bind_result($prepared_sql, $bind);
+        mysqli_stmt_fetch($prepared_sql);
+        mysqli_stmt_close($prepared_sql);
+        return $bind;
+    }
+    else {
+        return mysqli_stmt_get_result($prepared_sql);
+    }
+}
+
+/**
  * Добавляет новый пост из списка постов. Версия для цитаты
  *
  * @param mysqli $con Параметры соединения с БД
@@ -502,34 +530,6 @@ function validate_correct_email(array $input_array, string $parameter_name): ?st
 }
 
 /**
- * Подготавливает и выполняет "безопасный" запрос (и производит сравнение $check)
- *
- * @param mysqli $connection Данные для подключения к БД
- * @param string $sql Исходный запрос сплейсхолдерами
- * @param bool $check Сравнение с базой (true|false)
- * @param mixed $params Типы параметров 'i' - int,'s' - string
- * @return mixed Результат выполнения подготовленного запроса
- */
-function secure_query_bind_result(mysqli $connection, string $sql, bool $check, ...$params) {
-    $param_types = '';
-    foreach ($params as $param) {
-        $param_types .= (gettype($param) == 'integer') ? 'i' : 's';
-    }
-    $prepared_sql = mysqli_prepare($connection, $sql);
-    mysqli_stmt_bind_param($prepared_sql, $param_types, ...$params);
-    mysqli_stmt_execute($prepared_sql);
-    if ($check) {
-        mysqli_stmt_bind_result($prepared_sql, $bind);
-        mysqli_stmt_fetch($prepared_sql);
-        mysqli_stmt_close($prepared_sql);
-        return $bind;
-    }
-    else {
-        return mysqli_stmt_get_result($prepared_sql);
-    }
-}
-
-/**
  * Проверяет отсутствие|наличие значения в БД
  *
  * @param array $validation_array Проверяемый массив
@@ -568,8 +568,8 @@ function validate_correct_password(array $validation_array, string $parameter_na
     $users_column_name = $parameter_settings[1];
     $password_column_name = $parameter_settings[2];
     $email = $validation_array['login'];
-    $sql = "SELECT $password_column_name FROM $table_name WHERE $users_column_name = '$email'";
-    $db_password = mysqli_query($db_connection, $sql);
+    $sql = "SELECT $password_column_name FROM $table_name WHERE $users_column_name = ?";
+    $db_password = secure_query_bind_result($db_connection, $sql, false, $email);
     $password = mysqli_fetch_all($db_password, MYSQLI_ASSOC)[0]['password'];
     return !password_verify($validation_array[$parameter_name], $password) ? "Вы ввели неверный пароль" : null;
 }
@@ -599,7 +599,7 @@ function db_connect(string $host,string $user,string $pass,string $db) {
 }
 
 function get_user_data($db_connection, $email) {
-    $result = mysqli_query($db_connection, "SELECT username, avatar FROM users WHERE email = '$email'");
-    $user_data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    return $user_data[0];
+    $sql = "SELECT username, avatar FROM users WHERE email = ?";
+    $result = secure_query_bind_result($db_connection, $sql, false, $email);
+    return mysqli_fetch_row($result);
 }

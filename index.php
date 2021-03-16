@@ -30,8 +30,8 @@ if (count($_POST) > 0) {
 
     if (empty($form['errors'])) {
         $user_data = get_user_data($con, $form['values']['login']);
-        $_SESSION['username'] = $user_data['username'];
-        $_SESSION['avatar'] = $user_data['avatar'];
+        $_SESSION['username'] = $user_data[0];
+        $_SESSION['avatar'] = $user_data[1];
         $_SESSION['is_auth'] = 1;
         header("Location: feed.php");
         exit();
