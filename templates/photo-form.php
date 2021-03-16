@@ -7,7 +7,7 @@
                 <div class="adding-post__input-wrapper form__input-wrapper">
                     <label class="adding-post__label form__label" for="photo-heading">Заголовок <span class="form__input-required">*</span></label>
                     <div class="form__input-section  <?= !empty($form_errors['heading']) ? 'form__input-section--error' : '' ?>">
-                        <input class="adding-post__input form__input" id="photo-heading" type="text" name="heading" placeholder="Введите заголовок" value=<?= $form_values['heading'] ?? $form_values['heading'] ?>>
+                        <input class="adding-post__input form__input" id="photo-heading" type="text" name="heading" placeholder="Введите заголовок" value=<?= $form_values['heading'] ?? '' ?>>
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Ошибка</h3>
@@ -18,7 +18,7 @@
                 <div class="adding-post__input-wrapper form__input-wrapper">
                     <label class="adding-post__label form__label" for="photo-url">Ссылка из интернета</label>
                     <div class="form__input-section  <?= !empty($form_errors['photo-url']) ? 'form__input-section--error' : '' ?>">
-                        <input class="adding-post__input form__input" id="photo-url" type="text" name="photo-url" placeholder="Введите ссылку" value=<?= $form_values['photo-url'] ?? $form_values['photo-url'] ?>>
+                        <input class="adding-post__input form__input" id="photo-url" type="text" name="photo-url" placeholder="Введите ссылку" value=<?= $form_values['photo-url'] ?? '' ?>>
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Ошибка</h3>
@@ -30,7 +30,7 @@
                 <div class="adding-post__input-wrapper form__input-wrapper">
                     <label class="adding-post__label form__label" for="photo-tags">Теги</label>
                     <div class="form__input-section  <?= !empty($form_errors['tags']) ? 'form__input-section--error' : '' ?>">
-                        <input class="adding-post__input form__input" id="photo-tags" type="text" name="tags" placeholder="Введите теги" value=<?= $form_values['tags'] ?? $form_values['tags'] ?>>
+                        <input class="adding-post__input form__input" id="photo-tags" type="text" name="tags" placeholder="Введите теги" value=<?= $form_values['tags'] ?? '' ?>>
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Ошибка</h3>

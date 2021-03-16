@@ -67,11 +67,11 @@
                     <div class="post__author">
                         <a class="post__author-link" href="#" title="Профиль <?=$post['username']?>">
                             <div class="post__avatar-wrapper">
-                                <img class="post__author-avatar" src="img/<?=$post['avatar']?>" width="40" height="40" alt="Аватар пользователя">
+                                <img class="post__author-avatar" src="<?=$post['avatar']?>" width="40" height="40" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name"><?=htmlspecialchars($post['username'])?></b>
-                                <?php $post_time = new DateTime(generate_random_date($post_index)) ?>
+                                <?php $post_time = new DateTime(generate_random_date($post_index)); ?>
                                 <time class="post__time" datetime="<?=$post_time->format('Y-m-d H:i:s')?>" title="<?=$post_time->format('d.m.Y H:i')?>"><?=time_difference($post_time, $now_time)?></time>
                             </div>
                         </a>

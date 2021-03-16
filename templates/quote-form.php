@@ -7,7 +7,7 @@
                 <div class="adding-post__input-wrapper form__input-wrapper">
                     <label class="adding-post__label form__label" for="quote-heading">Заголовок <span class="form__input-required">*</span></label>
                     <div class="form__input-section  <?= !empty($form_errors['heading']) ? 'form__input-section--error' : '' ?>">
-                        <input class="adding-post__input form__input" id="quote-heading" type="text" name="heading" placeholder="Введите заголовок" value=<?= $form_values['heading'] ?? $form_values['heading'] ?>>
+                        <input class="adding-post__input form__input" id="quote-heading" type="text" name="heading" placeholder="Введите заголовок" value=<?= $form_values['heading'] ?? '' ?>>
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Ошибка</h3>
@@ -18,7 +18,7 @@
         <div class="adding-post__input-wrapper form__textarea-wrapper">
             <label class="adding-post__label form__label" for="cite-text">Текст цитаты <span class="form__input-required">*</span></label>
             <div class="form__input-section  <?= !empty($form_errors['content']) ? 'form__input-section--error' : '' ?>">
-                <textarea class="adding-post__textarea adding-post__textarea--quote form__textarea form__input" id="cite-text" placeholder="Текст цитаты" name="content"><?= $form_values['content'] ?? $form_values['content'] ?></textarea>
+                <textarea class="adding-post__textarea adding-post__textarea--quote form__textarea form__input" id="cite-text" placeholder="Текст цитаты" name="content"><?= $form_values['content'] ?? '' ?></textarea>
                 <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                 <div class="form__error-text">
                     <h3 class="form__error-title">Ошибка</h3>
@@ -29,7 +29,7 @@
         <div class="adding-post__textarea-wrapper form__input-wrapper">
             <label class="adding-post__label form__label" for="quote-author">Автор <span class="form__input-required">*</span></label>
             <div class="form__input-section  <?= !empty($form_errors['quote-author']) ? 'form__input-section--error' : '' ?>">
-                <input class="adding-post__input form__input" id="quote-author" type="text" name="quote-author" placeholder="Введите автора цитаты" value=<?= $form_values['quote-author'] ?? $form_values['quote-author'] ?>>
+                <input class="adding-post__input form__input" id="quote-author" type="text" name="quote-author" placeholder="Введите автора цитаты" value=<?= $form_values['quote-author'] ?? '' ?>>
                 <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                 <div class="form__error-text">
                     <h3 class="form__error-title">Ошибка</h3>
@@ -40,7 +40,7 @@
         <div class="adding-post__input-wrapper form__input-wrapper">
             <label class="adding-post__label form__label" for="cite-tags">Теги</label>
             <div class="form__input-section  <?= !empty($form_errors['tags']) ? 'form__input-section--error' : '' ?>">
-                <input class="adding-post__input form__input" id="cite-tags" type="text" name="tags" placeholder="Введите теги" value=<?= $form_values['tags'] ?? $form_values['tags'] ?>>
+                <input class="adding-post__input form__input" id="cite-tags" type="text" name="tags" placeholder="Введите теги" value=<?= $form_values['tags'] ?? '' ?>>
                 <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                 <div class="form__error-text">
                     <h3 class="form__error-title">Ошибка</h3>

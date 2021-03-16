@@ -14,7 +14,7 @@ function cut_text (string $text, int $length = 300) {
         $text = mb_substr($text, 0, $length + 1);
         $end = mb_strlen(strrchr($text, ' '));
         $text = mb_substr($text, 0, -$end) . '...';
-        }
+    }
     return $text;
 }
 
@@ -116,6 +116,34 @@ function filter_size_ico(string $type) {
 function get_content_types(mysqli $con) {
     $result = mysqli_query($con, "SELECT * FROM content_types");
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Подготавливает и выполняет "безопасный" запрос (и производит сравнение $check)
+ *
+ * @param mysqli $connection Данные для подключения к БД
+ * @param string $sql Исходный запрос сплейсхолдерами
+ * @param bool $check Сравнение с базой (true|false)
+ * @param mixed $params Типы параметров 'i' - int,'s' - string
+ * @return mixed Результат выполнения подготовленного запроса
+ */
+function secure_query_bind_result(mysqli $connection, string $sql, bool $check, ...$params) {
+    $param_types = '';
+    foreach ($params as $param) {
+        $param_types .= (gettype($param) == 'integer') ? 'i' : 's';
+    }
+    $prepared_sql = mysqli_prepare($connection, $sql);
+    mysqli_stmt_bind_param($prepared_sql, $param_types, ...$params);
+    mysqli_stmt_execute($prepared_sql);
+    if ($check) {
+        mysqli_stmt_bind_result($prepared_sql, $bind);
+        mysqli_stmt_fetch($prepared_sql);
+        mysqli_stmt_close($prepared_sql);
+        return $bind;
+    }
+    else {
+        return mysqli_stmt_get_result($prepared_sql);
+    }
 }
 
 /**
@@ -297,7 +325,7 @@ function validate_filled(array $input_array, string $parameter_name): ?string {
 function validate_length_heading(array $input_array, string $parameter_name): ?string {
     $len = strlen($input_array[$parameter_name]);
     if ($len < 10 or $len > 50) {
-           return 'Длина поля должна быть от 10 до 50 символов';
+        return 'Длина поля должна быть от 10 до 50 символов';
     }
     return null;
 }
@@ -313,7 +341,7 @@ function validate_length_heading(array $input_array, string $parameter_name): ?s
 function validate_length_content(array $input_array, string $parameter_name): ?string {
     $len = strlen($input_array[$parameter_name]);
     if ($len < 50 or $len > 500) {
-           return 'Длина поля должна быть от 50 до 500 символов';
+        return 'Длина поля должна быть от 50 до 500 символов';
     }
     return null;
 }
@@ -449,17 +477,19 @@ function validate_youtube_url(array $input_array, string $parameter_name): ?stri
  */
 
 function validate(array $fields, array $validation_array, mysqli $db_connection) {
+    $db_functions = ['validate_exists', 'validate_correct_password'];
     $validations = get_validation_rules($validation_array);
     $errors = [];
     foreach ($validations as $field => $rules) {
         foreach ($rules as $rule) {
             [$name, $parameters] = get_validation_name_and_parameters($rule);
             $method_name = get_validation_method_name($name);
-            $method_parameters = array_merge([$fields, $field], $parameters);
+            $method_parameters = [];
+            array_push($method_parameters, $fields, $field, $parameters);
             if (!function_exists($method_name)) {
-                return array('Функции валидации ' . $method_name . ' не существует');
+                return 'Функции валидации ' . $method_name . ' не существует';
             }
-            if ($method_name == 'validate_exists') {
+            if (in_array($method_name, $db_functions)) {
                 array_push($method_parameters, $db_connection);
             }
             if ($errors[$field] = call_user_func_array($method_name, $method_parameters)) {
@@ -500,47 +530,48 @@ function validate_correct_email(array $input_array, string $parameter_name): ?st
 }
 
 /**
- * Подготавливает и выполняет "безопасный" запрос (и производит сравнение $check)
+ * Проверяет отсутствие|наличие значения в БД
  *
- * @param mysqli $connection Данные для подключения к БД
- * @param string $sql Исходный запрос сплейсхолдерами
- * @param bool $check Сравнение с базой (true|false)
- * @param mixed $params Типы параметров 'i' - int,'s' - string
- * @return mixed Результат выполнения подготовленного запроса
+ * @param array $validation_array Проверяемый массив
+ * @param string $parameter_name Имя искомого параметра
+ * @param array $parameter_settings Установки параметров (где искать, и ищем отсутствие или наличие)
+ * @param mysqli $db_connection Параметры подключения к БД
+ * @return string Сообщение об ошибке, если нет ошибки - null
  */
-function secure_query_bind_result(mysqli $connection, string $sql, bool $check, ...$params) {
-    $param_types = '';
-    foreach ($params as $param) {
-        $param_types .= (gettype($param) == 'integer') ? 'i' : 's';
+
+function validate_exists(array $validation_array, string $parameter_name, array $parameter_settings, mysqli $db_connection): ?string {
+    $table_name = $parameter_settings[0];
+    $column_name = $parameter_settings[1];
+    $sql = "SELECT COUNT(*) AS amount FROM $table_name WHERE $column_name = ?";
+    $amount = secure_query_bind_result($db_connection, $sql, true, $validation_array[$parameter_name]);
+    if (($amount > 0) && (!in_array('not', $parameter_settings))) {
+        return "Запись с таким $parameter_name уже присутствует в базе данных";
     }
-    $prepared_sql = mysqli_prepare($connection, $sql);
-    mysqli_stmt_bind_param($prepared_sql, $param_types, ...$params);
-    mysqli_stmt_execute($prepared_sql);
-    if ($check) {
-        mysqli_stmt_bind_result($prepared_sql, $bind);
-        mysqli_stmt_fetch($prepared_sql);
-        mysqli_stmt_close($prepared_sql);
-        return $bind;
+    elseif (($amount === 0) && (in_array('not', $parameter_settings))) {
+        return "Записи с таким $parameter_name нет в базе данных";
     }
-    else {
-        return mysqli_stmt_get_result($prepared_sql);
-    }
+    return null;
 }
 
 /**
- * Проверяет отсутствие значения в БД
+ * Проверяет правильность введенного пароля
  *
  * @param array $validation_array Валидируемый массив
  * @param string $parameter_name Имя искомого параметра
- * @param string $table_name Имя таблицы БД
- * @param string $column_name Имя столбца таблицы
+ * @param $parameter_settings
  * @param mysqli $db_connection Данные для подключения к БД
  * @return string Сообщение об ошибке или null
  */
-function validate_exists(array $validation_array, string $parameter_name, string $table_name, string $column_name, mysqli $db_connection): ?string {
-    $sql = "SELECT COUNT(*) AS amount FROM $table_name WHERE $column_name = ?";
-    $amount = secure_query_bind_result($db_connection, $sql, true, $validation_array[$parameter_name]);
-    return $amount > 0 ? "Запись с таким $parameter_name уже присутствует в базе данных" : null;
+
+function validate_correct_password(array $validation_array, string $parameter_name, $parameter_settings, mysqli $db_connection): ?string {
+    $table_name = $parameter_settings[0];
+    $users_column_name = $parameter_settings[1];
+    $password_column_name = $parameter_settings[2];
+    $email = $validation_array['login'];
+    $sql = "SELECT $password_column_name FROM $table_name WHERE $users_column_name = ?";
+    $db_password = secure_query_bind_result($db_connection, $sql, false, $email);
+    $password = mysqli_fetch_all($db_password, MYSQLI_ASSOC)[0]['password'];
+    return !password_verify($validation_array[$parameter_name], $password) ? "Вы ввели неверный пароль" : null;
 }
 
 /**
@@ -565,4 +596,10 @@ function db_connect(string $host,string $user,string $pass,string $db) {
 
     mysqli_set_charset($con, "utf8mb4");
     return $con;
+}
+
+function get_user_data($db_connection, $email) {
+    $sql = "SELECT username, avatar FROM users WHERE email = ?";
+    $result = secure_query_bind_result($db_connection, $sql, false, $email);
+    return mysqli_fetch_row($result);
 }
