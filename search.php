@@ -6,6 +6,8 @@ require_once('db.php');
 
 session_start();
 
+$now_time = new DateTime('now');
+$search_results = [];
 $count_post_likes_query = "SELECT COUNT(*) FROM likes WHERE post_id = ?;";
 $count_post_comments_query = "SELECT COUNT(*) FROM comments WHERE post_id = ?;";
 $search_query =
@@ -26,7 +28,7 @@ if ($_SESSION['is_auth'] == 1) {
     if (count($_GET) > 0) {
         
         $keywords = trim($_GET['keywords']);
-        
+           
         if ($keywords != '') {
             
             $posts_mysqli = secure_query_bind_result($con, $search_query, false, $keywords);
@@ -45,7 +47,8 @@ if ($_SESSION['is_auth'] == 1) {
 
     $page_content = include_template('search-results.php', [
                                                             'keywords' => $keywords,
-                                                            'posts' => $search_results
+                                                            'posts' => $search_results,
+                                                            'now_time' => $now_time
                                                             ]);
 
     print($page_content);

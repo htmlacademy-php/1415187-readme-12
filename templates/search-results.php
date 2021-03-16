@@ -60,7 +60,7 @@
                     <img class="header__profile-avatar" src="img/userpic-medium.jpg" alt="Аватар профиля">
                   </div>
                   <div class="header__profile-name">
-                    <span>Антон Глуханько</span>
+                    <span>Anton</span>
                     <svg class="header__link-arrow" width="10" height="6">
                       <use xlink:href="#icon-arrow-right-ad"></use>
                     </svg>
@@ -129,7 +129,7 @@
         <?php else: ?>
           <div class="container">
             <div class="search__content">
-            <?php foreach($posts as $index => $post): ?>
+            <?php foreach($posts as $post_index => $post): ?>
                 <article class="search__post post post-<?=$post['type_class'];?>">
                     <header class="post__header post__author">
                         <a class="post__author-link" href="#" title="Автор">
@@ -138,12 +138,12 @@
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name"><?= $post['username'] ?? '' ?></b>
-                                <?php $post_time = get_post_time($index) ?>
-                                <time class="post__time" datetime="<?= $post_time->format('Y-m-d H:i:s'); ?>" title="<?= $post_time->format('d.m.Y H:i'); ?>"><?= absolute_time_to_relative($post_time); ?></time>
+                                <?php $post_time = new DateTime(generate_random_date($post_index)); ?>
+                                <time class="post__time" datetime="<?= $post_time->format('Y-m-d H:i:s'); ?>" title="<?=$post_time->format('d.m.Y H:i')?>"><?=time_difference($post_time, $now_time)?></time>
                             </div>
                         </a>
                     </header>
-                    <h2><a href="#"><?= $post['title'] ?? '' ?></a></h2>
+                    <h2><a href="post.php?id=<?=$post['id']?>"><?= $post['heading'] ?? '' ?></a></h2>
                     <div class="post__main">
                         <?php switch($post['type_class']): case 'quote': ?>
                             <blockquote>

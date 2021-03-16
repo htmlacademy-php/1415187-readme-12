@@ -21,12 +21,12 @@ $sql_select_posts =
 
 if (isset($_GET['post_type'])) {
     $post_type = $_GET['post_type'];
-    $sql_select_posts .= "WHERE content_types.id = ? ORDER BY view_count DESC;";
+    $sql_select_posts .= " WHERE content_types.id = ? ORDER BY view_count DESC;";
     $posts_mysqli = secure_query_bind_result($con, $sql_select_posts, false, $post_type);
     $popular_posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
 } else {
     $post_type='';
-    $sql_select_posts .= "ORDER BY view_count DESC;";
+    $sql_select_posts .= " ORDER BY view_count DESC;";
     $posts_mysqli = mysqli_query($con, $sql_select_posts);
     $popular_posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
 }
