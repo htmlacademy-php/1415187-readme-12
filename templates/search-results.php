@@ -15,7 +15,7 @@
     <header class="header">
       <div class="header__wrapper container">
         <div class="header__logo-wrapper">
-          <a class="header__logo-link" href="main.html">
+          <a class="header__logo-link" href="index.php">
             <img class="header__logo" src="img/logo.svg" alt="Логотип readme" width="128" height="24">
           </a>
           <p class="header__topic">
@@ -43,7 +43,7 @@
                 </a>
               </li>
               <li class="header__my-page header__my-page--feed">
-                <a class="header__page-link" href="feed.html" title="Моя лента">
+                <a class="header__page-link" href="feed.php" title="Моя лента">
                   <span class="visually-hidden">Моя лента</span>
                 </a>
               </li>
@@ -122,8 +122,8 @@
               Попробуйте изменить поисковый запрос или просто зайти в раздел &laquo;Популярное&raquo;, там живет самый крутой контент.
             </p>
             <div class="search__links">
-              <a class="search__popular-link button button--main" href="#">Популярное</a>
-              <a class="search__back-link" href="#">Вернуться назад</a>
+              <a class="search__popular-link button button--main" href="popular.php">Популярное</a>
+              <a class="search__back-link" href="javascript:history.back()">Вернуться назад</a>
             </div>
           </div>
         <?php else: ?>
