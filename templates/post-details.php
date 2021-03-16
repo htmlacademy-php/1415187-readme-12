@@ -85,7 +85,7 @@
                     </a>
                   </li>
                   <li class="header__profile-nav-item">
-                    <a class="header__profile-nav-link" href="#">
+                        <a class="header__profile-nav-link" href="logout.php">
                           <span class="header__profile-nav-text">
                             Выход
                           </span>
@@ -96,7 +96,7 @@
             </div>
           </li>
           <li>
-            <a class="header__post-button button button--transparent" href="adding-post.html">Пост</a>
+            <a class="header__post-button button button--transparent" href="add.php">Пост</a>
           </li>
         </ul>
       </nav>
@@ -109,7 +109,7 @@
     <section class="post-details">
       <h2 class="visually-hidden">Публикация</h2>
       <div class="post-details__wrapper">
-        <div class="post-details__main-block post post--details"> 
+        <div class="post-details__main-block post post--details">
             <div class="post-<?=$post['type_class']?>">
                 <?php
                 $post_content = include_template($post['type_class'].'-details.php', ['post' => $post]);
@@ -211,7 +211,7 @@
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
               <a class="post-details__avatar-link user__avatar-link" href="#">
-                <img class="post-details__picture user__picture" src="img/<?=$post['avatar']?>" alt="Аватар пользователя">
+                <img class="post-details__picture user__picture" src="<?=$post['avatar']?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">

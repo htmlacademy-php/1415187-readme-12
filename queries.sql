@@ -10,19 +10,19 @@ VALUES
 /* придумайте пару пользователей*/
 INSERT INTO users (username, email, avatar, password)
 VALUES
-('Эльвира', 'elvira@mail.ru', 'userpic-elvira.jpg', '012345'),
-('Петро', 'petro@rambler.ru', 'userpic-petro.jpg', '123456'),
-('Лариса', 'larisa@gmail.ru', 'userpic-larisa.jpg', '234567'),
-('Владик', 'vladik@ya.ru', 'userpic-big.jpg', '345678'),
-('Виктор', 'viktor@bk.ru', 'userpic-mark.jpg', '456789');
+('Эльвира', 'elvira@mail.ru', 'img/userpic-elvira.jpg', '012345'),
+('Петро', 'petro@rambler.ru', 'img/userpic-petro.jpg', '123456'),
+('Лариса', 'larisa@gmail.ru', 'img/userpic-larisa.jpg', '234567'),
+('Владик', 'vladik@ya.ru', 'img/userpic-big.jpg', '345678'),
+('Виктор', 'viktor@bk.ru', 'img/userpic-mark.jpg', '456789');
 
 /*существующий список постов */
 INSERT INTO posts (heading, post_type, content, author_id, view_count)
 VALUES
 ('Цитата', 4,  'Мы в жизни любим только раз, а после ищем лишь похожих', 3, 10),
 ('Игра престолов', 3, 'Не могу дождаться начала финального сезона своего любимого сериала!', 4, 3),
-('Наконец, обработал фотки!', 1, 'img/rock.jpg', 3, 49),
-('Моя мечта', 1, 'img/coast.jpg', 5, 25),
+('Наконец, обработал фотки!', 1, 'img/rock.jpg', 5, 49),
+('Моя мечта', 1, 'img/coast.jpg', 3, 25),
 ('Лучшие курсы', 5, 'www.htmlacademy.ru', 4, 13);
 
 UPDATE posts SET quote_author = 'Неизвестный автор' WHERE id=1;
@@ -54,3 +54,9 @@ INSERT INTO subscribe SET follower_id=4, author_id=5;
 UPDATE posts SET content = NULL WHERE id BETWEEN 3 AND 4;
 UPDATE posts SET img_url = 'img/rock.jpg' WHERE id = 3;
 UPDATE posts SET img_url = 'img/coast.jpg' WHERE id = 4;
+
+UPDATE users SET password = '$2y$10$jrqi2JwC04tkGjGbYsyihO8veQEBLtAxjHbFPyIcGCY23NqdOrJIS' WHERE id = 1;
+UPDATE users SET password = '$2y$10$cvYgfAODC3E6v7r8DP9cE.NRsZ2wFuUzqVyuEfh/ccYO7azs6qi76' WHERE id = 2;
+UPDATE users SET password = '$2y$10$/VIYHnnIsg807GHG1as/1e00oF3L7A1UIrnoqzcyAdsOiOhwvsSv6' WHERE id = 3;
+UPDATE users SET password = '$2y$10$fWUzRnLAa0Pb8XGdkFNqCuTWeNQnWRlMqVXz0ZmnW0Dq9EjH0Ewyq' WHERE id = 4;
+UPDATE users SET password = '$2y$10$guNBWeUMFFQi3pa/xR2yKOZQ3oFMsPQLPPPw5APDLHdZC7InfxQzm' WHERE id = 5;
