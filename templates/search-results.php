@@ -196,7 +196,7 @@
                                     <span class="visually-hidden">Запустить проигрыватель</span>
                                 </button>
                             </div>
-                        <?= endswitch ?>                    </div>
+                        <?php endswitch ?>                    </div>
                         <footer class="post__footer post__indicators">
                         <div class="post__buttons">
                             <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
