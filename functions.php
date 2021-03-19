@@ -124,7 +124,7 @@ function get_content_types(mysqli $con) {
  * @param mysqli $connection Данные для подключения к БД
  * @param string $sql Исходный запрос сплейсхолдерами
  * @param bool $check Сравнение с базой (true|false)
- * @param mixed $params Типы параметров 'i' - int,'s' - string
+ * @param mixed $params Передаваемые параметры (integer|string)
  * @return mixed Результат выполнения подготовленного запроса
  */
 function secure_query_bind_result(mysqli $connection, string $sql, bool $check, ...$params) {
