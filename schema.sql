@@ -27,7 +27,7 @@ heading VARCHAR(128),
 content TEXT,
 quote_author TEXT,
 img_url VARCHAR(128),
-youtube_url VARCHAR(128),
+video-url VARCHAR(128),
 url VARCHAR(128),
 view_count INT,
 FOREIGN KEY (author_id) REFERENCES users(id)
@@ -60,7 +60,8 @@ ON UPDATE CASCADE
 ON DELETE CASCADE,
 FOREIGN KEY (post_id) REFERENCES posts(id)
 ON UPDATE CASCADE
-ON DELETE CASCADE
+ON DELETE CASCADE,
+UNIQUE (user_id, post_id)
 );
 
 CREATE TABLE IF NOT EXISTS subscribe (
@@ -71,7 +72,8 @@ ON UPDATE CASCADE
 ON DELETE CASCADE,
 FOREIGN KEY (author_id) REFERENCES users(id)
 ON UPDATE CASCADE
-ON DELETE CASCADE
+ON DELETE CASCADE,
+UNIQUE (follower_id, author_id)
 );
 
 CREATE TABLE IF NOT EXISTS messages (

@@ -1,1 +1,1 @@
-<a href='../index.php' title="На главную"><img src="../img/404.jpg" width="100%"></a>
+<a href='javascript:history.back()' title="Назад"><img src="../img/404.jpg" width="100%"></a>

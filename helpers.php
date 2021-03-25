@@ -225,7 +225,7 @@ function extract_youtube_id($youtube_url)
     if ($parts) {
         if ($parts['path'] == '/watch') {
             parse_str($parts['query'], $vars);
-            $id = $vars['v'] ?? null;
+            $id = $vars['v'] ?? NULL;
         } else {
             if ($parts['host'] == 'youtu.be') {
                 $id = substr($parts['path'], 1);
