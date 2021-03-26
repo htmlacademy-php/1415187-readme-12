@@ -737,9 +737,8 @@ function save_post(mysqli $connection, array $post, array $post_types, array $us
     $fields = implode(', ', $finalFields);
     $query = "INSERT INTO posts SET {$fields}";
     secure_query_bind_result($connection, $query, false, ...$parameters);
-    $post_id = mysqli_insert_id($connection);
-
-    return $post_id;
+    
+    return mysqli_insert_id($connection);
 }
 
 /**
@@ -874,7 +873,7 @@ function get_popular_posts(mysqli $connection, $filter, string $order, int $page
  * @param int $profile_id ID Профиля
  * @return array Данные профиля
  */
-function get_profile(mysqli $connection, int $profile_id): array {
+function get_profile(mysqli $connection, $profile_id): array {
     $select_profile_query =
     "SELECT users.id, users.username, users.avatar, users.dt_add, COUNT(subscribe.author_id) AS followers
     FROM users
