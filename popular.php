@@ -20,6 +20,11 @@ $sort = get_filter($sort, ["likes","view_count","dt_add"]);
 $total_posts = get_total_posts($connection, $filter);
 $posts = get_popular_posts($connection, $filter, $sort, $page_limit, $page_offset);
 
+var_dump(($_GET['sort']));
+var_dump($_GET['filter']);
+var_dump($_GET['page']);
+var_dump($_GET['limit']);
+
 $page_content = include_template(
     'popular-template.php',
     [
