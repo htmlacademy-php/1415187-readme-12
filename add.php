@@ -40,7 +40,8 @@ $field_error_codes = [
 
 $img_folder = __DIR__ . '\\img\\';
 
-$user = get_user();
+$user = get_user($connection);
+
 if ($user === NULL) {
     header("Location: index.php");
     exit();

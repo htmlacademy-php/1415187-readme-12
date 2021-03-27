@@ -464,7 +464,7 @@ function get_user_data(mysqli $db_connection, string $email) {
  * @return array ассоциативный массив с данными пользователя
  */
 
-function get_user(): ?array {
+function get_user($connection): ?array {
     if ($_SESSION['is_auth'] !== 1) {
         return NULL;
     }
@@ -473,6 +473,7 @@ function get_user(): ?array {
     $user['id'] = $_SESSION['id'];
     $user['name'] = $_SESSION['username'];
     $user['avatar'] = $_SESSION['avatar'];
+    $user['messages'] = count_new_messages($connection, $user['id']);
 
     return $user;
 }
@@ -1022,8 +1023,7 @@ function get_dialogs($connection, $user_id)
  * @param  mixed $user_id Пользователь
  * @return array Список сообщений
  */
-function get_messages($connection, $user_id)
-{
+function get_messages($connection, $user_id) {
     $select_messages_query =
     "SELECT content, dt_add, sender_id, receiver_id,
     IF (receiver_id = ?, sender_id, receiver_id) AS dialog
@@ -1044,10 +1044,9 @@ function get_messages($connection, $user_id)
  * @param  mixed $message Сообщение
  * @return mixed Результат выполнения запроса
  */
-function add_message($connection, $sender_id, $receiver_id, string $message)
-{
+function add_message($connection, $sender_id, $receiver_id, string $message) {
     $add_message_query =
-    "INSERT into messages
+    "INSERT INTO messages
     SET sender_id = ?, receiver_id = ?, dt_add = ?, content = ?";
     $message = trim($message);
     $current_time = date('Y-m-d H:i:s');
@@ -1072,4 +1071,11 @@ function get_user_followers(mysqli $connection, $author_id): array {
     $followers_mysqli = secure_query_bind_result($connection, $select_followers_query, false, $author_id);
 
     return mysqli_fetch_all($followers_mysqli, MYSQLI_ASSOC);
+}
+
+function count_new_messages($connection, $user_id) {
+    $count_messages_query = 
+    "SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND was_read = false";
+    
+    return secure_query_bind_result($connection, $select_followers_query, false, $user_id);
 }

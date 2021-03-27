@@ -67,7 +67,7 @@ UPDATE users SET password = '$2y$10$fWUzRnLAa0Pb8XGdkFNqCuTWeNQnWRlMqVXz0ZmnW0Dq
 UPDATE users SET password = '$2y$10$guNBWeUMFFQi3pa/xR2yKOZQ3oFMsPQLPPPw5APDLHdZC7InfxQzm' WHERE id = 5;
 
 
-INSERT INTO messages (dt_add, content, sender_id, receiver_id)
+INSERT INTO messages (dt_add, content, sender_id, receiver_id, was_read)
 VALUES
-('2018-02-03 13:27:05', 'Тестовое сообщение #1', 3, 1),
-('2020-02-03 13:27:05','Тестовое сообщение #2', 1, 2);
+('2018-02-03 13:27:05', 'Тестовое сообщение #1', 3, 1, false),
+('2020-02-03 13:27:05','Тестовое сообщение #2', 1, 2, false);

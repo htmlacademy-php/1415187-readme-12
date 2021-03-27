@@ -7,7 +7,8 @@ $validation_rules = [
     'message' => 'filled|long:4'
 ];
 
-$user = get_user();
+$user = get_user($connection);
+
 if ($user === null) {
     header("Location: index.php");
     exit();

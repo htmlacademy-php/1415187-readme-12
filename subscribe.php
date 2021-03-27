@@ -5,7 +5,7 @@ $validation_rules = [
     'author_id' => 'exists:users,id,not',
 ];
 
-$user = get_user();
+$user = get_user($connection);
 
 if ($user === NULL) {
     header("Location: index.php");

@@ -6,7 +6,7 @@ $validation_rules = [
     'comment' => 'filled|length:3,200'
 ];
 
-$user = get_user();
+$user = get_user($connection);
 
 if ($user === NULL) {
     header("Location: index.php");
