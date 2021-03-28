@@ -33,6 +33,7 @@ if (count($_POST) > 0 && isset($_POST['receiver-id']) && ($_POST['receiver-id'] 
 $dialogs = get_dialogs($connection, $user['id']);
 if (($dialogs !== null) || ($GET['id'] !== null)) {
     $active_dialog_id = (int)($_GET['id'] ?? array_key_first($dialogs));
+    read_messages($connection, $active_dialog_id, $user['id']);
 }
 
 $messages = get_messages($connection, $user['id']);

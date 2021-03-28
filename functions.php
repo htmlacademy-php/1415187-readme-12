@@ -1074,8 +1074,21 @@ function get_user_followers(mysqli $connection, $author_id): array {
 }
 
 function count_new_messages($connection, $user_id) {
-    $count_messages_query = 
-    "SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND was_read = false";
+    $count_messages_query =
+    "SELECT COUNT(*) AS amount
+    FROM messages
+    WHERE receiver_id = ? AND was_read = false";
     
-    return secure_query_bind_result($connection, $select_followers_query, false, $user_id);
+    return secure_query_bind_result($connection, $count_messages_query, true, $user_id);
+}
+
+function read_messages($connection, $active_dialog_id, $user_id) {
+    $read_messages_query =
+    "UPDATE messages
+    SET was_read = true
+    WHERE sender_id = ? AND receiver_id = ?";
+    
+    secure_query_bind_result($connection, $read_messages_query, false, $active_dialog_id, $user_id);
+    
+    return NULL;
 }
