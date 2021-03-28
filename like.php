@@ -9,7 +9,7 @@ if ($user === NULL) {
 }
 
 if (!isset($_GET['id'])) {
-    display_404_page();
+    display_404_page($user);
     exit();
 }
 

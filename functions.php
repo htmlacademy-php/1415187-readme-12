@@ -68,9 +68,9 @@ function time_difference (string $time, DateTime $current_time) {
  * Создает страницу для ошибки 404
  */
 
-function display_404_page() {
+function display_404_page($user) {
     $page_content = include_template('404.php');
-    $layout_content = include_template('layout.php',['content' => $page_content]);
+    $layout_content = include_template('layout.php',['content' => $page_content, 'user' => $user]);
     print($layout_content);
     http_response_code(404);
 }
@@ -964,8 +964,7 @@ function get_profile_subscribes(mysqli $connection, int $user_id, int $profile_i
  * @param string $keywords
  * @return array Список постов
  */
-function search_posts(mysqli $connection, string $keywords)
-{
+function search_posts(mysqli $connection, string $keywords) {
     $search_query = "SELECT posts.*, users.username, users.avatar, content_types.type_class,
     COALESCE(like_count, 0) AS likes,
     COALESCE(comment_count, 0) AS comments
@@ -997,8 +996,7 @@ function search_posts(mysqli $connection, string $keywords)
  * @param  mixed $user_id Пользователь
  * @return array Список диалогов
  */
-function get_dialogs($connection, $user_id)
-{
+function get_dialogs($connection, $user_id) {
     $select_dialogs_query = "SELECT dialog, username, avatar, content, sender_id, last_message
     FROM messages
     INNER JOIN (SELECT MAX(dt_add) AS last_message,
@@ -1082,7 +1080,7 @@ function get_user_followers(mysqli $connection, $author_id): array {
  * @param  int $user_id ID пользователя
  * @return int Количество не прочитанных сообщений
  */
-function count_new_messages($connection, $user_id) {
+function count_new_messages(mysqli $connection, $user_id) {
     $count_messages_query =
     "SELECT COUNT(*) AS amount
     FROM messages
@@ -1099,7 +1097,7 @@ function count_new_messages($connection, $user_id) {
  * @param int $user_id ID пользователя
  * @return NULL
  */
-function read_messages($connection, $active_dialog_id, $user_id) {
+function read_messages(mysqli $connection, $active_dialog_id, $user_id) {
     $read_messages_query =
     "UPDATE messages
     SET was_read = true
@@ -1118,7 +1116,7 @@ function read_messages($connection, $active_dialog_id, $user_id) {
  * @param string|NULL Текущий фильтр
  * @return bool|NULL Возвращает противоположное значение полученному, либо NULL
  */
-function get_reverse($direction, $params, $sort, $filter) {
+function get_reverse($direction, array $params, $sort, $filter) {
     if (isset($direction)) {
         if (($params['sort'] == $sort)&&($params['filter'] == $filter)) {
             return $direction ? false : true;

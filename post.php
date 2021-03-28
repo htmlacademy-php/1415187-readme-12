@@ -18,7 +18,7 @@ $post = get_post($connection, $post_id);
 $comment_errors = [];
 
 if ($post === NULL) {
-    display_404_page();
+    display_404_page($user);
     exit();
 }
 
