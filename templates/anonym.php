@@ -130,7 +130,7 @@
               <svg class="form__input-icon" width="19" height="18">
                 <use xlink:href="#icon-input-user"></use>
               </svg>
-              <label class="visually-hidden">Логин</label>
+              <label class="visually-hidden <?= (isset($form_errors['login'])) ? 'form__input-section--error' : '' ?>">Логин</label>
               <span class="form__error-label form__error-label--login"><?= $form_errors['login'] ?? '' ?></span>
             </div>
             <div class="authorization__input-wrapper form__input-wrapper">
@@ -139,7 +139,7 @@
               <svg class="form__input-icon" width="16" height="20">
                 <use xlink:href="#icon-input-password"></use>
               </svg>
-              <label class="visually-hidden">Пароль</label>
+              <label class="visually-hidden <?= (isset($form_errors['password'])) ? 'form__input-section--error' : '' ?>">Пароль</label>
               <span class="form__error-label"><?= $form_errors['password'] ?? '' ?></span>
             </div>
             <a class="authorization__recovery" href="#">Восстановить пароль</a>
