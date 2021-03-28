@@ -19,7 +19,7 @@ $filter = get_filter($_GET['filter'], $content_type_names);
 $sort = $_GET['sort'] ?? 'view_count';
 $sort = get_filter($sort, ["likes","view_count","dt_add"]);
 $total_posts = get_total_posts($connection, $filter);
-$reverse = get_reverse($_GET['reverse'], $get['sort'], $sort) ?? false;
+$reverse = get_reverse($_GET['reverse'], $get, $sort, $filter);
 $posts = get_popular_posts($connection, $filter, $sort, $reverse, $page_limit, $page_offset);
 
 $page_content = include_template(

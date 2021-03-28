@@ -1110,14 +1110,22 @@ function read_messages($connection, $active_dialog_id, $user_id) {
 }
 
 /**
- * Меняет направление сортировки
+ * Меняет направление сортировки/при переключении между фильтрами не меняет значение
  *
  * @param  bool|NULL $direction Текущее направление
+ * @param array $params Прошлые параметры фильтра и сортировки
+ * @param string|NULL Текущая сортировка по лайкам/дате/просмотрам
+ * @param string|NULL Текущий фильтр
  * @return bool|NULL Возвращает противоположное значение полученному, либо NULL
  */
-function get_reverse($direction, $old_sort, $new_sort) {
-    if ((isset($direction))&&($old_sort == $new_sort)) {
-        return $direction ? false : true;
+function get_reverse($direction, $params, $sort, $filter) {
+    if (isset($direction)) {
+        if (($params['sort'] == $sort)&&($params['filter'] == $filter)) {
+            return $direction ? false : true;
+        }
+        elseif (($params['sort'] == $sort)&&($params['filter'] != $filter)) {
+            return $direction;
+        }
     }
-    return NULL;
+    return false;
 }

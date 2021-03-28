@@ -40,7 +40,8 @@
         <b class="popular__filters-caption filters__caption">Тип контента:</b>
         <ul class="popular__filters-list filters__list">
           <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-            <a class="filters__button filters__button--ellipse filters__button--all <?= ($filter == '') ? 'filters__button--active' : '' ?>" href="popular.php?">
+            <a class="filters__button filters__button--ellipse filters__button--all <?= ($filter == '') ? 'filters__button--active' : '' ?>" href="popular.php?
+                <?= 'sort=' . $sort ?><?= '&reverse=' . $reverse ?><?= '&filter='?>">
             <span>Все</span>
             </a>
           </li>
@@ -49,7 +50,7 @@
             <a class="button filters__button
               <?= $content_type['type_class'] ? 'filters__button--' . $content_type['type_class'] : '' ?>
               <?= ($filter == $content_type['type_class']) ? 'filters__button--active' : '' ?>"
-              href="popular.php?filter=<?=$content_type['type_class'] ?>">
+              href="popular.php?<?= 'sort=' . $sort ?><?= '&reverse=' . $reverse ?><?= '&filter=' . $content_type['type_class'] ?>">
               <span class="visually-hidden"><?= $content_type['type_name'] ?></span>
               <?php $size_ico = filter_size_ico($content_type['type_class']);?>
               <svg class="filters__icon" width="<?= $size_ico['w'] ?>" height="<?= $size_ico['h'] ?>">
