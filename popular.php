@@ -8,6 +8,7 @@ if ($user === NULL) {
     exit();
 }
 
+parse_str(parse_url($_SERVER['HTTP_REFERER'])['query'], $get);
 $title = $site_name . ': Популярное';
 $page_number = $_GET['page'] ?? '1';
 $page_limit = $_GET['limit'] ?? $page_limit;
@@ -18,7 +19,7 @@ $filter = get_filter($_GET['filter'], $content_type_names);
 $sort = $_GET['sort'] ?? 'view_count';
 $sort = get_filter($sort, ["likes","view_count","dt_add"]);
 $total_posts = get_total_posts($connection, $filter);
-$reverse = get_reverse($_GET['reverse']) ?? false;
+$reverse = get_reverse($_GET['reverse'], $get['sort'], $sort) ?? false;
 $posts = get_popular_posts($connection, $filter, $sort, $reverse, $page_limit, $page_offset);
 
 $page_content = include_template(

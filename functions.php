@@ -1115,8 +1115,8 @@ function read_messages($connection, $active_dialog_id, $user_id) {
  * @param  bool|NULL $direction Текущее направление
  * @return bool|NULL Возвращает противоположное значение полученному, либо NULL
  */
-function get_reverse($direction) {
-    if (isset($direction)) {
+function get_reverse($direction, $old_sort, $new_sort) {
+    if ((isset($direction))&&($old_sort == $new_sort)) {
         return $direction ? false : true;
     }
     return NULL;
