@@ -8,8 +8,8 @@
         <b class="popular__sorting-caption sorting__caption">Сортировка:</b>
         <ul class="popular__sorting-list sorting__list">
           <li class="sorting__item sorting__item--popular">
-            <a class="sorting__link sorting__link--active"
-              href="popular.php?sort=view_count<?= $filter ? '&filter=' . $filter : '' ?>">
+            <a class="sorting__link <?= ($sort == 'view_count') ? 'sorting__link--active' : '' ?> <?= $reverse ? 'sorting__link--reverse' : '' ?>"
+              href="popular.php?sort=view_count<?= '&reverse=' . $reverse ?><?= $filter ? '&filter=' . $filter : '' ?>">
               <span>Популярность</span>
               <svg class="sorting__icon" width="10" height="12">
                 <use xlink:href="#icon-sort"></use>
@@ -17,7 +17,8 @@
             </a>
           </li>
           <li class="sorting__item">
-            <a class="sorting__link" href="popular.php?sort=likes<?= $filter ? '&filter=' . $filter : '' ?>">
+            <a class="sorting__link <?= ($sort == 'likes') ? 'sorting__link--active' : '' ?> <?= $reverse ? 'sorting__link--reverse' : '' ?>"
+               href="popular.php?sort=likes<?= '&reverse=' . $reverse ?><?= $filter ? '&filter=' . $filter : '' ?>">
               <span>Лайки</span>
               <svg class="sorting__icon" width="10" height="12">
                 <use xlink:href="#icon-sort"></use>
@@ -25,7 +26,8 @@
             </a>
           </li>
           <li class="sorting__item">
-            <a class="sorting__link" href="popular.php?sort=dt_add<?= $filter ? '&filter=' . $filter : '' ?>">
+            <a class="sorting__link <?= ($sort == 'dt_add') ? 'sorting__link--active' : '' ?> <?= $reverse ? 'sorting__link--reverse' : '' ?>"
+               href="popular.php?sort=dt_add<?= '&reverse=' . $reverse ?><?= $filter ? '&filter=' . $filter : '' ?>">
               <span>Дата</span>
               <svg class="sorting__icon" width="10" height="12">
                 <use xlink:href="#icon-sort"></use>

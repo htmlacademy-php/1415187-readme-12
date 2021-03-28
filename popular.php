@@ -18,7 +18,8 @@ $filter = get_filter($_GET['filter'], $content_type_names);
 $sort = $_GET['sort'] ?? 'view_count';
 $sort = get_filter($sort, ["likes","view_count","dt_add"]);
 $total_posts = get_total_posts($connection, $filter);
-$posts = get_popular_posts($connection, $filter, $sort, $page_limit, $page_offset);
+$reverse = get_reverse($_GET['reverse']) ?? false;
+$posts = get_popular_posts($connection, $filter, $sort, $reverse, $page_limit, $page_offset);
 
 $page_content = include_template(
     'popular-template.php',
@@ -30,7 +31,8 @@ $page_content = include_template(
         'page_number' => $page_number,
         'page_limit' => $page_limit,
         'content_types' => $content_types,
-        'now_time' => $now_time
+        'now_time' => $now_time,
+        'reverse' => $reverse
     ]
 );
 $layout_content = include_template(

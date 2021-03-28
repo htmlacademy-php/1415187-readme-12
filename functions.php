@@ -836,12 +836,14 @@ function get_total_posts(mysqli $connection, $filter) {
  *
  * @param mysqli $connection Соединение с БД
  * @param mixed $filter Фильтр по типу контента
- * @param string $order Порядок сортировки по лайкам/дате/просмотрам
+ * @param string $sort Порядок сортировки по лайкам/дате/просмотрам
+ * @param bool $reverse Направление сортировки по возврастанию/убыванию
  * @param int $page_limit Количетство постов на страницу
  * @param int $page_offset Сколько постов пропускаем
  * @return array Список постов
  */
-function get_popular_posts(mysqli $connection, $filter, string $order, int $page_limit, int $page_offset) {
+function get_popular_posts(mysqli $connection, $filter, string $sort, bool $reverse, int $page_limit, int $page_offset) {
+    $order = $reverse ? 'ASC' : 'DESC';
     $select_posts_query =
     'SELECT posts.*, users.id
     AS user_id, users.username, users.avatar, content_types.type_class,
@@ -861,7 +863,7 @@ function get_popular_posts(mysqli $connection, $filter, string $order, int $page
         $select_posts_query .= "WHERE content_types.type_class = '$filter' ";
     }
 
-    $select_posts_query .= "ORDER BY $order DESC LIMIT ? OFFSET ?;";
+    $select_posts_query .= "ORDER BY $sort $order LIMIT ? OFFSET ?;";
     $posts_mysqli = secure_query_bind_result($connection, $select_posts_query, false, $page_limit, $page_offset);
 
     return mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
@@ -1102,8 +1104,20 @@ function read_messages($connection, $active_dialog_id, $user_id) {
     "UPDATE messages
     SET was_read = true
     WHERE sender_id = ? AND receiver_id = ?";
-    
     secure_query_bind_result($connection, $read_messages_query, false, $active_dialog_id, $user_id);
     
+    return NULL;
+}
+
+/**
+ * Меняет направление сортировки
+ *
+ * @param  bool|NULL $direction Текущее направление
+ * @return bool|NULL Возвращает противоположное значение полученному, либо NULL
+ */
+function get_reverse($direction) {
+    if (isset($direction)) {
+        return $direction ? false : true;
+    }
     return NULL;
 }
