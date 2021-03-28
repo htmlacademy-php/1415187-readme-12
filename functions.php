@@ -1073,6 +1073,13 @@ function get_user_followers(mysqli $connection, $author_id): array {
     return mysqli_fetch_all($followers_mysqli, MYSQLI_ASSOC);
 }
 
+/**
+ * Возвращает количество не прочитанных пользователем сообщений
+ *
+ * @param  mysqli $connection Соединение с БД
+ * @param  int $user_id ID пользователя
+ * @return int Количество не прочитанных сообщений
+ */
 function count_new_messages($connection, $user_id) {
     $count_messages_query =
     "SELECT COUNT(*) AS amount
@@ -1082,6 +1089,14 @@ function count_new_messages($connection, $user_id) {
     return secure_query_bind_result($connection, $count_messages_query, true, $user_id);
 }
 
+/**
+ * Ставит отметку о прочтении, если пользователя открыл диалог с новыми сообщениями
+ *
+ * @param  mysqli $connection Соединение с БД
+ * @param  int $active_dialog_id ID открытого диалога (= ID другого пользователя с которым диалог)
+ * @param int $user_id ID пользователя
+ * @return NULL
+ */
 function read_messages($connection, $active_dialog_id, $user_id) {
     $read_messages_query =
     "UPDATE messages

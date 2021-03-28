@@ -150,7 +150,9 @@
                         <a class="header__profile-nav-link" href="messages.php">
                         <span class="header__profile-nav-text">
                         Сообщения
+                        <?php if ($user['messages'] != 0): ?>
                         <i class="header__profile-indicator"><?= $user['messages'] ?></i>
+                        <?php endif; ?>
                         </span>
                         </a>
                       </li>
@@ -242,6 +244,6 @@
         </div>
       </div>
     </footer>
-    <script src="js/main.js"></script>
+    <!-- <script src="js/main.js"></script> -->
   </body>
 </html>
