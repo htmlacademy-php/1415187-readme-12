@@ -16,6 +16,7 @@ if (!isset($_GET['id'])) {
 $post_id = $_GET['id'];
 $post = get_post($connection, $post_id);
 $comment_errors = [];
+$show_all_comments = $_GET['showall'] ?? false;
 
 if ($post === NULL) {
     display_404_page($user);
@@ -33,6 +34,7 @@ $comments = get_post_comments($connection, $post_id);
 $views_mysqli = increase_post_views($connection, $post_id);
 $user['subscribed'] = user_subscribe($connection, false, $user['id'], $author_id);
 $title = $site_name . ': Публикация' . $post['heading'];
+$count_comments = count($comments);
 
 $page_content = include_template(
     'posts/' . 'post-details.php',
@@ -42,7 +44,9 @@ $page_content = include_template(
         'author' => $author,
         'comments' => $comments,
         'comment_errors' => $comment_errors,
-        'now_time' => $now_time
+        'now_time' => $now_time,
+        'show_all' => $show_all_comments,
+        'count_comments' => $count_comments
     ]
 );
 

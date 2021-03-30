@@ -119,7 +119,7 @@
               </li>
             </ul>
             <ul class="header__user-nav">
-              <?php if ($title != 'Readme: Регистрация') : ?>
+              <?php if ($title != 'ReadMe: Регистрация') : ?>
               <li class="header__profile">
                 <a class="header__profile-link" href="profile.php">
                   <div class="header__avatar-wrapper">
@@ -168,11 +168,11 @@
                 </div>
               </li>
               <?php endif; ?>
-              <?php if ($title == 'Readme: Добавление публикации') : ?>
+              <?php if ($title == 'ReadMe: Добавление публикации') : ?>
               <li>
                 <a class="header__post-button header__post-button--active button button--transparent" href="javascript:history.back()">Закрыть</a>
               </li>
-              <?php elseif ($title == 'Readme: Регистрация') : ?>
+              <?php elseif ($title == 'ReadMe: Регистрация') : ?>
               <li class="header__authorization">
                 <a class="header__user-button header__authorization-button button" href="index.php">Вход</a>
               </li>

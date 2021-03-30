@@ -60,6 +60,9 @@
             </form>
             <div class="comments__list-wrapper">
               <ul class="comments__list">
+                <?php if (!$show_all):
+                  $comments = array_slice($comments, 0, 3);
+                endif; ?>
                 <?php foreach($comments as $comment) : ?>
                 <li class="comments__item user">
                   <div class="comments__avatar">
@@ -85,10 +88,17 @@
                 </li>
                 <?php endforeach; ?>
               </ul>
-              <a class="comments__more-link" href="#">
-              <span>Показать все комментарии</span>
-              <sup class="comments__amount"><?= count($comments) ?></sup>
-              </a>
+              <?php if (($count_comments > 3)&&(!$show_all)): ?>
+                <a class="comments__more-link" href="/post.php?id=<?= $post['id'] . '&showall=1' ?>">
+                  <span>Показать все комментарии</span>
+                  <sup class="comments__amount"><?= $count_comments ?></sup>
+                </a>
+              <?php endif;
+              if (($count_comments > 3)&&($show_all)): ?>
+                <a class="comments__more-link" href="/post.php?id=<?= $post['id'] . '&showall=' ?>">
+                  <span>Скрыть комментарии</span>
+                </a>
+              <?php endif; ?>
             </div>
           </div>
         </div>

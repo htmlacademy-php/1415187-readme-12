@@ -74,8 +74,9 @@ if (count($_POST) > 0 && isset($_POST['form-type'])) {
         $file_url = ($form_type == 'photo') ? upload_file($form, $img_folder) : NULL;
         $post_id = save_post($connection, $form['values'], $post_types, $user, $file_url);
         add_tags($_POST['tags'], $post_id, $connection);
-
         $URL = '/post.php?id=' . $post_id;
+        $followers = get_user_followers($connection, $user['id']);
+        new_post_notification($mail_settings['sender'], $user, $followers, $form['values']['heading'], $post_id, $mailer);
         header("Location: $URL");
     }
 }

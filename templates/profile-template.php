@@ -155,10 +155,8 @@
                 </div>
                 <div class="post-mini__preview">
                   <a class="post-mini__link" href="post.php?id=<?= $like['post_id'] ?>" title="Перейти на публикацию">
-                    <?php
-                      switch ($like['type_class']) :
-                          case 'photo':
-                              ?>
+                    <?php switch ($like['type_class']) :
+                      case 'photo': ?>
                     <span class="visually-hidden">Фото</span>
                     <div class="post-mini__image-wrapper">
                       <?php

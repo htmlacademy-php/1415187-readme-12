@@ -28,8 +28,14 @@ VALUES
 UPDATE posts SET quote_author = 'Неизвестный автор' WHERE id=1;
 
 /* придумайте пару комментариев к разным постам */
-INSERT INTO comments SET user_id = 2, post_id = 4, content = 'тестовый комментарий 1', dt_add = '2019-11-03 06:06:57';
-INSERT INTO comments SET user_id = 1, post_id = 5, content = 'тестовый комментарий 2', dt_add = '2019-11-03 06:06:57';
+INSERT INTO comments SET user_id = 1, post_id = 4, content = 'тестовый комментарий 1', dt_add = '2010-11-03 06:06:57';
+INSERT INTO comments SET user_id = 2, post_id = 4, content = 'тестовый комментарий 2', dt_add = '2012-11-03 06:06:57';
+INSERT INTO comments SET user_id = 3, post_id = 4, content = 'тестовый комментарий 3', dt_add = '2013-11-03 06:06:57';
+INSERT INTO comments SET user_id = 4, post_id = 4, content = 'тестовый комментарий 4', dt_add = '2015-11-03 06:06:57';
+INSERT INTO comments SET user_id = 5, post_id = 4, content = 'тестовый комментарий 5', dt_add = '2016-11-03 06:06:57';
+INSERT INTO comments SET user_id = 2, post_id = 4, content = 'тестовый комментарий 6', dt_add = '2019-11-03 06:06:57';
+INSERT INTO comments SET user_id = 4, post_id = 4, content = 'тестовый комментарий 7', dt_add = '2020-11-03 06:06:57';
+INSERT INTO comments SET user_id = 1, post_id = 5, content = 'тестовый комментарий 8', dt_add = '2019-11-03 06:06:57';
 
 /* получить список постов с сортировкой по популярности и вместе с именами авторов и типом контента */
 SELECT posts.content, posts.view_count, users.username, content_types.type_name FROM posts

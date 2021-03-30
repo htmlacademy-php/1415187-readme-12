@@ -22,7 +22,7 @@ function cut_text (string $text, int $length = 300) {
  *
  * @param string $time Дата/время отсчета
  * @param DateTime $current_time Текущая дата/время
- * @return string Относительное время в общем формате (прим.: "4 дня назад", "3 недели назад")
+ * @return string Относительное время в общем формате (прим.: "4 дня *назад*", "3 недели *назад*")
  * @throws Exception
  */
 
@@ -107,12 +107,12 @@ function filter_size_ico(string $type) {
 /**
  * Создает список типов поста
  *
- * @param mysqli $con Соединение с базой
+ * @param mysqli $connection Соединение с базой
  * @return array Список типов
  */
 
-function get_content_types(mysqli $con) {
-    $result = mysqli_query($con, "SELECT * FROM content_types");
+function get_content_types(mysqli $connection) {
+    $result = mysqli_query($connection, "SELECT * FROM content_types");
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
@@ -307,6 +307,7 @@ function validate_youtube_url(array $input_array, string $parameter_name): ?stri
         $url = "https://www.googleapis.com/youtube/v3/videos?" . http_build_query($api_data);
 
         $resp = file_get_contents($url);
+        var_dump($resp);
 
         if (!($resp && $json = json_decode($resp, true))) {
             return 'Видео по ссылке не найдено';
@@ -320,11 +321,11 @@ function validate_youtube_url(array $input_array, string $parameter_name): ?stri
  *
  * @param array $fields Проверяемый массив связками поле - значение
  * @param array $validation_array Массив правил валидации вида поле - список правил валидации
- * @param mysqli $db_connection Соединение с БД
+ * @param mysqli $connection Соединение с БД
  * @return array|string Массив со списком ошибок | Строка с ошибкой
  */
 
-function validate(array $fields, array $validation_array, mysqli $db_connection) {
+function validate(array $fields, array $validation_array, mysqli $connection) {
     $db_functions = ['validate_exists', 'validate_correct_password'];
     $validations = get_validation_rules($validation_array);
     $errors = [];
@@ -338,7 +339,7 @@ function validate(array $fields, array $validation_array, mysqli $db_connection)
                 return 'Функции валидации ' . $method_name . ' не существует';
             }
             if (in_array($method_name, $db_functions)) {
-                array_push($method_parameters, $db_connection);
+                array_push($method_parameters, $connection);
             }
             if ($errors[$field] = call_user_func_array($method_name, $method_parameters)) {
                 break;
@@ -383,15 +384,15 @@ function validate_correct_email(array $input_array, string $parameter_name): ?st
  * @param array $validation_array Проверяемый массив
  * @param string $parameter_name Имя искомого параметра
  * @param array $parameter_settings Установки параметров (где искать, и ищем отсутствие или наличие)
- * @param mysqli $db_connection Параметры подключения к БД
+ * @param mysqli $connection Параметры подключения к БД
  * @return string Сообщение об ошибке, если нет ошибки - NULL
  */
 
-function validate_exists(array $validation_array, string $parameter_name, array $parameter_settings, mysqli $db_connection): ?string {
+function validate_exists(array $validation_array, string $parameter_name, array $parameter_settings, mysqli $connection): ?string {
     $table_name = $parameter_settings[0];
     $column_name = $parameter_settings[1];
     $sql = "SELECT COUNT(*) AS amount FROM $table_name WHERE $column_name = ?";
-    $amount = secure_query_bind_result($db_connection, $sql, true, $validation_array[$parameter_name]);
+    $amount = secure_query_bind_result($connection, $sql, true, $validation_array[$parameter_name]);
     if (($amount > 0) && (!in_array('not', $parameter_settings))) {
         return "Запись с таким $parameter_name уже присутствует в базе данных";
     }
@@ -407,17 +408,17 @@ function validate_exists(array $validation_array, string $parameter_name, array 
  * @param array $validation_array Валидируемый массив
  * @param string $parameter_name Имя искомого параметра
  * @param $parameter_settings
- * @param mysqli $db_connection Данные для подключения к БД
+ * @param mysqli $connection Данные для подключения к БД
  * @return string Сообщение об ошибке или NULL
  */
 
-function validate_correct_password(array $validation_array, string $parameter_name, $parameter_settings, mysqli $db_connection): ?string {
+function validate_correct_password(array $validation_array, string $parameter_name, $parameter_settings, mysqli $connection): ?string {
     $table_name = $parameter_settings[0];
     $users_column_name = $parameter_settings[1];
     $password_column_name = $parameter_settings[2];
     $email = $validation_array['login'];
     $sql = "SELECT $password_column_name FROM $table_name WHERE $users_column_name = ?";
-    $db_password = secure_query_bind_result($db_connection, $sql, false, $email);
+    $db_password = secure_query_bind_result($connection, $sql, false, $email);
     $password = mysqli_fetch_all($db_password, MYSQLI_ASSOC)[0]['password'];
     return !password_verify($validation_array[$parameter_name], $password) ? "Вы ввели неверный пароль" : NULL;
 }
@@ -433,29 +434,29 @@ function validate_correct_password(array $validation_array, string $parameter_na
  */
 
 function db_connect(string $host,string $user,string $pass,string $db) {
-    $con = mysqli_connect($host, $user, $pass, $db);
+    $connection = mysqli_connect($host, $user, $pass, $db);
 
-    if ($con === false) {
-        file_put_contents(__DIR__ . '/log.txt', mysqli_connect_error() . PHP_EOL, FILE_APPEND);
+    if ($connection === false) {
+        error_log(mysqli_connect_error(), 0);
         http_response_code(500);
         exit();
     }
 
-    mysqli_set_charset($con, "utf8mb4");
-    return $con;
+    mysqli_set_charset($connection, "utf8mb4");
+    return $connection;
 }
 
 /**
  * Ищет данные пользователя по email
  *
- * @param mysqli $db_connection подключение к БД
+ * @param mysqli $connection подключение к БД
  * @param string $email Почта/логин пользователя
  * @return array ассоциативный массив с данными пользователя
  */
 
-function get_user_data(mysqli $db_connection, string $email) {
+function get_user_data(mysqli $connection, string $email) {
     $sql = "SELECT id, username, avatar FROM users WHERE email = ?";
-    $result = secure_query_bind_result($db_connection, $sql, false, $email);
+    $result = secure_query_bind_result($connection, $sql, false, $email);
     return mysqli_fetch_assoc($result);
 }
 
@@ -479,29 +480,31 @@ function get_user($connection): ?array {
 }
 
 /**
- * Производит подписку|возвращает статус подписки (true|false)
+ * Производит подписку/отписку|возвращает статус подписки (true|false)
  *
  * @param mysqli $connection Подключение к БД
- * @param bool $check Произвести подписку| Проверку (true|false)
+ * @param bool $check Произвести подписку.отписку| Проверку (true|false)
  * @param int $follower_id ID подписчика
  * @param int $author_id ID подписки
  * @return NULL|bool В случае проверки подписки возвращает статус
  */
 
 function user_subscribe (mysqli $connection, bool $check, int $follower_id, int $author_id) {
-    $select_subscribe_query = "SELECT * FROM subscribe WHERE follower_id = ? AND author_id = ?";
-    $add_subscribe_query = "INSERT INTO subscribe SET follower_id = ?, author_id = ?";
-    $remove_subscribe_query = "DELETE FROM subscribe WHERE follower_id = ? AND author_id = ?";
-    $user_subscribe_mysqli = secure_query_bind_result($connection, $select_subscribe_query, false, $follower_id, $author_id);
+    $subscribe_query = "SELECT * FROM subscribe WHERE follower_id = ? AND author_id = ?"; 
+    $subscribe_mysqli = secure_query_bind_result($connection, $subscribe_query, false, $follower_id, $author_id);
     if ($check) {
-        if ($user_subscribe_mysqli->num_rows == 0) {
-            secure_query_bind_result($connection, $add_subscribe_query, false, $follower_id, $author_id);
+        if ($subscribe_mysqli->num_rows == 0) {
+            $subscribe_query = "INSERT INTO subscribe SET follower_id = ?, author_id = ?";
+            secure_query_bind_result($connection, $subscribe_query, false, $follower_id, $author_id);
+            return true;
         } else {
-            secure_query_bind_result($connection, $remove_subscribe_query, false, $follower_id, $author_id);
+            $subscribe_query = "DELETE FROM subscribe WHERE follower_id = ? AND author_id = ?";
+            secure_query_bind_result($connection, $subscribe_query, false, $follower_id, $author_id);
+            return false;
         }
     }
     else {
-        return $user_subscribe_mysqli->num_rows > 0;
+        return $subscribe_mysqli->num_rows > 0;
     }
     return NULL;
 }
@@ -723,7 +726,7 @@ function save_post(mysqli $connection, array $post, array $post_types, array $us
 
     if ($post_type == 'video') {
         array_push($fields, 'youtube_url');
-        array_push($parameters, $post['youtube_url']);
+        array_push($parameters, $post['video-url']);
     }
 
     if ($post_type == 'photo') {
@@ -1126,4 +1129,75 @@ function get_reverse($direction, array $params, $sort, $filter) {
         }
     }
     return false;
+}
+
+/**
+ * Производит подключение к почтовому серверу
+ *
+ * @param  array $settings Настройки подключения к серверу
+ * @param  string $site_name Имя сайта
+ * @return NULL
+ */
+function apply_mail_settings(array $settings, string $site_name) {
+    if (!$settings['encryption']) {
+        $transport = new Swift_SmtpTransport($settings['server'], $settings['port']);
+    }
+    else {
+        $transport = new Swift_SmtpTransport($settings['server'], $settings['port'], $setting['encryption']);
+    }
+    $transport->setUsername($settings['user']);
+    $transport->setPassword($settings['password']);
+    $mailer = new Swift_Mailer($transport);
+    
+    return $mailer;
+}
+
+/**
+ * Отправляет уведомление о новом подписчике
+ *
+ * @param string $sender Отправитель писем с сервера
+ * @param array $owner Массив с именем и email пользователя
+ * @param array $follower Массив с данными подписчика
+ * @param object $mailer Объект Swift_Mailer
+ * @return NULL
+ */
+function new_follower_notification($sender, $owner, $follower, $mailer) {
+    $subject = 'У вас новый подписчик';
+    $message = new Swift_Message($subject);
+    $message->setFrom($sender, $site_name);
+    $body = "Здравствуйте, " . $owner['username'] . ". На вас подписался новый пользователь " . $follower['name'] .
+    " Вот ссылка на его профиль: " . ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' .
+        $_SERVER['HTTP_HOST'] . "/profile.php?id=" . $follower['id'];
+    $message->setTo($owner['email']);
+    $message->setBody($body);
+    $mailer->send($message);
+    
+    return NULL;
+}
+
+/**
+ * Отправляет уведомление о новом посте
+ *
+ * @param string $sender Отправитель писем с сервера
+ * @param array $post_author Массив с именем и email автора поста
+ * @param array $mailing_list Массив со списком получателей
+ * @param string $post_heading Заголовок поста
+ * @param int $post_id ID поста
+ * @param object $mailer Объект Swift_Mailer
+ * @return NULL
+ */
+function new_post_notification($sender, $post_author, $mailing_list, $post_heading, $post_id, $mailer) {
+    $subject = "Новая публикация от пользователя " . $post_author['name'];
+    $message = new Swift_Message($subject);
+    $message->setFrom($sender, "ReadMe");
+    foreach ($mailing_list as $reciever) {
+        $body = "Здравствуйте, " . $reciever['username'] . ". Пользователь " . $post_author['name'] .
+        " только что опубликовал новую запись " . "«" . $post_heading . "». " .
+        "Посмотрите её на странице пользователя: " . ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' .
+        $_SERVER['HTTP_HOST'] . "/profile.php?id=" . $post_author['id'];
+        $message->setTo([$reciever['email']]);
+        $message->setBody($body);
+        $mailer->send($message);
+    }
+    return NULL;
 }

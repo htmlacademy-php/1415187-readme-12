@@ -1,0 +1,15 @@
+{
+    "name": "m2x/readme",
+    "description": "PHP training project",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mark Morgunov",
+            "email": "morgunov.mark@bk.ru"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
+}
