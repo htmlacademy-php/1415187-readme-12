@@ -20,7 +20,7 @@ $form = [
     'errors' => [],
 ];
 
-$img_folder = __DIR__ . '\\img\\';
+$img_folder = __DIR__ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
 
 $title = $site_name . ': Регистрация';
 

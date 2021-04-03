@@ -1,9 +1,9 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
 
 $user = get_user();
 
-if ($user === NULL) {
+if ($user === null) {
     header("Location: index.php");
     exit();
 }
@@ -17,7 +17,7 @@ $post_id = $_GET['id'];
 $post = get_post($connection, $post_id);
 $comment_errors = [];
 
-if ($post === NULL) {
+if ($post === null) {
     display_404_page();
     exit();
 }
@@ -42,7 +42,7 @@ $page_content = include_template(
         'author' => $author,
         'comments' => $comments,
         'comment_errors' => $comment_errors,
-        'now_time' => $now_time
+        'now_time' => $now_time,
     ]
 );
 
@@ -51,7 +51,7 @@ $layout_content = include_template(
     [
         'content' => $page_content,
         'user' => $user,
-        'title' => $title
+        'title' => $title,
     ]
 );
 

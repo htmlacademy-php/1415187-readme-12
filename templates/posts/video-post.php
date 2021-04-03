@@ -1,9 +1,12 @@
 <div class="post-video__block">
    <div class="post-video__preview">
-      <?= embed_youtube_cover(htmlspecialchars($post['content'])) ?>
-      <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
+      <?php if ((explode('?', $_SERVER['REQUEST_URI'])[0] == '/feed.php')) : ?>
+          <?= embed_youtube_cover(htmlspecialchars($post['youtube_url']), 758, 380) ?>
+      <?php else : ?>
+          <?= embed_youtube_cover(htmlspecialchars($post['youtube_url']), 358, 120) ?>
+      <?php endif; ?>
    </div>
-   <a href="post-details.php?id=?<?= $post['id'] ?>" class="post-video__play-big button">
+   <a href="post.php?id=<?= $post['id'] ?>" class="post-video__play-big button">
       <svg class="post-video__play-big-icon" width="14" height="14">
          <use xlink:href="#icon-video-play-big"></use>
       </svg>

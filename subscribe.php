@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
 
 $validation_rules = [
     'author_id' => 'exists:users,id,not',
@@ -7,7 +7,7 @@ $validation_rules = [
 
 $user = get_user();
 
-if ($user === NULL) {
+if ($user === null) {
     header("Location: index.php");
     exit();
 }
@@ -20,7 +20,7 @@ if (!isset($_GET['id'])) {
 $author_id = $_GET['id'];
 
 if ($author_id == $user['id']) {
-    header("Location: profile.php?id=".$author_id);
+    header("Location: profile.php?id=" . $author_id);
     exit();
 }
 

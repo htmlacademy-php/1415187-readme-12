@@ -73,7 +73,9 @@
                <div class="post__author">
                   <a class="post__author-link" href="profile.php?id=<?= $post['author_id'] ?>" title="Профиль <?= htmlspecialchars($post['username']) ?>">
                      <div class="post__avatar-wrapper">
-                        <img class="post__author-avatar" src="img/<?= $post['avatar'] ?>" width="40" height="40" alt="Аватар пользователя">
+                       <?php if (isset($post['avatar'])) : ?>
+                         <img class="post__author-avatar" src="img/<?= $post['avatar'] ?>" width="40" height="40" alt="Аватар пользователя">
+                       <?php endif; ?>
                      </div>
                      <div class="post__info">
                         <b class="post__author-name"><?= htmlspecialchars($post['username']) ?></b>

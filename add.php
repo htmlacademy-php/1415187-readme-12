@@ -1,30 +1,30 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
 
 $title = $site_name . ': Добавление публикации';
 
 $validation_rules = [
     'text' => [
         'heading' => 'filled|length:10,50',
-        'content' => 'filled|length:50,500'
+        'content' => 'filled|length:50,500',
     ],
     'photo' => [
         'heading' => 'filled|length:10,50',
         'photo-url' => 'filled|correct_url|image_url_content',
-        'photo-file' => 'img_loaded'
+        'photo-file' => 'img_loaded',
     ],
     'link' => [
         'heading' => 'filled|length:10,50',
-        'link-url' => 'filled|correct_url'
+        'link-url' => 'filled|correct_url',
     ],
     'quote' => [
         'heading' => 'filled|length:10,50',
         'content' => 'filled',
-        'quote-author' => 'filled'
+        'quote-author' => 'filled',
     ],
     'video' => [
         'heading' => 'filled|length:10,50',
-        'video-url' => 'filled|correct_url|youtube_url'
+        'video-url' => 'filled|correct_url|youtube_url',
     ],
 ];
 
@@ -35,13 +35,13 @@ $field_error_codes = [
     'photo-url' => 'Ссылка на изображение',
     'video-url' => 'Ссылка YouTube',
     'photo-file' => 'Файл фото',
-    'quote-author' => 'Автор'
+    'quote-author' => 'Автор',
 ];
 
-$img_folder = __DIR__ . '\\img\\';
+$img_folder = __DIR__ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
 
 $user = get_user();
-if ($user === NULL) {
+if ($user === null) {
     header("Location: index.php");
     exit();
 }
@@ -63,14 +63,14 @@ if (count($_POST) > 0 && isset($_POST['form-type'])) {
     $form['values']['photo-file'] = $_FILES['photo-file'];
     $form['errors'] = validate($form['values'], $validation_rules[$_POST['form-type']], $connection);
 
-    if ((empty($form['errors']['photo-file']))&&(!empty($form['errors']['photo-url']))) {
+    if ((empty($form['errors']['photo-file'])) && (!empty($form['errors']['photo-url']))) {
         $form = ignore_field($form, 'photo-url');
-    } elseif ((!empty($form['errors']['photo-file']))&&(empty($form['errors']['photo-url']))) {
+    } elseif ((!empty($form['errors']['photo-file'])) && (empty($form['errors']['photo-url']))) {
         $form = ignore_field($form, 'photo-file');
     }
     $form['errors'] = array_filter($form['errors']);
     if (empty($form['errors'])) {
-        $file_url = ($form_type == 'photo') ? upload_file($form, $img_folder) : NULL;
+        $file_url = ($form_type == 'photo') ? upload_file($form, $img_folder) : null;
         $post_id = save_post($connection, $form['values'], $post_types, $user, $file_url);
         add_tags($_POST['tags'], $post_id, $connection);
 
@@ -95,7 +95,7 @@ $layout_content = include_template(
     [
         'content' => $page_content,
         'user' => $user,
-        'title' => $title
+        'title' => $title,
     ]
 );
 

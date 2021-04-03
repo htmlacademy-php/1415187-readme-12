@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
 
 if (isset($_SESSION['id'])) {
     header("Location: feed.php");
@@ -8,7 +8,7 @@ if (isset($_SESSION['id'])) {
 $title = $site_name . ': Блог, каким он должен быть';
 $validation_rules = [
     'login' => 'filled|exists:users,email,not',
-    'password' => 'filled|correct_password:users,email,password'
+    'password' => 'filled|correct_password:users,email,password',
 ];
 
 $form_error_codes = [
@@ -43,7 +43,7 @@ $page_content = include_template(
     [
         'form_values' => $form['values'] ?? [],
         'form_errors' => $form['errors'] ?? [],
-        'form_error_codes' => $form_error_codes
+        'form_error_codes' => $form_error_codes,
     ]
 );
 print($page_content);
