@@ -171,7 +171,7 @@
                                  case 'video': ?>
                               <span class="visually-hidden">Видео</span>
                               <div class="post-mini__image-wrapper">
-                                 <?= $like['youtube_url'] ? embed_youtube_cover($like['youtube_url']) : '' ?>
+                                 <?= $like['youtube_url'] ? embed_youtube_cover($like['youtube_url'], 758, 360) : '' ?>
                                  <span class="post-mini__play-big">
                                     <svg class="post-mini__play-big-icon" width="12" height="13">
                                        <use xlink:href="#icon-video-play-big"></use>
