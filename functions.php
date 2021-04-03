@@ -715,7 +715,7 @@ function save_post(mysqli $connection, array $post, array $post_types, array $us
 
     if ($post_type == 'video') {
         array_push($fields, 'youtube_url');
-        array_push($parameters, $post['youtube_url']);
+        array_push($parameters, $post['video-url']);
     }
 
     if ($post_type == 'photo') {
