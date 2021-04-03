@@ -20,7 +20,7 @@
                 <span><?= $post['likes'] ?></span>
                 <span class="visually-hidden">количество лайков</span>
               </a>
-              <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
+              <a class="post__indicator post__indicator--comments button" href="/post.php?id=<?= $post['id'] . '&showall=1' ?>" title="Комментарии">
                 <svg class="post__indicator-icon" width="19" height="17">
                   <use xlink:href="#icon-comment"></use>
                 </svg>
