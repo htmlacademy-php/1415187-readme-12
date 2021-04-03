@@ -1,9 +1,9 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
 
 $user = get_user($connection);
 
-if ($user === NULL) {
+if ($user === null) {
     header("Location: index.php");
     exit();
 }
@@ -17,7 +17,7 @@ $content_types = get_content_types($connection);
 $content_type_names = array_column($content_types, 'type_class');
 $filter = get_filter($_GET['filter'], $content_type_names);
 $sort = $_GET['sort'] ?? 'view_count';
-$sort = get_filter($sort, ["likes","view_count","dt_add"]);
+$sort = get_filter($sort, ["likes", "view_count", "dt_add"]);
 $total_posts = get_total_posts($connection, $filter);
 $reverse = get_reverse($_GET['reverse'], $get, $sort, $filter);
 $posts = get_popular_posts($connection, $filter, $sort, $reverse, $page_limit, $page_offset);
@@ -33,7 +33,7 @@ $page_content = include_template(
         'page_limit' => $page_limit,
         'content_types' => $content_types,
         'now_time' => $now_time,
-        'reverse' => $reverse
+        'reverse' => $reverse,
     ]
 );
 $layout_content = include_template(
@@ -42,7 +42,7 @@ $layout_content = include_template(
         'title' => $title,
         'user' => $user,
         'content' => $page_content,
-        'active_section' => 'popular'
+        'active_section' => 'popular',
     ]
 );
 

@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../vendor/autoload.php');
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $mail_settings = [
     'user' => 'keks@phpdemo.ru',
@@ -7,7 +7,7 @@ $mail_settings = [
     'password' => 'htmlacademy',
     'server' => 'phpdemo.ru',
     'port' => 25,
-    'encryption' => false
-    ];
+    'encryption' => false,
+];
 
 $mailer = apply_mail_settings($mail_settings, $site_name);

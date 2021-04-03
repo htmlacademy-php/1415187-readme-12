@@ -1,9 +1,9 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
 
 $user = get_user($connection);
 
-if ($user === NULL) {
+if ($user === null) {
     header("Location: index.php");
     exit();
 }
@@ -20,7 +20,7 @@ $page_content = include_template(
         'posts' => $posts,
         'filter' => $filter,
         'content_types' => $content_types,
-        'now_time' => $now_time
+        'now_time' => $now_time,
     ]
 );
 

@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
 
 $validation_rules = [
     'owner_id' => 'exists:users,id,not',
@@ -7,7 +7,7 @@ $validation_rules = [
 
 $user = get_user($connection);
 
-if ($user === NULL) {
+if ($user === null) {
     header("Location: index.php");
     exit();
 }

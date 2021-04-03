@@ -133,7 +133,7 @@
             <a class="user__button user__button--subscription button button--main" href="subscribe.php?id=<?= $author['id'] ?>"><?= $user['subscribed'] ? 'Отписаться' : 'Подписаться' ?></a>
             <a class="user__button user__button--writing button button--green" href="message.php">Сообщение</a>
           </div>
-          <? endif; ?>
+          <?php endif; ?>
         </div>
       </div>
     </section>

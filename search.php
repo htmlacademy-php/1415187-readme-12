@@ -1,10 +1,10 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
 
 $user = get_user($connection);
 $title = $site_name . ': Cтраница результатов поиска';
 
-if ($user === NULL) {
+if ($user === null) {
     header("Location: index.php");
     exit();
 }
@@ -22,14 +22,14 @@ if (count($search_results) == 0) {
     $title .= ' (нет результатов)';
 }
 
-    $page_content = include_template(
-        'search-template.php',
-        [
-            'keywords' => $keywords,
-            'posts' => $search_results,
-            'now_time' => $now_time
-        ]
-    );
+$page_content = include_template(
+    'search-template.php',
+    [
+        'keywords' => $keywords,
+        'posts' => $search_results,
+        'now_time' => $now_time,
+    ]
+);
 
 $layout_content = include_template(
     'layout.php',
