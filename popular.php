@@ -1,50 +1,46 @@
 <?php
+require_once __DIR__ . '/libs/base.php';
 
-require_once('helpers.php');
-require_once('functions.php');
-require_once('db.php');
+$user = get_user();
 
-$is_auth = rand(0, 1);
-$user_name = 'Mark';
-$page_title = 'readme: популярное';
-$now_time = new DateTime('now');
-
-$sql_select_posts =
-    "SELECT
-        posts.*,
-        users.username,
-        users.avatar,
-        content_types.type_class
-    FROM posts
-    INNER JOIN users ON posts.author_id=users.id
-    INNER JOIN content_types ON posts.post_type=content_types.id";
-
-if (isset($_GET['post_type'])) {
-    $post_type = $_GET['post_type'];
-    $sql_select_posts .= " WHERE content_types.id = ? ORDER BY view_count DESC;";
-    $posts_mysqli = secure_query_bind_result($con, $sql_select_posts, false, $post_type);
-    $popular_posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
-} else {
-    $post_type='';
-    $sql_select_posts .= " ORDER BY view_count DESC;";
-    $posts_mysqli = mysqli_query($con, $sql_select_posts);
-    $popular_posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
+if ($user === null) {
+    header("Location: index.php");
+    exit();
 }
 
-$content_types = get_content_types($con);
+$title = $site_name . ': Популярное';
+$page_number = $_GET['page'] ?? '1';
+$page_limit = $_GET['limit'] ?? $page_limit;
+$page_offset = ($page_number - 1) * $page_limit;
+$content_types = get_content_types($connection);
+$content_type_names = array_column($content_types, 'type_class');
+$filter = get_filter($_GET['filter'], $content_type_names);
+$sort = $_GET['sort'] ?? 'view_count';
+$sort = get_filter($sort, ["likes", "view_count", "dt_add"]);
+$total_posts = get_total_posts($connection, $filter);
+$posts = get_popular_posts($connection, $filter, $sort, $page_limit, $page_offset);
 
-$page_content = include_template('main.php', [
-                                                 'popular_posts' => $popular_posts,
-                                                 'now_time' => $now_time,
-                                                 'content_types' => $content_types,
-                                                 'post_type' => $post_type
-                                                    ]);
-
-$layout_content = include_template('layout.php', [
-                                                     'content' => $page_content,
-                                                     'user_name' => $user_name,
-                                                     'page_title' => $page_title,
-                                                     'is_auth' => $is_auth
-                                                        ]);
+$page_content = include_template(
+    'popular-template.php',
+    [
+        'posts' => $posts,
+        'total_posts' => $total_posts,
+        'filter' => $filter,
+        'sort' => $sort,
+        'page_number' => $page_number,
+        'page_limit' => $page_limit,
+        'content_types' => $content_types,
+        'now_time' => $now_time,
+    ]
+);
+$layout_content = include_template(
+    'layout.php',
+    [
+        'title' => $title,
+        'user' => $user,
+        'content' => $page_content,
+        'active_section' => 'popular',
+    ]
+);
 
 print($layout_content);
