@@ -82,6 +82,7 @@ dt_add DATETIME,
 content TEXT,
 sender_id INT UNSIGNED,
 receiver_id INT UNSIGNED,
+was_read BOOL,
 FOREIGN KEY (sender_id) REFERENCES users(id)
 ON UPDATE CASCADE
 ON DELETE CASCADE,

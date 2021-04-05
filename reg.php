@@ -1,18 +1,22 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
+
+if (isset($_SESSION['id'])) {
+    header("Location: feed.php");
+}
 
 $validation_rules = [
     'email' => 'filled|correct_email|exists:users,email',
-    'login' => 'filled',
-    'password' => 'filled|repeat_password',
-    'password-repeat' => 'filled|repeat_password'
+    'login' => 'filled|length:3,25',
+    'password' => 'filled|repeat_password|length:6,15',
+    'password-repeat' => 'filled|repeat_password',
 ];
 
 $form_error_codes = [
     'email' => 'Email',
     'login' => 'Логин',
     'password' => 'Пароль',
-    'password-repeat' => 'Повторный пароль'
+    'password-repeat' => 'Повтор пароля',
 ];
 
 $form = [
@@ -54,7 +58,7 @@ $page_content = include_template(
     [
         'form_values' => $form['values'] ?? [],
         'form_errors' => $form['errors'] ?? [],
-        'form_error_codes' => $form_error_codes
+        'form_error_codes' => $form_error_codes,
     ]
 );
 
