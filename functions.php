@@ -224,8 +224,12 @@ function validate_correct_url(array $input_array, string $parameter_name): ?stri
     if (!is_array($headers)) {
         return "Такой ссылки не существует";
     }
-
-    $err_flag = strpos($headers[0], '200') ? 200 : 404;
+    
+    if (strpos($headers[0], '303')) {
+        $err_flag = strpos($headers[18], '200') ? 200 : ''; 
+    } else {
+        $err_flag = strpos($headers[0], '200') ? 200 : '';
+    }
 
     if ($err_flag !== 200) {
         return "Такой страницы не существует или ресурс недоступен";
@@ -301,11 +305,9 @@ function validate_youtube_url(array $input_array, string $parameter_name): ?stri
     if ($id) {
         $api_data = ['id' => $id, 'part' => 'id,status', 'key' => 'AIzaSyD24lsJ4BL-azG188tHxXtbset3ehKXeJg'];
         $url = "https://www.googleapis.com/youtube/v3/videos?" . http_build_query($api_data);
-
-        $resp = file_get_contents($url);
-        var_dump($resp);
-
-        if (!($resp && $json = json_decode($resp, true))) {
+        $resp = @file_get_contents($url);
+        $json = json_decode($resp, true);
+        if ((($json['items']) === []) || ($json['items']) === null) {
             return 'Видео по ссылке не найдено';
         }
     }
