@@ -536,7 +536,11 @@ function get_feed_posts(mysqli $connection, $filter, int $follower_id)
 
     $select_posts_query .= "ORDER BY dt_add DESC";
     $posts_mysqli = mysqli_query($connection, $select_posts_query);
-    return mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
+    $posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
+    foreach ($posts as &$post) {
+        $post = array_merge($post, count_reposts($connection, $post));
+    }
+    return $posts;
 }
 
 /**
@@ -552,6 +556,95 @@ function get_filter($value, array $options)
         return $value;
     }
     return null;
+}
+
+/**
+ * Совершает репост поста, при условии, что пользователь не автор
+ * оригинального поста и пользователь не совершал ранее репоста текущего поста (из  любого источника).
+ * Скопированы будут все данные, кроме время (станет текущее), автор (пользователь),
+ * количество просмотров (аннулируется), откуда взят репост (нужно, если репост делается уже скопированного поста).
+ *
+ * В случае, если автор оригинального поста попытается сделать репост своего поста (из любого источника), то функция проигнорирует его.
+ * В случае, если пользователь уже делал репост текущего поста (из любого источника), в нем обновится только дата.
+ *
+ * @param mysqli $connection Соединение с БД
+ * @param int $user_id ID пользователя
+ * @param int $post_id ID поста
+ * @return $repost_id ID of repost on current user
+*/
+function repost_post(mysqli $connection, int $user_id, int $post_id)
+{   
+    $sql = "SELECT COUNT(*) AS amount FROM posts WHERE author_id = ?
+        AND id = (SELECT original_post FROM posts WHERE id = ?)";
+    $amount = secure_query_bind_result($connection, $sql, true, $user_id, $post_id);
+    if ($amount !== 0) {
+        return null;
+    }
+    
+    $current_time = date('Y-m-d H:i:s');
+    $sql = "SELECT COUNT(*) AS amount FROM posts WHERE author_id = ?
+        AND original_post = (SELECT original_post FROM posts WHERE id = ?)";
+    $amount = secure_query_bind_result($connection, $sql, true, $user_id, $post_id);
+    if ($amount === 0) {
+        $sql = 
+            "INSERT INTO posts
+                (dt_add,
+                author_id,
+                view_count,
+                post_type,
+                heading,
+                content,
+                quote_author,
+                img_url,
+                youtube_url,
+                url,
+                original_post,
+                repost_from)
+            SELECT
+                ?,
+                ?,
+                0,
+                post_type,
+                heading,
+                content,
+                quote_author,
+                img_url,
+                youtube_url,
+                url,
+                original_post,
+                id
+            FROM posts WHERE id = ?";
+    } else {
+        $sql = "UPDATE posts SET dt_add = ? WHERE author_id = ? AND original_post =
+            (SELECT original_post FROM (SELECT original_post FROM posts WHERE id = ?) AS posts_1)";
+    }
+    secure_query_bind_result($connection, $sql, false, $current_time, $user_id, $post_id);
+    $sql = "SELECT id FROM posts WHERE author_id = ? AND original_post =
+        (SELECT original_post FROM posts WHERE id = ?)";
+    
+    return secure_query_bind_result($connection, $sql, true, $user_id, $post_id);
+}
+
+/**
+ * Производит подсчет репостов. Если пост не оригинальный (ID поста не совпадает с ID оригинала),
+ * тогда подсчет ведется только тех репостов, которые сделаны с текущего поста.
+ * Если пост оригинальный - ведется подсчет всех репостов (то есть количество таких постов в базе - 1)
+ *
+ * @param mysqli $connection
+ * @param array $post Все данные поста, полученные ранее
+ * @return mixed Количество репостов (опционально имя автора)
+*/
+function count_reposts(mysqli $connection, array $post)
+{
+    if ($post['id'] === $post['original_post']) {
+        $sql_count_reposts = "SELECT COUNT(*) FROM posts WHERE original_post = ?";
+        return ['reposts' => secure_query_bind_result($connection, $sql_count_reposts, true, $post['id']) - 1];
+    } else {
+        $sql_count_reposts = "SELECT COUNT(*) FROM posts WHERE repost_from = ?";
+        $sql_get_author_name = "SELECT users.username FROM users JOIN posts ON users.id = posts.author_id WHERE posts.id = ?";
+        return ['reposts' => secure_query_bind_result($connection, $sql_count_reposts, true, $post['id']),
+                'author_original' => secure_query_bind_result($connection, $sql_get_author_name, true, $post['original_post'])];
+    }
 }
 
 /**
@@ -576,7 +669,10 @@ function get_post(mysqli $connection, int $post_id)
         INNER JOIN content_types ON posts.post_type=content_types.id
         WHERE posts.id = ?;";
     $post_mysqli = secure_query_bind_result($connection, $select_post_by_id, false, $post_id);
-    return mysqli_fetch_assoc($post_mysqli);
+    $post = mysqli_fetch_assoc($post_mysqli);
+    $reposts = count_reposts($connection, $post);
+    
+    return array_merge($post, $reposts);
 }
 
 /**
@@ -625,16 +721,21 @@ function get_post_comments(mysqli $connection, int $post_id)
 }
 
 /**
- * Увеличивает счетчик просмотров поста
+ * Увеличивает счетчик просмотров поста,
+ * при этом не учитывает просмотры самого автора
  *
  * @param mysqli $connection Соединение с БД
  * @param int $post_id ID поста
  * @return NULL
 */
-function increase_post_views($connection, $post_id)
-{
-    $update_post_view_count_query = "UPDATE posts SET view_count = view_count + 1 WHERE id = ?";
-    secure_query_bind_result($connection, $update_post_view_count_query, false, $post_id);
+function increase_post_views($connection, $user_id, $post_id)
+{   
+    $check_author_not_user_query = "SELECT IF(author_id = ?, true, false) FROM posts WHERE id = ?";
+    $is_author = secure_query_bind_result($connection, $check_author_not_user_query, true, $user_id, $post_id);
+    if (!$is_author) {
+        $update_post_view_count_query = "UPDATE posts SET view_count = view_count + 1 WHERE id = ?";
+        secure_query_bind_result($connection, $update_post_view_count_query, false, $post_id);
+    }
 
     return null;
 }
@@ -736,8 +837,9 @@ function save_post(mysqli $connection, array $post, array $post_types, array $us
     $fields = implode(', ', $finalFields);
     $query = "INSERT INTO posts SET {$fields}";
     secure_query_bind_result($connection, $query, false, ...$parameters);
-
-    return mysqli_insert_id($connection);
+    $post_id = mysqli_insert_id($connection);
+    secure_query_bind_result($connection, "UPDATE posts SET original_post = ? WHERE id = " . $post_id, false, $post_id);
+    return $post_id;
 }
 
 /**
@@ -913,8 +1015,11 @@ function get_profile_posts(mysqli $connection, int $profile_id)
         GROUP BY posts.id
         ORDER BY dt_add DESC;";
     $posts_mysqli = secure_query_bind_result($connection, $select_user_posts_query, false, $profile_id);
-
-    return mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
+    $posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
+    foreach ($posts as &$post) {
+        $post = array_merge($post, count_reposts($connection, $post));
+    }
+    return $posts;
 }
 
 /**
