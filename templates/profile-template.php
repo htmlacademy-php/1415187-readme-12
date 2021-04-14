@@ -101,14 +101,18 @@
                       <span><?= $post['likes'] ?? '' ?></span>
                       <span class="visually-hidden">количество лайков</span>
                     </a>
-                    <a class="post__indicator post__indicator--repost button" href="repost.php?id=<?= $post['id'] ?>"
-                      title="Репост">
+                    <a class="post__indicator post__indicator--repost button" href="repost.php?id=<?= $post['id'] ?>" title="Репост">
                       <svg class="post__indicator-icon" width="19" height="17">
                         <use xlink:href="#icon-repost"></use>
                       </svg>
-                      <span><?= $post['reposts'] ?? '' ?></span>
+                      <span><?= $post['reposts'] ?></span>
                       <span class="visually-hidden">количество репостов</span>
                     </a>
+                    <?php if (isset($post['author_original'])): ?>
+                    <a class="post__indicator" href="post.php?id=<?= $post['original_post'] ?>" title="Перейти к посту автора">
+                      <span>Репост автора <?= $post['author_original'] ?></span>
+                    </a>
+                    <?php endif; ?>
                   </div>
                   <time class="post__time"
                     datetime="<?= $post['dt_add'] ?? '' ?>"><?= time_difference($post['dt_add'], $now_time) . ' назад' ?>

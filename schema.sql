@@ -30,6 +30,8 @@ img_url VARCHAR(128),
 youtube_url VARCHAR(128),
 url VARCHAR(128),
 view_count INT,
+repost_from INT,
+original_post INT,
 FOREIGN KEY (author_id) REFERENCES users(id)
 ON UPDATE CASCADE
 ON DELETE CASCADE,

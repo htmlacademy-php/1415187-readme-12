@@ -47,13 +47,18 @@
                   <span><?= $post['comments'] ?? ''?></span>
                   <span class="visually-hidden">количество комментариев</span>
                 </a>
-                <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
-                  <svg class="post__indicator-icon" width="19" height="17">
-                    <use xlink:href="#icon-repost"></use>
-                  </svg>
-                  <span>--</span>
-                  <span class="visually-hidden">количество репостов</span>
-                </a>
+                <a class="post__indicator post__indicator--repost button" href="repost.php?id=<?= $post['id'] ?>" title="Репост">
+                <svg class="post__indicator-icon" width="19" height="17">
+                  <use xlink:href="#icon-repost"></use>
+                </svg>
+                <span><?= $post['reposts'] ?></span>
+                <span class="visually-hidden">количество репостов</span>
+              </a>
+              <?php if (isset($post['author_original'])): ?>
+              <a class="post__indicator" href="post.php?id=<?= $post['original_post'] ?>" title="Перейти к посту автора">
+                <span>Репост автора <?= $post['author_original'] ?></span>
+              </a>
+              <?php endif; ?>
               </div>
             </footer>
           </article>

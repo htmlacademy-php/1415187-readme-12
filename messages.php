@@ -13,7 +13,7 @@ if ($user === null) {
     header("Location: index.php");
     exit();
 }
-$title = $settings['site_name'] . ': Сообщения';
+$title = $site_name . ': Сообщения';
 $add_post_button = true;
 $form['errors'] = [];
 

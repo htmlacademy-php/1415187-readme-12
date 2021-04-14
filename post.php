@@ -14,6 +14,7 @@ if (!isset($_GET['id'])) {
 }
 
 $post_id = $_GET['id'];
+increase_post_views($connection, $user['id'], $post_id);
 $post = get_post($connection, $post_id);
 $comment_errors = [];
 $show_all_comments = $_GET['showall'] ?? false;
@@ -32,13 +33,8 @@ $author_id = $post['author_id'];
 $author = get_post_author($connection, $author_id);
 $comments = get_post_comments($connection, $post_id);
 $user['subscribed'] = user_subscribe($connection, false, $user['id'], $author_id);
-$title = $site_name . ': Публикация' . $post['heading'];
+$title = $site_name . ': Публикация "' . $post['heading'] . '"';
 $count_comments = count($comments);
-
-if (explode('?', $_SERVER['REQUEST_URI'])[0] != explode('?', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH))[0]) {
-    $views_mysqli = increase_post_views($connection, $post_id);
-}
-
 $page_content = include_template(
     'posts/' . 'post-details.php',
     [
