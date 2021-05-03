@@ -14,6 +14,6 @@ if (!isset($_GET['id'])) {
 }
 
 $post_id = $_GET['id'];
-like_post($connection, $user['id'], $post_id);
+$URL = '/post.php?id=' . repost_post($connection, $user['id'], $post_id);
 
-header('Location: ' . $_SERVER['HTTP_REFERER']);
+header("Location: $URL");
