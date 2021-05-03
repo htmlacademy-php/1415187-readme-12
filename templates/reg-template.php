@@ -78,7 +78,7 @@
           <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
           <ul class="form__invalid-list">
             <?php foreach ($form_errors as $field => $error) : ?>
-            <li class="form__invalid-item"><?= $form_error_codes[$field] ?> . <?= $error ?></li>
+            <li class="form__invalid-item"><?= $form_error_codes[$field] ?>: <?= $error ?></li>
             <?php endforeach; ?>
           </ul>
         </div>

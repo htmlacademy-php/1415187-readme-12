@@ -1,6 +1,6 @@
 <div class="post-video__block">
    <div class="post-video__preview">
-      <?php if ((explode('?', $_SERVER['REQUEST_URI'])[0] == '/feed.php')) : ?>
+      <?php if (in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/feed.php', '/profile.php'])) : ?>
           <?= embed_youtube_cover(htmlspecialchars($post['youtube_url']), 758, 380) ?>
       <?php else : ?>
           <?= embed_youtube_cover(htmlspecialchars($post['youtube_url']), 358, 120) ?>

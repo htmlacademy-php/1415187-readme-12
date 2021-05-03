@@ -119,7 +119,7 @@
               </li>
             </ul>
             <ul class="header__user-nav">
-              <?php if ($title != 'Readme: Регистрация') : ?>
+              <?php if ($title != 'ReadMe: Регистрация') : ?>
               <li class="header__profile">
                 <a class="header__profile-link" href="profile.php">
                   <div class="header__avatar-wrapper">
@@ -150,7 +150,9 @@
                         <a class="header__profile-nav-link" href="messages.php">
                         <span class="header__profile-nav-text">
                         Сообщения
-                        <i class="header__profile-indicator">2</i>
+                        <?php if ($user['messages'] != 0): ?>
+                        <i class="header__profile-indicator"><?= $user['messages'] ?></i>
+                        <?php endif; ?>
                         </span>
                         </a>
                       </li>
@@ -166,11 +168,11 @@
                 </div>
               </li>
               <?php endif; ?>
-              <?php if ($title == 'Readme: Добавление публикации') : ?>
+              <?php if ($title == 'ReadMe: Добавление публикации') : ?>
               <li>
                 <a class="header__post-button header__post-button--active button button--transparent" href="javascript:history.back()">Закрыть</a>
               </li>
-              <?php elseif ($title == 'Readme: Регистрация') : ?>
+              <?php elseif ($title == 'ReadMe: Регистрация') : ?>
               <li class="header__authorization">
                 <a class="header__user-button header__authorization-button button" href="index.php">Вход</a>
               </li>
@@ -242,6 +244,6 @@
         </div>
       </div>
     </footer>
-    <script src="js/main.js"></script>
+    <!-- <script src="js/main.js"></script> -->
   </body>
 </html>
