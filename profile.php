@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/libs/base.php';
 
-$user = get_user($connection);
+$user = get_user();
 
 if ($user === null) {
     header("Location: index.php");
@@ -10,6 +10,10 @@ if ($user === null) {
 
 $profile_id = isset($_GET['id']) ? (int) $_GET['id'] : $user['id'];
 $owner = get_profile($connection, $profile_id);
+if ($owner === null) {
+    display_404_page($user);
+    exit();
+}
 $title = $site_name . ': Профиль ' . $owner['username'];
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
 $user['subscribed'] = user_subscribe($connection, false, $user['id'], $profile_id);

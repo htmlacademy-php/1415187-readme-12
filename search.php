@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/libs/base.php';
 
-$user = get_user($connection);
+$user = get_user();
 $title = $site_name . ': Cтраница результатов поиска';
 
 if ($user === null) {

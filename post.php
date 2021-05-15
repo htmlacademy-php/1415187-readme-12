@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/libs/base.php';
 
-$user = get_user($connection);
+$user = get_user();
 
 if ($user === null) {
     header("Location: index.php");
@@ -14,15 +14,14 @@ if (!isset($_GET['id'])) {
 }
 
 $post_id = $_GET['id'];
-increase_post_views($connection, $user['id'], $post_id);
 $post = get_post($connection, $post_id);
-$comment_errors = [];
-$show_all_comments = $_GET['showall'] ?? false;
-
 if ($post === null) {
     display_404_page($user);
     exit();
 }
+increase_post_views($connection, $user['id'], $post_id);
+$comment_errors = [];
+$show_all_comments = $_GET['showall'] ?? false;
 
 if (!empty($_SESSION['errors'])) {
     $comment_errors = $_SESSION['errors'];
