@@ -79,15 +79,15 @@
                 <img class="comments__picture" src="img/<?= $user['avatar'] ?>" alt="Аватар пользователя">
               <?php endif; ?>
               </div>
-              <div class="form__input-section <?= !empty($message_errors) ? 'form__input-section--error' : '' ?>">
+              <div class="form__input-section <?= !empty($form['errors']) ? 'form__input-section--error' : '' ?>">
                 <textarea class="comments__textarea form__textarea form__input" name="message"
-                placeholder="Ваше сообщение"></textarea>
+                placeholder="Ваше сообщение"><?= (!empty($form['errors'])) ? ($form['values']['message']) : '' ?></textarea>
               <label class="visually-hidden">Ваше сообщение</label>
-              <?php if (!empty($message_errors)) : ?>
+              <?php if (!empty($form['errors'])) : ?>
                 <button class="form__error-button button" type="button">!</button>
                 <div class="form__error-text">
                   <h3 class="form__error-title">Ошибка валидации</h3>
-                  <p class="form__error-desc"><?= $message_errors['receiver-id'] ?? $message_errors['message'] ?></p>
+                  <p class="form__error-desc"><?= $form['errors']['receiver-id'] ?? $form['errors']['message'] ?></p>
                 </div>
               <?php endif; ?>
                 </div>

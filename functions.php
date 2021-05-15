@@ -1269,7 +1269,7 @@ function apply_mail_settings(array $settings, string $site_name)
     if (!$settings['encryption']) {
         $transport = new Swift_SmtpTransport($settings['server'], $settings['port']);
     } else {
-        $transport = new Swift_SmtpTransport($settings['server'], $settings['port'], $setting['encryption']);
+        $transport = new Swift_SmtpTransport($settings['server'], $settings['port'], $settings['encryption']);
     }
     $transport->setUsername($settings['user']);
     $transport->setPassword($settings['password']);
@@ -1288,7 +1288,8 @@ function apply_mail_settings(array $settings, string $site_name)
  * @return NULL
 */
 function new_follower_notification($sender, $owner, $follower, $mailer)
-{
+{   
+    global $site_name;
     $subject = 'У вас новый подписчик';
     $message = new Swift_Message($subject);
     $message->setFrom($sender, $site_name);

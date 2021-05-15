@@ -4,7 +4,7 @@ require_once __DIR__ . '/libs/base.php';
 
 $validation_rules = [
     'receiver-id' => 'exists:users,id,not',
-    'message' => 'filled|long:4',
+    'message' => 'filled|length:4,500',
 ];
 
 $user = get_user($connection);
@@ -25,8 +25,6 @@ if (count($_POST) > 0 && isset($_POST['receiver-id']) && ($_POST['receiver-id'] 
     if (empty($form['errors'])) {
         $message = add_message($connection, $user['id'], $receiver_id, $_POST['message']);
         header("Location: " . $_SERVER['PHP_SELF']);
-    } else {
-        $errors = $form['errors'];
     }
 }
 
@@ -47,9 +45,9 @@ $page_content = include_template(
         'user' => $user,
         'dialogs' => $dialogs,
         'messages' => $messages,
-        'message_errors' => $errors,
         'active_dialog_id' => $active_dialog_id,
         'now_time' => $now_time,
+        'form' => $form
     ]
 );
 $layout_content = include_template(
