@@ -68,20 +68,6 @@
             <?php foreach ($posts as $post) : ?>
             <article class="profile__post post post-<?=$post['type_class'];?>">
               <header class="post__header">
-                <?php if ($post['repost']) :?>
-                <div class="post__author">
-                  <a class="post__author-link" href="profile.php?id=<?= $post['original_author_id'] ?? '' ?>"
-                    title="Автор">
-                    <div class="post__avatar-wrapper post__avatar-wrapper--repost">
-                      <img class="post__author-avatar" src="img/<?= $post['original_author_avatar'] ?? '' ?>"
-                        alt="Аватар пользователя">
-                    </div>
-                    <div class="post__info">
-                      <b class="post__author-name">Репост: <?= $post['original_author_username'] ?? '' ?></b>
-                    </div>
-                  </a>
-                </div>
-                <?php endif; ?>
                 <h2><a href="post.php?id=<?= $post['id'] ?>"><?= htmlspecialchars($post['heading']) ?? '' ?></a></h2>
               </header>
               <div class="post__main">

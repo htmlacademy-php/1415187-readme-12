@@ -67,6 +67,7 @@ $layout_content = include_template(
     [
         'content' => $page_content,
         'title' => $title,
+        'active_section' => $active_section,
     ]
 );
 

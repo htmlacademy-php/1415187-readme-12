@@ -37,6 +37,7 @@ $layout_content = include_template(
         'title' => $title,
         'user' => $user,
         'content' => $page_content,
+        'active_section' => $active_section,
     ]
 );
 

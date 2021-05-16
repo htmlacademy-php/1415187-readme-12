@@ -76,7 +76,7 @@
             <a class="post__author-link" href="profile.php?id=<?= $post['author_id'] ?>" title="Профиль <?= htmlspecialchars($post['username']) ?>">
               <div class="post__avatar-wrapper">
                 <?php if (isset($post['avatar'])) : ?>
-                <img class="post-details__picture user__picture" src="img/<?= $post['avatar'] ?>" alt="Аватар пользователя">
+                <img class="post-details__picture user__picture" src="img/<?= $post['avatar'] ?>" alt="Аватар пользователя" width="45" height="45">
                 <?php endif; ?>
               </div>
               <div class="post__info">

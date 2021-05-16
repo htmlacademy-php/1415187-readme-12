@@ -63,7 +63,10 @@ function time_difference(string $time, DateTime $current_time)
 function display_404_page($user)
 {
     $page_content = include_template('404.php');
-    $layout_content = include_template('layout.php', ['content' => $page_content, 'user' => $user]);
+    $layout_content = include_template('layout.php', ['content' => $page_content,
+                                                      'user' => $user,
+                                                      'title' => 'Ресурс не найден: 404',
+                                                     'active_section' => '']);
     print($layout_content);
     http_response_code(404);
 }
@@ -565,7 +568,7 @@ function get_filter($value, array $options)
  * Скопированы будут все данные, кроме время (станет текущее), автор (пользователь),
  * количество просмотров (аннулируется), откуда взят репост (нужно, если репост делается уже скопированного поста).
  *
- * В случае, если автор оригинального поста попытается сделать репост своего поста (из любого источника), то функция проигнорирует его.
+ * В случае, если автор оригинального поста попытается сделать репост своего поста (из любого источника), то функция вернет ID поста без внесения каких-либо измений.
  * В случае, если пользователь уже делал репост текущего поста (из любого источника), в нем обновится только дата.
  *
  * @param mysqli $connection Соединение с БД
@@ -579,7 +582,7 @@ function repost_post(mysqli $connection, int $user_id, int $post_id)
         AND id = (SELECT original_post FROM posts WHERE id = ?)";
     $amount = secure_query_bind_result($connection, $sql, true, $user_id, $post_id);
     if ($amount !== 0) {
-        return null;
+        return $post_id;
     }
 
     $current_time = date('Y-m-d H:i:s');
@@ -809,7 +812,7 @@ function save_post(mysqli $connection, array $post, array $post_types, array $us
         $post['heading'],
         $user['id'],
         $post_types[$post_type],
-        $post['content'],
+        $post['content'] ?? null,
         0,
         $current_time,
     ];
@@ -1250,6 +1253,8 @@ function read_messages(mysqli $connection, $active_dialog_id, $user_id)
 */
 function get_reverse($direction, array $params, $sort, $filter)
 {
+    $params['sort'] = $params['sort'] ?? 'view_count';
+    $params['filter'] = $params['filter'] ?? null;
     if (isset($direction)) {
         if (($params['sort'] == $sort) && ($params['filter'] == $filter)) {
             return $direction ? false : true;

@@ -8,13 +8,9 @@ if ($user === null) {
     exit();
 }
 
-if (!isset($_GET['id'])) {
-    display_404_page();
-    exit();
-}
-
 $post_id = $_GET['id'];
 $post = get_post($connection, $post_id);
+
 if ($post === null) {
     display_404_page($user);
     exit();
@@ -25,7 +21,9 @@ $show_all_comments = $_GET['showall'] ?? false;
 
 if (!empty($_SESSION['errors'])) {
     $comment_errors = $_SESSION['errors'];
+    $comment_text = $_SESSION['comment_value'];
     unset($_SESSION['errors']);
+    unset($_SESSION['comment_value']);
 }
 
 $author_id = $post['author_id'];
@@ -45,6 +43,7 @@ $page_content = include_template(
         'now_time' => $now_time,
         'show_all' => $show_all_comments,
         'count_comments' => $count_comments,
+        'comment_text' => $comment_text ?? '',
     ]
 );
 
@@ -54,6 +53,7 @@ $layout_content = include_template(
         'content' => $page_content,
         'user' => $user,
         'title' => $title,
+        'active_section' => $active_section,
     ]
 );
 

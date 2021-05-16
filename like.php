@@ -9,7 +9,7 @@ if ($user === null) {
 }
 
 if (!isset($_GET['id'])) {
-    display_404_page($user);
+    header("Location: index.php");
     exit();
 }
 

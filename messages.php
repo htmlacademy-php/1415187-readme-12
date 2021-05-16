@@ -39,6 +39,8 @@ foreach ($messages as $message) {
     array_push($dialogs[$message['dialog']]['messages'], $message);
 }
 
+$active_section = 'messages';
+
 $page_content = include_template(
     'messages-template.php',
     [
@@ -56,7 +58,7 @@ $layout_content = include_template(
         'title' => $title,
         'user' => $user,
         'content' => $page_content,
-        'active_section' => 'messages',
+        'active_section' => $active_section,
         'add_post_button' => $add_post_button,
     ]
 );
