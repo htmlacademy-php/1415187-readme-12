@@ -8,6 +8,7 @@ $validation_rules = [
 ];
 
 $user = get_user();
+$active_dialog_id = 0;
 
 if ($user === null) {
     header("Location: index.php");

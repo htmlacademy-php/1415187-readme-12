@@ -419,8 +419,8 @@ function validate_correct_password(array $validation_array, string $parameter_na
     $email = $validation_array['login'];
     $sql = "SELECT $password_column_name FROM $table_name WHERE $users_column_name = ?";
     $db_password = secure_query_bind_result($connection, $sql, false, $email);
-    $password = mysqli_fetch_all($db_password, MYSQLI_ASSOC)[0]['password'];
-    return !password_verify($validation_array[$parameter_name], $password) ? "Вы ввели неверный пароль" : null;
+    $password = mysqli_fetch_row($db_password, MYSQLI_ASSOC)['password'] ?? null;
+    return ($password != null) ? (!password_verify($validation_array[$parameter_name], $password) ? "Вы ввели неверный пароль" : null) : null;
 }
 
 /**
@@ -1145,6 +1145,7 @@ function get_dialogs($connection, $user_id)
         INNER JOIN users
         ON users.id = dialog
         ORDER BY last_message DESC ";
+	$dialogs_assoc = [];
     $dialogs_mysqli = secure_query_bind_result($connection, $select_dialogs_query, false, $user_id, $user_id, $user_id);
     while ($dialogs = mysqli_fetch_array($dialogs_mysqli, MYSQLI_ASSOC)) {
         $dialogs_assoc[$dialogs['dialog']] = array_slice($dialogs, 1);
