@@ -1145,7 +1145,7 @@ function get_dialogs($connection, $user_id)
         INNER JOIN users
         ON users.id = dialog
         ORDER BY last_message DESC ";
-	$dialogs_assoc = [];
+    $dialogs_assoc = [];
     $dialogs_mysqli = secure_query_bind_result($connection, $select_dialogs_query, false, $user_id, $user_id, $user_id);
     while ($dialogs = mysqli_fetch_array($dialogs_mysqli, MYSQLI_ASSOC)) {
         $dialogs_assoc[$dialogs['dialog']] = array_slice($dialogs, 1);
