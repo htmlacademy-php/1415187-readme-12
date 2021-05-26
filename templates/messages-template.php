@@ -33,6 +33,20 @@
             </a>
           </li>
         <?php endforeach; ?>
+          <?php if ((isset($write_to))&&(!isset($dialogs[$active_dialog_id]))): ?>
+              <a class="messages__contacts-tab messages__contacts-tab--active tabs__item--active tabs__item " href="messages.php?id=<?= $active_dialog_id ?>">
+                  <div class="messages__avatar-wrapper">
+                      <?php if (isset($write_to['avatar'])) : ?>
+                          <img class="messages__avatar" src="img/<?= $write_to['avatar']?>" alt="Аватар пользователя">
+                      <?php endif; ?>
+                  </div>
+                  <div class="messages__info">
+                <span class="messages__contact-name">
+                  <?= $write_to['username']?>
+                </span>
+                  </div>
+              </a>
+          <?php endif; ?>
       </ul>
     </div>
     <div class="messages__chat">
@@ -40,10 +54,10 @@
       <?php foreach ($dialogs as $dialog_id => $dialog) : ?>
         <ul class="messages__list tabs__content
             <?= ($active_dialog_id == $dialog_id) ? 'tabs__content--active' : '' ?>">
-            <?php foreach ($dialog['messages'] as $message) : ?>
-            <li class="messages__item <?= ($user['id'] == $message['sender_id']) ? 'messages__item--my' : '' ?>">
+              <?php foreach ($dialog['messages'] as $message) : ?>
+                <li class="messages__item <?= ($user['id'] == $message['sender_id']) ? 'messages__item--my' : '' ?>">
                   <div class="messages__info-wrapper">
-                  <div class="messages__item-avatar">
+                    <div class="messages__item-avatar">
                       <a class="messages__author-link" href="#">
                       <?php $first_sender = ($user['id'] == $message['sender_id']) ? $user : $dialog; ?>
                       <?php if (isset($first_sender['avatar'])) : ?>
@@ -52,7 +66,7 @@
                       alt="Аватар пользователя">
                       <?php endif; ?>
                       </a>
-                  </div>
+                    </div>
                   <div class="messages__item-info">
                       <a class="messages__author" href="#">
                       <?= ($user['id'] == $message['sender_id']) ? $user['name'] : $dialog['username']?>
@@ -68,9 +82,10 @@
                     <?= $message['content'] ?? '' ?>
                   </p>
               </li>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
         </ul>
       <?php endforeach; ?>
+          <?= (!isset($dialogs[$active_dialog_id])) ? '<ul class="messages__list"><li class="messages__item"><p class="messages__text">Сообщений пока нет</p></li></ul>' : '' ?>
         <div class="comments">
           <form class="comments__form form" action="#" method="post">
             <input type="hidden" name="receiver-id" value="<?= $active_dialog_id ?>">

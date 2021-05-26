@@ -136,7 +136,7 @@
           <?php if ($user['id'] != $author['id']) : ?>
           <div class="post-details__user-buttons user__buttons">
             <a class="user__button user__button--subscription button button--main" href="subscribe.php?id=<?= $author['id'] ?>"><?= $user['subscribed'] ? 'Отписаться' : 'Подписаться' ?></a>
-            <a class="user__button user__button--writing button button--green" href="message.php">Сообщение</a>
+            <a class="user__button user__button--writing button button--green" href="messages.php">Сообщение</a>
           </div>
           <?php endif; ?>
         </div>

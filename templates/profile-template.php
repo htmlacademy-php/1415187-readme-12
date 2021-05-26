@@ -35,7 +35,7 @@
           <a class="profile__user-button user__button user__button--subscription button button--main"
             href="subscribe.php?id=<?= $owner['id'] ?>"><?= $user['subscribed'] ? 'Отписаться' : 'Подписаться' ?></a>
           <a class="profile__user-button user__button user__button--writing button button--green"
-            href="messages.php">Сообщение</a>
+            href="messages.php?id=<?= $owner['id'] ?>">Сообщение</a>
         </div>
         <?php endif; ?>
       </div>

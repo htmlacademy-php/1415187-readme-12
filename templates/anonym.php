@@ -126,7 +126,7 @@
           <form class="authorization__form form" action="#" method="post">
             <div class="authorization__input-wrapper form__input-wrapper">
               <input class="authorization__input authorization__input--login form__input" type="text" name="login"
-                placeholder="Логин" value="<?= $form_values['login'] ?? '' ?>">
+                placeholder="Логин" value="<?= htmlspecialchars($form_values['login'] ?? '') ?>">
               <svg class="form__input-icon" width="19" height="18">
                 <use xlink:href="#icon-input-user"></use>
               </svg>

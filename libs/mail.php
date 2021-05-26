@@ -5,7 +5,7 @@ $mail_settings = [
     'user' => 'keks@phpdemo.ru',
     'sender' => 'keks@phpdemo.ru',
     'password' => 'htmlacademy',
-    'server' => 'phpdemo.ru',
+    'server' => 'mailtrap.io',
     'port' => 25,
     'encryption' => false,
 ];
