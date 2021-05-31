@@ -102,7 +102,7 @@ function db_get_prepare_stmt($link, $sql, $data = [])
  */
 function get_noun_plural_form(int $number, string $one, string $two, string $many): string
 {
-    $number = (int)$number;
+    $number = (int) $number;
     $mod10 = $number % 10;
     $mod100 = $number % 100;
 
@@ -205,7 +205,7 @@ function embed_youtube_cover($youtube_url, $width, $height)
 
     if ($id) {
         $src = sprintf("https://img.youtube.com/vi/%s/maxresdefault.jpg", $id);
-        $res = '<img alt="youtube cover" width="' . $width . '" height="'. $height . '" src="' . $src . '" />';
+        $res = '<img alt="youtube cover" width="' . $width . '" height="' . $height . '" src="' . $src . '" />';
     }
 
     return $res;
@@ -225,7 +225,7 @@ function extract_youtube_id($youtube_url)
     if ($parts) {
         if ($parts['path'] == '/watch') {
             parse_str($parts['query'], $vars);
-            $id = $vars['v'] ?? NULL;
+            $id = $vars['v'] ?? null;
         } else {
             if ($parts['host'] == 'youtu.be') {
                 $id = substr($parts['path'], 1);

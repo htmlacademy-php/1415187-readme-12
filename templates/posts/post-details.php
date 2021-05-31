@@ -17,23 +17,28 @@
                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                   <use xlink:href="#icon-heart-active"></use>
                 </svg>
-                <span><?= $post['likes']?></span>
+                <span><?= $post['likes'] ?></span>
                 <span class="visually-hidden">количество лайков</span>
               </a>
-              <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
+              <a class="post__indicator post__indicator--comments button" href="/post.php?id=<?= $post['id'] . '&showall=1' ?>" title="Комментарии">
                 <svg class="post__indicator-icon" width="19" height="17">
                   <use xlink:href="#icon-comment"></use>
                 </svg>
-                <span><?= $post['comments']?></span>
+                <span><?= $post['comments'] ?></span>
                 <span class="visually-hidden">количество комментариев</span>
               </a>
-              <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
+              <a class="post__indicator post__indicator--repost button" href="repost.php?id=<?= $post['id'] ?>" title="Репост">
                 <svg class="post__indicator-icon" width="19" height="17">
                   <use xlink:href="#icon-repost"></use>
                 </svg>
-                <span>--</span>
+                <span><?= $post['reposts'] ?></span>
                 <span class="visually-hidden">количество репостов</span>
               </a>
+              <?php if (isset($post['author_original'])): ?>
+              <a class="post__indicator" href="post.php?id=<?= $post['original_post'] ?>" title="Перейти к посту автора">
+                <span>Пост автора <?= $post['author_original'] ?></span>
+              </a>
+              <?php endif; ?>
             </div>
             <span class="post__view"><?= $post['view_count'] ?> просмотров</span>
           </div>
@@ -46,13 +51,13 @@
                 <?php endif; ?>
               </div>
               <div class="form__input-section <?= !empty($comment_errors) ? 'form__input-section--error' : '' ?>">
-                <textarea class="comments__textarea form__textarea form__input" name="comment" placeholder="Ваш комментарий"></textarea>
+                <textarea class="comments__textarea form__textarea form__input" name="comment" placeholder="Ваш комментарий"><?= (!empty($comment_errors)) ? ($comment_text) ?? '' : '' ?></textarea>
                 <label class="visually-hidden">Ваш комментарий</label>
                 <?php if (!empty($comment_errors)) : ?>
                 <button class="form__error-button button" type="button">!</button>
                 <div class="form__error-text">
                   <h3 class="form__error-title">Ошибка валидации</h3>
-                  <p class="form__error-desc"><?= $comment_errors[0] ? $comment_errors['post-id'] : $comment_errors['comment'] ?></p>
+                  <p class="form__error-desc"><?= isset($comment_errors[0]) ? $comment_errors['post-id'] : $comment_errors['comment'] ?></p>
                 </div>
                 <?php endif; ?>
               </div>
@@ -60,6 +65,9 @@
             </form>
             <div class="comments__list-wrapper">
               <ul class="comments__list">
+                <?php if (!$show_all):
+                  $comments = array_slice($comments, 0, 3);
+                endif; ?>
                 <?php foreach($comments as $comment) : ?>
                 <li class="comments__item user">
                   <div class="comments__avatar">
@@ -85,10 +93,17 @@
                 </li>
                 <?php endforeach; ?>
               </ul>
-              <a class="comments__more-link" href="#">
-              <span>Показать все комментарии</span>
-              <sup class="comments__amount"><?= count($comments) ?></sup>
-              </a>
+              <?php if (($count_comments > 3)&&(!$show_all)): ?>
+                <a class="comments__more-link" href="/post.php?id=<?= $post['id'] . '&showall=1' ?>">
+                  <span>Показать все комментарии</span>
+                  <sup class="comments__amount"><?= $count_comments ?></sup>
+                </a>
+              <?php endif;
+              if (($count_comments > 3)&&($show_all)): ?>
+                <a class="comments__more-link" href="/post.php?id=<?= $post['id'] . '&showall=' ?>">
+                  <span>Скрыть комментарии</span>
+                </a>
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -121,7 +136,7 @@
           <?php if ($user['id'] != $author['id']) : ?>
           <div class="post-details__user-buttons user__buttons">
             <a class="user__button user__button--subscription button button--main" href="subscribe.php?id=<?= $author['id'] ?>"><?= $user['subscribed'] ? 'Отписаться' : 'Подписаться' ?></a>
-            <a class="user__button user__button--writing button button--green" href="message.php">Сообщение</a>
+            <a class="user__button user__button--writing button button--green" href="messages.php">Сообщение</a>
           </div>
           <?php endif; ?>
         </div>

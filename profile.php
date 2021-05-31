@@ -1,15 +1,19 @@
 <?php
-require_once(__DIR__ . '/libs/base.php');
+require_once __DIR__ . '/libs/base.php';
 
 $user = get_user();
 
-if ($user === NULL) {
+if ($user === null) {
     header("Location: index.php");
     exit();
 }
 
-$profile_id = isset($_GET['id']) ? (int)$_GET['id'] : $user['id'];
+$profile_id = isset($_GET['id']) ? (int) $_GET['id'] : $user['id'];
 $owner = get_profile($connection, $profile_id);
+if ($owner === null) {
+    display_404_page($user);
+    exit();
+}
 $title = $site_name . ': Профиль ' . $owner['username'];
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'posts';
 $user['subscribed'] = user_subscribe($connection, false, $user['id'], $profile_id);
@@ -26,7 +30,7 @@ $page_content = include_template(
         'posts' => $posts,
         'likes' => $likes,
         'subscribes' => $subscribes,
-        'now_time' => $now_time
+        'now_time' => $now_time,
     ]
 );
 
@@ -36,6 +40,7 @@ $layout_content = include_template(
         'content' => $page_content,
         'user' => $user,
         'title' => $title,
+        'active_section' => $active_section,
     ]
 );
 

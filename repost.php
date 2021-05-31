@@ -9,11 +9,11 @@ if ($user === null) {
 }
 
 if (!isset($_GET['id'])) {
-    header("Location: index.php");
+    display_404_page($user);
     exit();
 }
 
 $post_id = $_GET['id'];
-like_post($connection, $user['id'], $post_id);
+$URL = '/post.php?id=' . repost_post($connection, $user['id'], $post_id);
 
-header('Location: ' . $_SERVER['HTTP_REFERER']);
+header("Location: $URL");

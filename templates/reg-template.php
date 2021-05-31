@@ -14,13 +14,13 @@
             <div
               class="form__input-section <?= (!empty($form_errors['email'])) ? 'form__input-section--error' : '' ?>">
               <input class="registration__input form__input" id="registration-email" type="email" name="email"
-                placeholder="Укажите эл.почту" value=<?= $form_values['email'] ?>>
+                placeholder="Укажите эл.почту" value="<?= htmlspecialchars($form_values['email'] ?? '') ?>">
               <button class="form__error-button button" type="button">!
               <span class="visually-hidden">Информация об ошибке</span>
               </button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Ошибка</h3>
-                <p class="form__error-desc"><?= $form_errors['email'] ?></p>
+                <p class="form__error-desc"><?= $form_errors['email'] ?? '' ?></p>
               </div>
             </div>
           </div>
@@ -31,12 +31,12 @@
               class="form__input-section
               <?php (!empty($form_errors['login'])) ? 'form__input-section--error' : '' ?>">
               <input class="registration__input form__input" id="registration-login" type="text" name="login"
-                placeholder="Укажите логин" value=<?= $form_values['login'] ?>>
+                placeholder="Укажите логин" value="<?= htmlspecialchars($form_values['login'] ?? '') ?>">
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об
               ошибке</span></button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Ошибка</h3>
-                <p class="form__error-desc"><?= $form_errors['login'] ?></p>
+                <p class="form__error-desc"><?= $form_errors['login'] ?? '' ?></p>
               </div>
             </div>
           </div>
@@ -47,12 +47,12 @@
               class="form__input-section
               <?php (!empty($form_errors['password'])) ? 'form__input-section--error' : '' ?>">
               <input class="registration__input form__input" id="registration-password" type="password"
-                name="password" placeholder="Придумайте пароль" value=<?= $form_values['password'] ?>>
+                name="password" placeholder="Придумайте пароль" value="<?= htmlspecialchars($form_values['password'] ?? '') ?>">
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об
               ошибке</span></button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Ошибка</h3>
-                <p class="form__error-desc"><?= $form_errors['password'] ?></p>
+                <p class="form__error-desc"><?= $form_errors['password'] ?? '' ?></p>
               </div>
             </div>
           </div>
@@ -63,12 +63,12 @@
               class="form__input-section
               <?php (!empty($form_errors['password-repeat'])) ? 'form__input-section--error' : '' ?>">
               <input class="registration__input form__input" id="registration-password-repeat" type="password"
-                name="password-repeat" placeholder="Повторите пароль" value=<?= $form_values['password-repeat'] ?>>
+                name="password-repeat" placeholder="Повторите пароль" value="<?= htmlspecialchars($form_values['password-repeat'] ?? '') ?>">
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об
               ошибке</span></button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Ошибка</h3>
-                <p class="form__error-desc"><?= $form_errors['password-repeat'] ?></p>
+                <p class="form__error-desc"><?= $form_errors['password-repeat'] ?? '' ?></p>
               </div>
             </div>
           </div>
@@ -78,7 +78,7 @@
           <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
           <ul class="form__invalid-list">
             <?php foreach ($form_errors as $field => $error) : ?>
-            <li class="form__invalid-item"><?= $form_error_codes[$field] ?> . <?= $error ?></li>
+            <li class="form__invalid-item"><?= $form_error_codes[$field] ?>: <?= $error ?></li>
             <?php endforeach; ?>
           </ul>
         </div>
