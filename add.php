@@ -40,7 +40,7 @@ $field_error_codes = [
 
 $img_folder = __DIR__ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
 
-$user = get_user($connection);
+$user = get_user();
 
 if ($user === null) {
     header("Location: index.php");
@@ -61,7 +61,7 @@ $post_types = array_column($content_types, 'id', 'type_class');
 if (count($_POST) > 0 && isset($_POST['form-type'])) {
     $form_type = $_POST['form-type'];
     $form['values'] = $_POST;
-    $form['values']['photo-file'] = $_FILES['photo-file'];
+    $form['values']['photo-file'] = $_FILES['photo-file'] ?? null;
     $form['errors'] = validate($form['values'], $validation_rules[$_POST['form-type']], $connection);
 
     if ((empty($form['errors']['photo-file'])) && (!empty($form['errors']['photo-url']))) {
@@ -95,9 +95,10 @@ $page_content = include_template(
 $layout_content = include_template(
     'layout.php',
     [
-        'content' => $page_content,
-        'user' => $user,
         'title' => $title,
+        'active_section' => $active_section,
+        'user' => $user,
+        'content' => $page_content,
     ]
 );
 

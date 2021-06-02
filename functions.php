@@ -50,7 +50,7 @@ function time_difference(string $time, DateTime $current_time)
         $relative_time = $diff->i . ' ' .
         get_noun_plural_form($diff->i, 'минуту', 'минуты', 'минут');
     } elseif ($diff->s >= 0) {
-        $relative_time = 'Только что';
+        $relative_time = 'Менее минуты';
     } else {
         $relative_time = '';
     }
@@ -63,7 +63,10 @@ function time_difference(string $time, DateTime $current_time)
 function display_404_page($user)
 {
     $page_content = include_template('404.php');
-    $layout_content = include_template('layout.php', ['content' => $page_content, 'user' => $user]);
+    $layout_content = include_template('layout.php', ['content' => $page_content,
+                                                      'user' => $user,
+                                                      'title' => 'Ресурс не найден: 404',
+                                                     'active_section' => '']);
     print($layout_content);
     http_response_code(404);
 }
@@ -224,9 +227,9 @@ function validate_correct_url(array $input_array, string $parameter_name): ?stri
     if (!is_array($headers)) {
         return "Такой ссылки не существует";
     }
-    
+
     if (strpos($headers[0], '303')) {
-        $err_flag = strpos($headers[18], '200') ? 200 : ''; 
+        $err_flag = strpos($headers[18], '200') ? 200 : '';
     } else {
         $err_flag = strpos($headers[0], '200') ? 200 : '';
     }
@@ -416,8 +419,8 @@ function validate_correct_password(array $validation_array, string $parameter_na
     $email = $validation_array['login'];
     $sql = "SELECT $password_column_name FROM $table_name WHERE $users_column_name = ?";
     $db_password = secure_query_bind_result($connection, $sql, false, $email);
-    $password = mysqli_fetch_all($db_password, MYSQLI_ASSOC)[0]['password'];
-    return !password_verify($validation_array[$parameter_name], $password) ? "Вы ввели неверный пароль" : null;
+    $password = mysqli_fetch_row($db_password)['password'] ?? null;
+    return ($password != null) ? (!password_verify($validation_array[$parameter_name], $password) ? "Вы ввели неверный пароль" : null) : null;
 }
 
 /**
@@ -458,11 +461,30 @@ function get_user_data(mysqli $connection, string $email)
 }
 
 /**
+ * Ищет данные пользователя в активном диалоге по id
+ *
+ * @param mysqli $connection подключение к БД
+ * @param int|null $id ID пользователя
+ * @return array ассоциативный массив с данными пользователя
+ */
+function get_user_data_dialog (mysqli $connection, $id)
+{
+    if ($id != null) {
+        $sql = "SELECT username, avatar FROM users WHERE id = ?";
+        $result = secure_query_bind_result($connection, $sql, false, $id);
+        return mysqli_fetch_assoc($result);
+    } else {
+        return null;
+    }
+}
+
+/**
  * Записывает данные пользователя из сессии, если аутентификация проведена
  * @return array ассоциативный массив с данными пользователя
 */
-function get_user($connection): ?array
+function get_user(): ?array
 {
+    global $connection;
     if ($_SESSION['is_auth'] !== 1) {
         return null;
     }
@@ -564,7 +586,7 @@ function get_filter($value, array $options)
  * Скопированы будут все данные, кроме время (станет текущее), автор (пользователь),
  * количество просмотров (аннулируется), откуда взят репост (нужно, если репост делается уже скопированного поста).
  *
- * В случае, если автор оригинального поста попытается сделать репост своего поста (из любого источника), то функция проигнорирует его.
+ * В случае, если автор оригинального поста попытается сделать репост своего поста (из любого источника), то функция вернет ID поста без внесения каких-либо измений.
  * В случае, если пользователь уже делал репост текущего поста (из любого источника), в нем обновится только дата.
  *
  * @param mysqli $connection Соединение с БД
@@ -573,20 +595,20 @@ function get_filter($value, array $options)
  * @return $repost_id ID of repost on current user
 */
 function repost_post(mysqli $connection, int $user_id, int $post_id)
-{   
+{
     $sql = "SELECT COUNT(*) AS amount FROM posts WHERE author_id = ?
         AND id = (SELECT original_post FROM posts WHERE id = ?)";
     $amount = secure_query_bind_result($connection, $sql, true, $user_id, $post_id);
     if ($amount !== 0) {
-        return null;
+        return $post_id;
     }
-    
+
     $current_time = date('Y-m-d H:i:s');
     $sql = "SELECT COUNT(*) AS amount FROM posts WHERE author_id = ?
         AND original_post = (SELECT original_post FROM posts WHERE id = ?)";
     $amount = secure_query_bind_result($connection, $sql, true, $user_id, $post_id);
     if ($amount === 0) {
-        $sql = 
+        $sql =
             "INSERT INTO posts
                 (dt_add,
                 author_id,
@@ -621,7 +643,7 @@ function repost_post(mysqli $connection, int $user_id, int $post_id)
     secure_query_bind_result($connection, $sql, false, $current_time, $user_id, $post_id);
     $sql = "SELECT id FROM posts WHERE author_id = ? AND original_post =
         (SELECT original_post FROM posts WHERE id = ?)";
-    
+
     return secure_query_bind_result($connection, $sql, true, $user_id, $post_id);
 }
 
@@ -651,10 +673,10 @@ function count_reposts(mysqli $connection, array $post)
  * Получает пост по ID
  *
  * @param mysqli $connection Соединение с БД
- * @param int $post_id ID поста
+ * @param int|NULL $post_id ID поста
  * @return array|NULL Полученный из БД пост|NULL
 */
-function get_post(mysqli $connection, int $post_id)
+function get_post(mysqli $connection, $post_id)
 {
     $select_post_by_id =
         "SELECT
@@ -670,9 +692,11 @@ function get_post(mysqli $connection, int $post_id)
         WHERE posts.id = ?;";
     $post_mysqli = secure_query_bind_result($connection, $select_post_by_id, false, $post_id);
     $post = mysqli_fetch_assoc($post_mysqli);
-    $reposts = count_reposts($connection, $post);
-    
-    return array_merge($post, $reposts);
+    if (isset($post)) {
+        $reposts = count_reposts($connection, $post);
+        return array_merge($post, $reposts);
+    }
+    return null;
 }
 
 /**
@@ -729,7 +753,7 @@ function get_post_comments(mysqli $connection, int $post_id)
  * @return NULL
 */
 function increase_post_views($connection, $user_id, $post_id)
-{   
+{
     $check_author_not_user_query = "SELECT IF(author_id = ?, true, false) FROM posts WHERE id = ?";
     $is_author = secure_query_bind_result($connection, $check_author_not_user_query, true, $user_id, $post_id);
     if (!$is_author) {
@@ -806,7 +830,7 @@ function save_post(mysqli $connection, array $post, array $post_types, array $us
         $post['heading'],
         $user['id'],
         $post_types[$post_type],
-        $post['content'],
+        $post['content'] ?? null,
         0,
         $current_time,
     ];
@@ -972,9 +996,9 @@ function get_popular_posts(mysqli $connection, $filter, string $sort, bool $reve
  *
  * @param mysqli $connection Соединение с БД
  * @param int $profile_id ID Профиля
- * @return array Данные профиля
+ * @return array|null Данные профиля
 */
-function get_profile(mysqli $connection, $profile_id): array
+function get_profile(mysqli $connection, $profile_id)
 {
     $select_profile_query =
         "SELECT
@@ -1139,6 +1163,7 @@ function get_dialogs($connection, $user_id)
         INNER JOIN users
         ON users.id = dialog
         ORDER BY last_message DESC ";
+    $dialogs_assoc = [];
     $dialogs_mysqli = secure_query_bind_result($connection, $select_dialogs_query, false, $user_id, $user_id, $user_id);
     while ($dialogs = mysqli_fetch_array($dialogs_mysqli, MYSQLI_ASSOC)) {
         $dialogs_assoc[$dialogs['dialog']] = array_slice($dialogs, 1);
@@ -1182,7 +1207,7 @@ function get_messages($connection, $user_id)
 */
 function add_message($connection, $sender_id, $receiver_id, string $message)
 {
-    $add_message_query = "INSERT INTO messages SET sender_id = ?, receiver_id = ?, dt_add = ?, content = ?";
+    $add_message_query = "INSERT INTO messages SET sender_id = ?, receiver_id = ?, dt_add = ?, content = ?, was_read = 0";
     $message = trim($message);
     $current_time = date('Y-m-d H:i:s');
 
@@ -1247,6 +1272,8 @@ function read_messages(mysqli $connection, $active_dialog_id, $user_id)
 */
 function get_reverse($direction, array $params, $sort, $filter)
 {
+    $params['sort'] = $params['sort'] ?? 'view_count';
+    $params['filter'] = $params['filter'] ?? null;
     if (isset($direction)) {
         if (($params['sort'] == $sort) && ($params['filter'] == $filter)) {
             return $direction ? false : true;
@@ -1269,7 +1296,7 @@ function apply_mail_settings(array $settings, string $site_name)
     if (!$settings['encryption']) {
         $transport = new Swift_SmtpTransport($settings['server'], $settings['port']);
     } else {
-        $transport = new Swift_SmtpTransport($settings['server'], $settings['port'], $setting['encryption']);
+        $transport = new Swift_SmtpTransport($settings['server'], $settings['port'], $settings['encryption']);
     }
     $transport->setUsername($settings['user']);
     $transport->setPassword($settings['password']);
@@ -1289,6 +1316,7 @@ function apply_mail_settings(array $settings, string $site_name)
 */
 function new_follower_notification($sender, $owner, $follower, $mailer)
 {
+    global $site_name;
     $subject = 'У вас новый подписчик';
     $message = new Swift_Message($subject);
     $message->setFrom($sender, $site_name);

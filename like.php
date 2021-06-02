@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/libs/base.php';
 
-$user = get_user($connection);
+$user = get_user();
 
 if ($user === null) {
     header("Location: index.php");
@@ -9,7 +9,7 @@ if ($user === null) {
 }
 
 if (!isset($_GET['id'])) {
-    display_404_page($user);
+    header("Location: index.php");
     exit();
 }
 

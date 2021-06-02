@@ -51,13 +51,13 @@
                 <?php endif; ?>
               </div>
               <div class="form__input-section <?= !empty($comment_errors) ? 'form__input-section--error' : '' ?>">
-                <textarea class="comments__textarea form__textarea form__input" name="comment" placeholder="Ваш комментарий"></textarea>
+                <textarea class="comments__textarea form__textarea form__input" name="comment" placeholder="Ваш комментарий"><?= (!empty($comment_errors)) ? ($comment_text) ?? '' : '' ?></textarea>
                 <label class="visually-hidden">Ваш комментарий</label>
                 <?php if (!empty($comment_errors)) : ?>
                 <button class="form__error-button button" type="button">!</button>
                 <div class="form__error-text">
                   <h3 class="form__error-title">Ошибка валидации</h3>
-                  <p class="form__error-desc"><?= $comment_errors[0] ? $comment_errors['post-id'] : $comment_errors['comment'] ?></p>
+                  <p class="form__error-desc"><?= isset($comment_errors[0]) ? $comment_errors['post-id'] : $comment_errors['comment'] ?></p>
                 </div>
                 <?php endif; ?>
               </div>
@@ -136,7 +136,7 @@
           <?php if ($user['id'] != $author['id']) : ?>
           <div class="post-details__user-buttons user__buttons">
             <a class="user__button user__button--subscription button button--main" href="subscribe.php?id=<?= $author['id'] ?>"><?= $user['subscribed'] ? 'Отписаться' : 'Подписаться' ?></a>
-            <a class="user__button user__button--writing button button--green" href="message.php">Сообщение</a>
+            <a class="user__button user__button--writing button button--green" href="messages.php">Сообщение</a>
           </div>
           <?php endif; ?>
         </div>

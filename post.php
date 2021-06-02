@@ -1,32 +1,29 @@
 <?php
 require_once __DIR__ . '/libs/base.php';
 
-$user = get_user($connection);
+$user = get_user();
 
 if ($user === null) {
     header("Location: index.php");
     exit();
 }
 
-if (!isset($_GET['id'])) {
-    display_404_page();
-    exit();
-}
-
 $post_id = $_GET['id'];
-increase_post_views($connection, $user['id'], $post_id);
 $post = get_post($connection, $post_id);
-$comment_errors = [];
-$show_all_comments = $_GET['showall'] ?? false;
 
 if ($post === null) {
     display_404_page($user);
     exit();
 }
+increase_post_views($connection, $user['id'], $post_id);
+$comment_errors = [];
+$show_all_comments = $_GET['showall'] ?? false;
 
 if (!empty($_SESSION['errors'])) {
     $comment_errors = $_SESSION['errors'];
+    $comment_text = $_SESSION['comment_value'];
     unset($_SESSION['errors']);
+    unset($_SESSION['comment_value']);
 }
 
 $author_id = $post['author_id'];
@@ -46,6 +43,7 @@ $page_content = include_template(
         'now_time' => $now_time,
         'show_all' => $show_all_comments,
         'count_comments' => $count_comments,
+        'comment_text' => $comment_text ?? '',
     ]
 );
 
@@ -55,6 +53,7 @@ $layout_content = include_template(
         'content' => $page_content,
         'user' => $user,
         'title' => $title,
+        'active_section' => $active_section,
     ]
 );
 

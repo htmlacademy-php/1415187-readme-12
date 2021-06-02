@@ -6,7 +6,7 @@ $validation_rules = [
     'comment' => 'filled|length:3,200',
 ];
 
-$user = get_user($connection);
+$user = get_user();
 
 if ($user === null) {
     header("Location: index.php");
@@ -27,6 +27,7 @@ if (empty($form['errors'])) {
     $comment = post_comment($connection, $user['id'], $post_id, $_POST['comment']);
 } else {
     $_SESSION['errors'] = $form['errors'];
+    $_SESSION['comment_value'] = $form['values']['comment'];
 }
 
 $URL = '/post.php?id=' . $post_id;
