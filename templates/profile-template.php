@@ -103,14 +103,13 @@
                   <time class="post__time"
                     datetime="<?= $post['dt_add'] ?? '' ?>"><?= time_difference($post['dt_add'], $now_time) . ' назад' ?>
                 </div>
-                <?php if (isset($post['tags'])) : ?>
-                <ul class="post__tags">
-                  <?php foreach ($post['tags'] as $tag_name) : ?>
-                  <li>
-                    <a href="search.php?keywords=<?= '%23' . $tag_name ?>"><?= '#' . $tag_name ?></a>
-                  </li>
+                <?php if(!empty($post[0])) :
+                  $tags = explode(',', $post[0]); ?>
+                  <ul class="post__tags">
+                  <?php foreach($tags as $tag): ?>
+                    <li><a href="search.php?keywords=<?=urlencode('#' . $tag) ?>">#<?=$tag?></a></li>
                   <?php endforeach; ?>
-                </ul>
+                  </ul>
                 <?php endif; ?>
               </footer>
               <div class="comments">

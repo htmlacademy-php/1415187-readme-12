@@ -544,8 +544,8 @@ function get_feed_posts(mysqli $connection, $filter, int $follower_id)
             users.id AS user_id,
             users.username,
             users.avatar,
-        (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
-        (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) AS comments
+            (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+            (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) AS comments
         FROM posts
         INNER JOIN users ON posts.author_id=users.id
         INNER JOIN content_types ON posts.post_type=content_types.id
@@ -560,6 +560,7 @@ function get_feed_posts(mysqli $connection, $filter, int $follower_id)
     $posts_mysqli = mysqli_query($connection, $select_posts_query);
     $posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
     foreach ($posts as &$post) {
+        $post = array_merge($post, get_hashtags($connection, $post['id']));
         $post = array_merge($post, count_reposts($connection, $post));
     }
     return $posts;
@@ -684,8 +685,8 @@ function get_post(mysqli $connection, $post_id)
             users.username,
             users.avatar,
             content_types.type_class,
-        (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
-        (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) AS comments
+            (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+            (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) AS comments
         FROM posts
         INNER JOIN users ON posts.author_id=users.id
         INNER JOIN content_types ON posts.post_type=content_types.id
@@ -694,9 +695,23 @@ function get_post(mysqli $connection, $post_id)
     $post = mysqli_fetch_assoc($post_mysqli);
     if (isset($post)) {
         $reposts = count_reposts($connection, $post);
+        $post = array_merge($post, get_hashtags($connection, $post_id));
         return array_merge($post, $reposts);
     }
     return null;
+}
+
+function get_hashtags(mysqli $connection, $post_id)
+{
+    $select_hashtags_query = 
+        "SELECT
+            GROUP_CONCAT(hashtags.tag_name) as tags
+        FROM posts
+        inner JOIN post_tags ON post_tags.post_id = posts.id
+        inner JOIN hashtags ON hashtags.id = post_tags.hashtag_id
+        WHERE posts.id = ?";
+    $hastags_mysqli = secure_query_bind_result($connection, $select_hashtags_query, false, $post_id);
+    return mysqli_fetch_row($hastags_mysqli);
 }
 
 /**
@@ -1041,6 +1056,7 @@ function get_profile_posts(mysqli $connection, int $profile_id)
     $posts_mysqli = secure_query_bind_result($connection, $select_user_posts_query, false, $profile_id);
     $posts = mysqli_fetch_all($posts_mysqli, MYSQLI_ASSOC);
     foreach ($posts as &$post) {
+        $post = array_merge($post, get_hashtags($connection, $post['id']));
         $post = array_merge($post, count_reposts($connection, $post));
     }
     return $posts;
@@ -1132,8 +1148,11 @@ function search_posts(mysqli $connection, string $keywords)
     (substr($keywords, 0, 1) == '#')
     ? secure_query_bind_result($connection, $search_by_tag_query, false, substr($keywords, 1))
     : secure_query_bind_result($connection, $search_by_keywords_query, false, $keywords);
-
-    return mysqli_fetch_all($search_results_mysqli, MYSQLI_ASSOC);
+    $posts = mysqli_fetch_all($search_results_mysqli, MYSQLI_ASSOC);
+    foreach ($posts as &$post) {
+        $post = array_merge($post, get_hashtags($connection, $post['id']));
+    }
+    return $posts;
 }
 
 /**

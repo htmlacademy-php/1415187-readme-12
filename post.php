@@ -32,6 +32,7 @@ $comments = get_post_comments($connection, $post_id);
 $user['subscribed'] = user_subscribe($connection, false, $user['id'], $author_id);
 $title = $site_name . ': Публикация "' . $post['heading'] . '"';
 $count_comments = count($comments);
+
 $page_content = include_template(
     'posts/' . 'post-details.php',
     [
