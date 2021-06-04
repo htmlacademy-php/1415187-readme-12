@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/libs/base.php';
 
 if (isset($_SESSION['id'])) {
@@ -7,12 +8,12 @@ if (isset($_SESSION['id'])) {
 
 $title = $site_name . ': Блог, каким он должен быть';
 $validation_rules = [
-    'login' => 'filled|exists:users,email,not',
+    'login'    => 'filled|exists:users,email,not',
     'password' => 'filled|correct_password:users,email,password',
 ];
 
 $form_error_codes = [
-    'login' => 'Логин',
+    'login'    => 'Логин',
     'password' => 'Пароль',
 ];
 
@@ -22,7 +23,6 @@ $form = [
 ];
 
 if (count($_POST) > 0) {
-
     $form['values'] = $_POST;
     $form['errors'] = validate($form['values'], $validation_rules, $connection);
     $form['errors'] = array_filter($form['errors']);
@@ -41,8 +41,8 @@ if (count($_POST) > 0) {
 $page_content = include_template(
     'anonym.php',
     [
-        'form_values' => $form['values'] ?? [],
-        'form_errors' => $form['errors'] ?? [],
+        'form_values'      => $form['values'] ?? [],
+        'form_errors'      => $form['errors'] ?? [],
         'form_error_codes' => $form_error_codes,
     ]
 );

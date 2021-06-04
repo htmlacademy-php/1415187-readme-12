@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/libs/base.php';
 
 if (isset($_SESSION['id'])) {
@@ -6,16 +7,16 @@ if (isset($_SESSION['id'])) {
 }
 
 $validation_rules = [
-    'email' => 'filled|correct_email|exists:users,email',
-    'login' => 'filled|length:3,25',
-    'password' => 'filled|repeat_password|length:6,15',
+    'email'           => 'filled|correct_email|exists:users,email',
+    'login'           => 'filled|length:3,25',
+    'password'        => 'filled|repeat_password|length:6,15',
     'password-repeat' => 'filled|repeat_password',
 ];
 
 $form_error_codes = [
-    'email' => 'Email',
-    'login' => 'Логин',
-    'password' => 'Пароль',
+    'email'           => 'Email',
+    'login'           => 'Логин',
+    'password'        => 'Пароль',
     'password-repeat' => 'Повтор пароля',
 ];
 
@@ -37,8 +38,10 @@ if (count($_POST) > 0) {
         $current_time = date('Y-m-d H:i:s');
         $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $avatar = save_image('userpic-file', $img_folder);
-        secure_query_bind_result($connection,
-            "INSERT into users SET username = ?, email = ?, password = ?, avatar = ?, dt_add =?", false,
+        secure_query_bind_result(
+            $connection,
+            "INSERT into users SET username = ?, email = ?, password = ?, avatar = ?, dt_add =?",
+            false,
             $_POST['login'],
             $_POST['email'],
             $password_hash,
@@ -56,8 +59,8 @@ $form_values = $form['values'] ?? [];
 $page_content = include_template(
     'reg-template.php',
     [
-        'form_values' => $form['values'] ?? [],
-        'form_errors' => $form['errors'] ?? [],
+        'form_values'      => $form['values'] ?? [],
+        'form_errors'      => $form['errors'] ?? [],
         'form_error_codes' => $form_error_codes,
     ]
 );
@@ -65,8 +68,8 @@ $page_content = include_template(
 $layout_content = include_template(
     'layout.php',
     [
-        'content' => $page_content,
-        'title' => $title,
+        'content'        => $page_content,
+        'title'          => $title,
         'active_section' => $active_section,
     ]
 );

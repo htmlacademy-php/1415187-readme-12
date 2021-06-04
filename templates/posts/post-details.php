@@ -42,6 +42,14 @@
             </div>
             <span class="post__view"><?= $post['view_count'] ?> просмотров</span>
           </div>
+          <?php if(!empty($post[0])) :
+            $tags = explode(',', $post[0]); ?>
+            <ul class="post__tags">
+              <?php foreach($tags as $tag): ?>
+                <li><a href="search.php?keywords=<?=urlencode('#' . $tag) ?>">#<?=$tag?></a></li>
+              <?php endforeach; ?>
+            </ul>
+          <?php endif; ?>
           <div class="comments">
             <form class="comments__form form" action="comment.php" method="post">
               <input type="hidden" name="post-id" value="<?= $post['id']?>">

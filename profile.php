@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/libs/base.php';
 
 $user = get_user();
@@ -8,7 +9,7 @@ if ($user === null) {
     exit();
 }
 
-$profile_id = isset($_GET['id']) ? (int) $_GET['id'] : $user['id'];
+$profile_id = isset($_GET['id']) ? (int)$_GET['id'] : $user['id'];
 $owner = get_profile($connection, $profile_id);
 if ($owner === null) {
     display_404_page($user);
@@ -24,22 +25,22 @@ $subscribes = get_profile_subscribes($connection, $user['id'], $profile_id);
 $page_content = include_template(
     'profile-template.php',
     [
-        'user' => $user,
-        'tab' => $tab,
-        'owner' => $owner,
-        'posts' => $posts,
-        'likes' => $likes,
+        'user'       => $user,
+        'tab'        => $tab,
+        'owner'      => $owner,
+        'posts'      => $posts,
+        'likes'      => $likes,
         'subscribes' => $subscribes,
-        'now_time' => $now_time,
+        'now_time'   => $now_time,
     ]
 );
 
 $layout_content = include_template(
     'layout.php',
     [
-        'content' => $page_content,
-        'user' => $user,
-        'title' => $title,
+        'content'        => $page_content,
+        'user'           => $user,
+        'title'          => $title,
         'active_section' => $active_section,
     ]
 );

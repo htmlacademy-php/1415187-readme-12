@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/libs/base.php';
 
 $user = get_user();
@@ -32,27 +33,28 @@ $comments = get_post_comments($connection, $post_id);
 $user['subscribed'] = user_subscribe($connection, false, $user['id'], $author_id);
 $title = $site_name . ': Публикация "' . $post['heading'] . '"';
 $count_comments = count($comments);
+
 $page_content = include_template(
     'posts/' . 'post-details.php',
     [
-        'user' => $user,
-        'post' => $post,
-        'author' => $author,
-        'comments' => $comments,
+        'user'           => $user,
+        'post'           => $post,
+        'author'         => $author,
+        'comments'       => $comments,
         'comment_errors' => $comment_errors,
-        'now_time' => $now_time,
-        'show_all' => $show_all_comments,
+        'now_time'       => $now_time,
+        'show_all'       => $show_all_comments,
         'count_comments' => $count_comments,
-        'comment_text' => $comment_text ?? '',
+        'comment_text'   => $comment_text ?? '',
     ]
 );
 
 $layout_content = include_template(
     'layout.php',
     [
-        'content' => $page_content,
-        'user' => $user,
-        'title' => $title,
+        'content'        => $page_content,
+        'user'           => $user,
+        'title'          => $title,
         'active_section' => $active_section,
     ]
 );

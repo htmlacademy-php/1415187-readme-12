@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/libs/base.php';
 
 $user = get_user();
@@ -26,7 +27,7 @@ $page_content = include_template(
     'search-template.php',
     [
         'keywords' => $keywords,
-        'posts' => $search_results,
+        'posts'    => $search_results,
         'now_time' => $now_time,
     ]
 );
@@ -34,9 +35,9 @@ $page_content = include_template(
 $layout_content = include_template(
     'layout.php',
     [
-        'title' => $title,
-        'user' => $user,
-        'content' => $page_content,
+        'title'          => $title,
+        'user'           => $user,
+        'content'        => $page_content,
         'active_section' => $active_section,
     ]
 );

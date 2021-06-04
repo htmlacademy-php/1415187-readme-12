@@ -71,6 +71,14 @@
                 </a>
               </div>
             </footer>
+            <?php if(!empty($post[0])) :
+            $tags = explode(',', $post[0]); ?>
+              <ul class="post__tags">
+                <?php foreach($tags as $tag): ?>
+                  <li><a href="search.php?keywords=<?=urlencode('#' . $tag) ?>">#<?=$tag?></a></li>
+                <?php endforeach; ?>
+              </ul>
+            <?php endif ?>
           </article>
           <?php endforeach; ?>
         </div>
