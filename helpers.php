@@ -1,7 +1,7 @@
 <?php
+
 /**
  * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
- *
  * Примеры использования:
  * is_date_valid('2019-01-01'); // true
  * is_date_valid('2016-02-29'); // true
@@ -10,7 +10,6 @@
  * is_date_valid('10/10/2010'); // false
  *
  * @param string $date Дата в виде строки
- *
  * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
  */
 function is_date_valid(string $date): bool
@@ -24,10 +23,9 @@ function is_date_valid(string $date): bool
 /**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *
- * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param       $link mysqli Ресурс соединения
+ * @param       $sql  string SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
- *
  * @return mysqli_stmt Подготовленное выражение
  */
 function db_get_prepare_stmt($link, $sql, $data = [])
@@ -81,7 +79,6 @@ function db_get_prepare_stmt($link, $sql, $data = [])
 /**
  * Возвращает корректную форму множественного числа
  * Ограничения: только для целых чисел
- *
  * Пример использования:
  * $remaining_minutes = 5;
  * echo "Я поставил таймер на {$remaining_minutes} " .
@@ -93,16 +90,15 @@ function db_get_prepare_stmt($link, $sql, $data = [])
  *     );
  * Результат: "Я поставил таймер на 5 минут"
  *
- * @param int $number Число, по которому вычисляем форму множественного числа
- * @param string $one Форма единственного числа: яблоко, час, минута
- * @param string $two Форма множественного числа для 2, 3, 4: яблока, часа, минуты
+ * @param int $number  Число, по которому вычисляем форму множественного числа
+ * @param string $one  Форма единственного числа: яблоко, час, минута
+ * @param string $two  Форма множественного числа для 2, 3, 4: яблока, часа, минуты
  * @param string $many Форма множественного числа для остальных чисел
- *
  * @return string Рассчитанная форма множественнго числа
  */
 function get_noun_plural_form(int $number, string $one, string $two, string $many): string
 {
-    $number = (int) $number;
+    $number = (int)$number;
     $mod10 = $number % 10;
     $mod100 = $number % 100;
 
@@ -126,8 +122,9 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
 
 /**
  * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
+ *
  * @param string $name Путь к файлу шаблона относительно папки templates
- * @param array $data Ассоциативный массив с данными для шаблона
+ * @param array  $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
 function include_template($name, array $data = [])
@@ -150,15 +147,19 @@ function include_template($name, array $data = [])
 
 /**
  * Функция проверяет доступно ли видео по ссылке на youtube
- * @param string $url ссылка на видео
  *
+ * @param string $url ссылка на видео
  * @return string Ошибку если валидация не прошла
  */
 function check_youtube_url($url)
 {
     $id = extract_youtube_id($url);
 
-    set_error_handler(function () {}, E_WARNING);
+    set_error_handler(
+        function () {
+        },
+        E_WARNING
+    );
     $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=' . $id);
     restore_error_handler();
 
@@ -177,6 +178,7 @@ function check_youtube_url($url)
 
 /**
  * Возвращает код iframe для вставки youtube видео на страницу
+ *
  * @param string $youtube_url Ссылка на youtube видео
  * @return string
  */
@@ -195,6 +197,7 @@ function embed_youtube_video($youtube_url)
 
 /**
  * Возвращает img-тег с обложкой видео для вставки на страницу
+ *
  * @param string $youtube_url Ссылка на youtube видео
  * @return string
  */
@@ -213,6 +216,7 @@ function embed_youtube_cover($youtube_url, $width, $height)
 
 /**
  * Извлекает из ссылки на youtube видео его уникальный ID
+ *
  * @param string $youtube_url Ссылка на youtube видео
  * @return array
  */

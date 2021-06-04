@@ -1,12 +1,13 @@
 <?php
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $mail_settings = [
-    'user' => 'keks@phpdemo.ru',
-    'sender' => 'keks@phpdemo.ru',
-    'password' => 'htmlacademy',
-    'server' => 'mailtrap.io',
-    'port' => 25,
+    'user'       => 'keks@phpdemo.ru',
+    'sender'     => 'keks@phpdemo.ru',
+    'password'   => 'htmlacademy',
+    'server'     => 'mailtrap.io',
+    'port'       => 25,
     'encryption' => false,
 ];
 
