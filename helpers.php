@@ -98,7 +98,7 @@ function db_get_prepare_stmt($link, $sql, $data = [])
  */
 function get_noun_plural_form(int $number, string $one, string $two, string $many): string
 {
-    $number = (int)$number;
+    $number = (int) $number;
     $mod10 = $number % 10;
     $mod100 = $number % 100;
 
