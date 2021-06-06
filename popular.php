@@ -26,23 +26,23 @@ $active_section = 'popular';
 $page_content = include_template(
     'popular-template.php',
     [
-        'posts'         => $posts,
-        'total_posts'   => $total_posts,
-        'filter'        => $filter,
-        'sort'          => $sort,
-        'page_number'   => $page_number,
-        'page_limit'    => $page_limit,
+        'posts' => $posts,
+        'total_posts' => $total_posts,
+        'filter' => $filter,
+        'sort' => $sort,
+        'page_number' => $page_number,
+        'page_limit' => $page_limit,
         'content_types' => $content_types,
-        'now_time'      => $now_time,
-        'reverse'       => $reverse,
+        'now_time' => $now_time,
+        'reverse' => $reverse,
     ]
 );
 $layout_content = include_template(
     'layout.php',
     [
-        'title'          => $title,
-        'user'           => $user,
-        'content'        => $page_content,
+        'title' => $title,
+        'user' => $user,
+        'content' => $page_content,
         'active_section' => $active_section,
     ]
 );

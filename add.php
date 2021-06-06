@@ -5,37 +5,37 @@ require_once __DIR__ . '/libs/base.php';
 $title = $site_name . ': Добавление публикации';
 
 $validation_rules = [
-    'text'  => [
+    'text' => [
         'heading' => 'filled|length:10,50',
         'content' => 'filled|length:50,500',
     ],
     'photo' => [
-        'heading'    => 'filled|length:10,50',
-        'photo-url'  => 'filled|correct_url|image_url_content',
+        'heading' => 'filled|length:10,50',
+        'photo-url' => 'filled|correct_url|image_url_content',
         'photo-file' => 'img_loaded',
     ],
-    'link'  => [
-        'heading'  => 'filled|length:10,50',
+    'link' => [
+        'heading' => 'filled|length:10,50',
         'link-url' => 'filled|correct_url',
     ],
     'quote' => [
-        'heading'      => 'filled|length:10,50',
-        'content'      => 'filled',
+        'heading' => 'filled|length:10,50',
+        'content' => 'filled',
         'quote-author' => 'filled',
     ],
     'video' => [
-        'heading'   => 'filled|length:10,50',
+        'heading' => 'filled|length:10,50',
         'video-url' => 'filled|correct_url|youtube_url',
     ],
 ];
 
 $field_error_codes = [
-    'heading'      => 'Заголовок',
-    'content'      => 'Текст поста',
-    'link-url'     => 'Ссылка',
-    'photo-url'    => 'Ссылка на изображение',
-    'video-url'    => 'Ссылка YouTube',
-    'photo-file'   => 'Файл фото',
+    'heading' => 'Заголовок',
+    'content' => 'Текст поста',
+    'link-url' => 'Ссылка',
+    'photo-url' => 'Ссылка на изображение',
+    'video-url' => 'Ссылка YouTube',
+    'photo-file' => 'Файл фото',
     'quote-author' => 'Автор',
 ];
 
@@ -92,21 +92,21 @@ if (count($_POST) > 0 && isset($_POST['form-type'])) {
 $page_content = include_template(
     'add-template.php',
     [
-        'content_types'     => $content_types,
-        'form_values'       => $form['values'] ?? [],
-        'form_errors'       => $form['errors'] ?? [],
+        'content_types' => $content_types,
+        'form_values' => $form['values'] ?? [],
+        'form_errors' => $form['errors'] ?? [],
         'field_error_codes' => $field_error_codes,
-        'form_type'         => $form_type,
+        'form_type' => $form_type,
     ]
 );
 
 $layout_content = include_template(
     'layout.php',
     [
-        'title'          => $title,
+        'title' => $title,
         'active_section' => $active_section,
-        'user'           => $user,
-        'content'        => $page_content,
+        'user' => $user,
+        'content' => $page_content,
     ]
 );
 

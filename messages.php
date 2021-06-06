@@ -4,7 +4,7 @@ require_once __DIR__ . '/libs/base.php';
 
 $validation_rules = [
     'receiver-id' => 'exists:users,id,not',
-    'message'     => 'filled|length:4,500',
+    'message' => 'filled|length:4,500',
 ];
 
 $user = get_user();
@@ -50,22 +50,22 @@ $active_section = 'messages';
 $page_content = include_template(
     'messages-template.php',
     [
-        'user'             => $user,
-        'dialogs'          => $dialogs,
-        'messages'         => $messages,
+        'user' => $user,
+        'dialogs' => $dialogs,
+        'messages' => $messages,
         'active_dialog_id' => $active_dialog_id,
-        'now_time'         => $now_time,
-        'form'             => $form,
-        'write_to'         => $write_to
+        'now_time' => $now_time,
+        'form' => $form,
+        'write_to' => $write_to
     ]
 );
 $layout_content = include_template(
     'layout.php',
     [
-        'title'           => $title,
-        'user'            => $user,
-        'content'         => $page_content,
-        'active_section'  => $active_section,
+        'title' => $title,
+        'user' => $user,
+        'content' => $page_content,
+        'active_section' => $active_section,
         'add_post_button' => $add_post_button,
     ]
 );
