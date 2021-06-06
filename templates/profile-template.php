@@ -30,7 +30,7 @@
             <?= get_noun_plural_form($owner['followers'], 'подписчик', 'подписчика', 'подписчиков') ?></span>
           </p>
         </div>
-        <?php if ($user['id'] != $owner['id']) : ?>
+        <?php if ($user['id'] !== $owner['id']) : ?>
         <div class="profile__user-buttons user__buttons">
           <a class="profile__user-button user__button user__button--subscription button button--main"
             href="subscribe.php?id=<?= $owner['id'] ?>"><?= $user['subscribed'] ? 'Отписаться' : 'Подписаться' ?></a>
@@ -47,23 +47,23 @@
           <ul class="profile__tabs-list filters__list tabs__list">
             <li class="profile__tabs-item filters__item">
               <a class="profile__tabs-link filters__button
-                <?= ($tab == 'posts') ? 'filters__button--active' : '' ?> tabs__item button"
+                <?= ($tab === 'posts') ? 'filters__button--active' : '' ?> tabs__item button"
                 href="profile.php?id=<?= $owner['id'] ?>&tab=posts">Посты</a>
             </li>
             <li class="profile__tabs-item filters__item">
               <a class="profile__tabs-link filters__button
-                <?= ($tab == 'likes') ? 'filters__button--active' : '' ?> tabs__item button"
+                <?= ($tab === 'likes') ? 'filters__button--active' : '' ?> tabs__item button"
                 href="profile.php?id=<?= $owner['id'] ?>&tab=likes">Лайки</a>
             </li>
             <li class="profile__tabs-item filters__item">
               <a class="profile__tabs-link filters__button
-                <?= ($tab == 'subscribes') ? 'filters__button--active' : '' ?> tabs__item button"
+                <?= ($tab === 'subscribes') ? 'filters__button--active' : '' ?> tabs__item button"
                 href="profile.php?id=<?= $owner['id'] ?>&tab=subscribes">Подписки</a>
             </li>
           </ul>
         </div>
         <div class="profile__tab-content">
-          <section class="profile__posts tabs__content <?= ($tab == 'posts') ? 'tabs__content--active' : '' ?>">
+          <section class="profile__posts tabs__content <?= ($tab === 'posts') ? 'tabs__content--active' : '' ?>">
             <h2 class="visually-hidden">Публикации</h2>
             <?php foreach ($posts as $post) : ?>
             <article class="profile__post post post-<?=$post['type_class'];?>">

@@ -72,7 +72,7 @@ if (count($_POST) > 0 && isset($_POST['form-type'])) {
     }
     $form['errors'] = array_filter($form['errors']);
     if (empty($form['errors'])) {
-        $file_url = ($form_type == 'photo') ? upload_file($form, $img_folder) : null;
+        $file_url = ($form_type === 'photo') ? upload_file($form, $img_folder) : null;
         $post_id = save_post($connection, $form['values'], $post_types, $user, $file_url);
         add_tags($_POST['tags'], $post_id, $connection);
         $URL = '/post.php?id=' . $post_id;

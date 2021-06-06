@@ -84,15 +84,15 @@ function display_404_page($user)
  */
 function filter_size_ico(string $type)
 {
-    if ($type == 'photo') {
+    if ($type === 'photo') {
         $result = ['w' => 22, 'h' => 18];
-    } elseif ($type == 'video') {
+    } elseif ($type === 'video') {
         $result = ['w' => 24, 'h' => 16];
-    } elseif ($type == 'text') {
+    } elseif ($type === 'text') {
         $result = ['w' => 20, 'h' => 21];
-    } elseif ($type == 'quote') {
+    } elseif ($type === 'quote') {
         $result = ['w' => 21, 'h' => 20];
-    } elseif ($type == 'link') {
+    } elseif ($type === 'link') {
         $result = ['w' => 21, 'h' => 18];
     } else {
         $result = ['w' => 22, 'h' => 20];
@@ -125,7 +125,7 @@ function secure_query_bind_result(mysqli $connection, string $sql, bool $check, 
 {
     $param_types = '';
     foreach ($params as $param) {
-        $param_types .= (gettype($param) == 'integer') ? 'i' : 's';
+        $param_types .= (gettype($param) === 'integer') ? 'i' : 's';
     }
     $prepared_sql = mysqli_prepare($connection, $sql);
     mysqli_stmt_bind_param($prepared_sql, $param_types, ...$params);
@@ -254,7 +254,7 @@ function validate_correct_url(array $input_array, string $parameter_name): ?stri
  */
 function validate_img_loaded(array $input_array, string $parameter_name): ?string
 {
-    if ($input_array[$parameter_name]['error'] != 0) {
+    if ($input_array[$parameter_name]['error'] !== 0) {
         return 'Файл не получен';
     } else {
         if (!in_array(exif_imagetype($input_array[$parameter_name]['tmp_name']), [1, 2, 3])) {
@@ -434,7 +434,7 @@ function validate_correct_password(
     $sql = "SELECT $password_column_name FROM $table_name WHERE $users_column_name = ?";
     $db_password = secure_query_bind_result($connection, $sql, false, $email);
     $password = mysqli_fetch_row($db_password)['password'] ?? null;
-    return ($password != null) ? (!password_verify(
+    return ($password !== null) ? (!password_verify(
         $validation_array[$parameter_name],
         $password
     ) ? "Вы ввели неверный пароль" : null) : null;
@@ -486,7 +486,7 @@ function get_user_data(mysqli $connection, string $email)
  */
 function get_user_data_dialog(mysqli $connection, $id)
 {
-    if ($id != null) {
+    if ($id !== null) {
         $sql = "SELECT username, avatar FROM users WHERE id = ?";
         $result = secure_query_bind_result($connection, $sql, false, $id);
         return mysqli_fetch_assoc($result);
@@ -530,7 +530,7 @@ function user_subscribe(mysqli $connection, bool $check, int $follower_id, int $
     $subscribe_query = "SELECT * FROM subscribe WHERE follower_id = ? AND author_id = ?";
     $subscribe_mysqli = secure_query_bind_result($connection, $subscribe_query, false, $follower_id, $author_id);
     if ($check) {
-        if ($subscribe_mysqli->num_rows == 0) {
+        if ($subscribe_mysqli->num_rows === 0) {
             $subscribe_query = "INSERT INTO subscribe SET follower_id = ?, author_id = ?";
             secure_query_bind_result($connection, $subscribe_query, false, $follower_id, $author_id);
             return true;
@@ -874,21 +874,21 @@ function save_post(mysqli $connection, array $post, array $post_types, array $us
         $current_time,
     ];
 
-    if ($post_type == 'link') {
+    if ($post_type === 'link') {
         $parameters[3] = $post['link-url'];
     }
 
-    if ($post_type == 'quote') {
+    if ($post_type === 'quote') {
         array_push($fields, 'quote_author');
         array_push($parameters, $post['quote-author']);
     }
 
-    if ($post_type == 'video') {
+    if ($post_type === 'video') {
         array_push($fields, 'youtube_url');
         array_push($parameters, $post['video-url']);
     }
 
-    if ($post_type == 'photo') {
+    if ($post_type === 'photo') {
         array_push($fields, 'img_url');
         array_push($parameters, $file_url);
     }
@@ -1191,7 +1191,7 @@ function search_posts(mysqli $connection, string $keywords)
     WHERE posts.id = post_tags.post_id AND hashtags.tag_name = ?";
     $search_by_keywords_query = $search_query . "WHERE MATCH(heading,content) AGAINST(?)";
     $search_results_mysqli =
-        (substr($keywords, 0, 1) == '#')
+        (substr($keywords, 0, 1) === '#')
             ? secure_query_bind_result($connection, $search_by_tag_query, false, substr($keywords, 1))
             : secure_query_bind_result($connection, $search_by_keywords_query, false, $keywords);
     $posts = mysqli_fetch_all($search_results_mysqli, MYSQLI_ASSOC);
@@ -1357,9 +1357,9 @@ function get_reverse($direction, array $params, $sort, $filter)
     $params['sort'] = $params['sort'] ?? 'view_count';
     $params['filter'] = $params['filter'] ?? null;
     if (isset($direction)) {
-        if (($params['sort'] == $sort) && ($params['filter'] == $filter)) {
+        if (($params['sort'] === $sort) && ($params['filter'] === $filter)) {
             return $direction ? false : true;
-        } elseif (($params['sort'] == $sort) && ($params['filter'] != $filter)) {
+        } elseif (($params['sort'] === $sort) && ($params['filter'] !== $filter)) {
             return $direction;
         }
     }

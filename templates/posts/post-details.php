@@ -59,7 +59,7 @@
                 <?php endif; ?>
               </div>
               <div class="form__input-section <?= !empty($comment_errors) ? 'form__input-section--error' : '' ?>">
-                <textarea class="comments__textarea form__textarea form__input" name="comment" placeholder="Ваш комментарий"><?= (!empty($comment_errors)) ? ($comment_text) ?? '' : '' ?></textarea>
+                <textarea class="comments__textarea form__textarea form__input" name="comment" placeholder="Ваш комментарий"><?= (!empty($comment_errors)) ? htmlspecialchars($comment_text) ?? '' : '' ?></textarea>
                 <label class="visually-hidden">Ваш комментарий</label>
                 <?php if (!empty($comment_errors)) : ?>
                 <button class="form__error-button button" type="button">!</button>
@@ -95,7 +95,7 @@
                       </time>
                     </div>
                     <p class="comments__text">
-                      <?= $comment['content'] ?? '' ?>
+                      <?= htmlspecialchars($comment['content'] ?? '') ?>
                     </p>
                   </div>
                 </li>
@@ -141,7 +141,7 @@
               <span class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($author['posts'],'публикация','публикации','публикаций'); ?></span>
             </p>
           </div>
-          <?php if ($user['id'] != $author['id']) : ?>
+          <?php if ($user['id'] !== $author['id']) : ?>
           <div class="post-details__user-buttons user__buttons">
             <a class="user__button user__button--subscription button button--main" href="subscribe.php?id=<?= $author['id'] ?>"><?= $user['subscribed'] ? 'Отписаться' : 'Подписаться' ?></a>
             <a class="user__button user__button--writing button button--green" href="messages.php">Сообщение</a>

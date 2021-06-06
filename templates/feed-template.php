@@ -81,7 +81,7 @@
         </li>
         <?php foreach($content_types as $content_type) : ?>
         <li class="feed__filters-item filters__item">
-          <a class="button filters__button filters__button--<?= $content_type['type_class'] ?> <?= ($filter == $content_type['type_class']) ? 'filters__button--active' : '' ?>" href="feed.php?filter=<?= $content_type['type_class'] ?>">
+          <a class="button filters__button filters__button--<?= $content_type['type_class'] ?> <?= ($filter === $content_type['type_class']) ? 'filters__button--active' : '' ?>" href="feed.php?filter=<?= $content_type['type_class'] ?>">
             <span class="visually-hidden"><?= $content_type['type_name'] ?></span>
             <svg class="filters__icon" width="22" height="21">
               <use xlink:href="#icon-filter-<?= $content_type['type_class'] ?>"></use>

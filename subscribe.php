@@ -20,7 +20,7 @@ if (!isset($_GET['id'])) {
 
 $owner_id = $_GET['id'];
 
-if ($owner_id == $user['id']) {
+if ($owner_id === $user['id']) {
     header("Location: profile.php?id=" . $owner_id);
     exit();
 }

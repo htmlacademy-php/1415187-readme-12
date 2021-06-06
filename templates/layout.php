@@ -119,7 +119,7 @@
               </li>
             </ul>
             <ul class="header__user-nav">
-              <?php if ($title != 'ReadMe: Регистрация') : ?>
+              <?php if ($title !== 'ReadMe: Регистрация') : ?>
               <li class="header__profile">
                 <a class="header__profile-link" href="profile.php">
                   <div class="header__avatar-wrapper">
@@ -150,7 +150,7 @@
                         <a class="header__profile-nav-link" href="messages.php">
                         <span class="header__profile-nav-text">
                         Сообщения
-                        <?php if ($user['messages'] != 0): ?>
+                        <?php if ($user['messages'] !== 0): ?>
                         <i class="header__profile-indicator"><?= $user['messages'] ?></i>
                         <?php endif; ?>
                         </span>

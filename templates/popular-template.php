@@ -8,7 +8,7 @@
         <b class="popular__sorting-caption sorting__caption">Сортировка:</b>
         <ul class="popular__sorting-list sorting__list">
           <li class="sorting__item sorting__item--popular">
-            <a class="sorting__link <?= ($sort == 'view_count') ? 'sorting__link--active' : '' ?> <?= $reverse ? 'sorting__link--reverse' : '' ?>"
+            <a class="sorting__link <?= ($sort === 'view_count') ? 'sorting__link--active' : '' ?> <?= $reverse ? 'sorting__link--reverse' : '' ?>"
               href="popular.php?sort=view_count<?= '&reverse=' . $reverse ?><?= $filter ? '&filter=' . $filter : '' ?>">
               <span>Популярность</span>
               <svg class="sorting__icon" width="10" height="12">
@@ -17,7 +17,7 @@
             </a>
           </li>
           <li class="sorting__item">
-            <a class="sorting__link <?= ($sort == 'likes') ? 'sorting__link--active' : '' ?> <?= $reverse ? 'sorting__link--reverse' : '' ?>"
+            <a class="sorting__link <?= ($sort === 'likes') ? 'sorting__link--active' : '' ?> <?= $reverse ? 'sorting__link--reverse' : '' ?>"
                href="popular.php?sort=likes<?= '&reverse=' . $reverse ?><?= $filter ? '&filter=' . $filter : '' ?>">
               <span>Лайки</span>
               <svg class="sorting__icon" width="10" height="12">
@@ -26,7 +26,7 @@
             </a>
           </li>
           <li class="sorting__item">
-            <a class="sorting__link <?= ($sort == 'dt_add') ? 'sorting__link--active' : '' ?> <?= $reverse ? 'sorting__link--reverse' : '' ?>"
+            <a class="sorting__link <?= ($sort === 'dt_add') ? 'sorting__link--active' : '' ?> <?= $reverse ? 'sorting__link--reverse' : '' ?>"
                href="popular.php?sort=dt_add<?= '&reverse=' . $reverse ?><?= $filter ? '&filter=' . $filter : '' ?>">
               <span>Дата</span>
               <svg class="sorting__icon" width="10" height="12">
@@ -40,7 +40,7 @@
         <b class="popular__filters-caption filters__caption">Тип контента:</b>
         <ul class="popular__filters-list filters__list">
           <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-            <a class="filters__button filters__button--ellipse filters__button--all <?= ($filter == '') ? 'filters__button--active' : '' ?>" href="popular.php?<?= 'sort=' . $sort ?><?= '&reverse=' . $reverse ?><?= '&filter='?>">
+            <a class="filters__button filters__button--ellipse filters__button--all <?= ($filter === '') ? 'filters__button--active' : '' ?>" href="popular.php?<?= 'sort=' . $sort ?><?= '&reverse=' . $reverse ?><?= '&filter='?>">
             <span>Все</span>
             </a>
           </li>
@@ -48,7 +48,7 @@
           <li class="popular__filters-item filters__item">
             <a class="button filters__button
               <?= $content_type['type_class'] ? 'filters__button--' . $content_type['type_class'] : '' ?>
-              <?= ($filter == $content_type['type_class']) ? 'filters__button--active' : '' ?>"
+              <?= ($filter === $content_type['type_class']) ? 'filters__button--active' : '' ?>"
               href="popular.php?<?= 'sort=' . $sort ?><?= '&reverse=' . $reverse ?><?= '&filter=' . $content_type['type_class'] ?>">
               <span class="visually-hidden"><?= $content_type['type_name'] ?></span>
               <?php $size_ico = filter_size_ico($content_type['type_class']);?>
