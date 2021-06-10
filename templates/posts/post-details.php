@@ -38,7 +38,7 @@
                                 <span><?= $post['reposts'] ?></span>
                                 <span class="visually-hidden">количество репостов</span>
                             </a>
-                            <?php if (isset($post['author_original'])): ?>
+                            <?php if (isset($post['author_original'])) : ?>
                                 <a class="post__indicator" href="post.php?id=<?= $post['original_post'] ?>"
                                    title="Перейти к посту автора">
                                     <span>Пост автора <?= htmlspecialchars($post['author_original'] ?? '') ?></span>
@@ -50,7 +50,7 @@
                     <?php if (!empty($post[0])) :
                         $tags = explode(',', $post[0]); ?>
                         <ul class="post__tags">
-                            <?php foreach ($tags as $tag): ?>
+                            <?php foreach ($tags as $tag) : ?>
                                 <li><a href="search.php?keywords=<?= urlencode('#' . $tag) ?>">#<?= $tag ?></a></li>
                             <?php endforeach; ?>
                         </ul>
@@ -81,7 +81,7 @@
                         </form>
                         <div class="comments__list-wrapper">
                             <ul class="comments__list">
-                                <?php if (!$show_all):
+                                <?php if (!$show_all) :
                                     $comments = array_slice($comments, 0, 3);
                                 endif; ?>
                                 <?php foreach ($comments as $comment) : ?>
@@ -111,13 +111,13 @@
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <?php if (($count_comments > 3) && (!$show_all)): ?>
+                            <?php if (($count_comments > 3) && (!$show_all)) : ?>
                                 <a class="comments__more-link" href="/post.php?id=<?= $post['id'] . '&showall=1' ?>">
                                     <span>Показать все комментарии</span>
                                     <sup class="comments__amount"><?= $count_comments ?></sup>
                                 </a>
                             <?php endif;
-                            if (($count_comments > 3) && ($show_all)): ?>
+                            if (($count_comments > 3) && ($show_all)) : ?>
                                 <a class="comments__more-link" href="/post.php?id=<?= $post['id'] . '&showall=' ?>">
                                     <span>Скрыть комментарии</span>
                                 </a>
@@ -141,8 +141,10 @@
                                 <span><?= htmlspecialchars($author['username'] ?? '') ?></span>
                             </a>
                             <time class="post-details__time user__time"
-                                  datetime="<?= $author['dt_add'] ?? '' ?>"><?= time_difference($author['dt_add'],
-                                    $now_time) . ' на сайте' ?></time>
+                                  datetime="<?= $author['dt_add'] ?? '' ?>"><?= time_difference(
+                                      $author['dt_add'],
+                                      $now_time
+                                  ) . ' на сайте' ?></time>
                         </div>
                     </div>
                     <div class="post-details__rating user__rating">
@@ -150,14 +152,22 @@
                             <span
                                 class="post-details__rating-amount user__rating-amount"><?= $author['followers'] ?></span>
                             <span
-                                class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($author['followers'],
-                                    'подписчик', 'подписчика', 'подписчиков'); ?></span>
+                                class="post-details__rating-text user__rating-text"><?= get_noun_plural_form(
+                                    $author['followers'],
+                                    'подписчик',
+                                    'подписчика',
+                                    'подписчиков'
+                                ); ?></span>
                         </p>
                         <p class="post-details__rating-item user__rating-item user__rating-item--publications">
                             <span class="post-details__rating-amount user__rating-amount"><?= $author['posts'] ?></span>
                             <span
-                                class="post-details__rating-text user__rating-text"><?= get_noun_plural_form($author['posts'],
-                                    'публикация', 'публикации', 'публикаций'); ?></span>
+                                class="post-details__rating-text user__rating-text"><?= get_noun_plural_form(
+                                    $author['posts'],
+                                    'публикация',
+                                    'публикации',
+                                    'публикаций'
+                                ); ?></span>
                         </p>
                     </div>
                     <?php if ($user['id'] !== $author['id']) : ?>

@@ -22,7 +22,7 @@
                         <a class="search__back-link" href="javascript:history.back()">Вернуться назад</a>
                     </div>
                 </div>
-            <?php else: ?>
+            <?php else : ?>
                 <div class="container">
                     <div class="search__content">
                         <?php foreach ($posts as $post) : ?>
@@ -41,8 +41,9 @@
                                             <b class="post__author-name"><?= !empty($post['username'] ?? null) ? htmlspecialchars($post['username']) : '' ?></b>
                                             <?php if (isset($post['dt_add'])) : ?>
                                                 <time class="post__time"
-                                                      datetime="<?= $post['dt_add'] ?? '' ?>"><?= time_difference($post['dt_add'],
-                                                        $now_time) . ' назад' ?></time>
+                                                      datetime="<?= $post['dt_add'] ?? '' ?>">
+                                                    <?= time_difference($post['dt_add'], $now_time) . ' назад' ?>
+                                                </time>
                                             <?php endif; ?>
                                         </div>
                                     </a>
@@ -51,8 +52,10 @@
                                     <a href="post.php?id=<?= $post['id'] ?>"><?= !empty($post['heading'] ?? null) ? htmlspecialchars($post['heading']) : '' ?></a>
                                 </h2>
                                 <div class="post__main">
-                                    <?= include_template('posts/' . $post['type_class'] . '-post.php',
-                                        ['post' => $post]) ?>
+                                    <?= include_template(
+                                        'posts/' . $post['type_class'] . '-post.php',
+                                        ['post' => $post]
+                                    ) ?>
                                 </div>
                                 <footer class="post__footer post__indicators">
                                     <div class="post__buttons">
@@ -83,7 +86,7 @@
                                 <?php if (!empty($post[0])) :
                                     $tags = explode(',', $post[0]); ?>
                                     <ul class="post__tags">
-                                        <?php foreach ($tags as $tag): ?>
+                                        <?php foreach ($tags as $tag) : ?>
                                             <li>
                                                 <a href="search.php?keywords=<?= urlencode('#' . $tag) ?>">#<?= $tag ?></a>
                                             </li>

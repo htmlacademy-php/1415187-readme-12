@@ -48,8 +48,8 @@
                     <?php foreach ($content_types as $content_type) : ?>
                         <li class="popular__filters-item filters__item">
                             <a class="button filters__button
-              <?= $content_type['type_class'] ? 'filters__button--' . $content_type['type_class'] : '' ?>
-              <?= ($filter === $content_type['type_class']) ? 'filters__button--active' : '' ?>"
+                        <?= $content_type['type_class'] ? 'filters__button--' . $content_type['type_class'] : '' ?>
+                        <?= ($filter === $content_type['type_class']) ? 'filters__button--active' : '' ?>"
                                href="popular.php?<?= 'sort=' . $sort ?><?= '&reverse=' . $reverse ?><?= '&filter=' . $content_type['type_class'] ?>">
                                 <span class="visually-hidden"><?= $content_type['type_name'] ?></span>
                                 <?php $size_ico = filter_size_ico($content_type['type_class']); ?>
@@ -88,9 +88,9 @@
                                     <div class="post__info">
                                         <b class="post__author-name"><?= htmlspecialchars($post['username'] ?? '') ?></b>
                                         <time class="post__time" datetime="<?= $post['dt_add'] ?? '' ?>"
-                                              title="<?= date_create_from_format('Y-m-d H:i:s',
-                                                  $post['dt_add'])->format('d.m.Y H:i') ?>"><?= time_difference($post['dt_add'],
-                                                $now_time) . ' назад' ?></time>
+                                              title="<?= date_create_from_format('Y-m-d H:i:s', $post['dt_add'])
+                                                  ->format('d.m.Y H:i') ?>">
+                                            <?= time_difference($post['dt_add'], $now_time) . ' назад' ?></time>
                                     </div>
                                 </a>
                             </div>

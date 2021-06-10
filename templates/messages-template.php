@@ -8,7 +8,7 @@
                 <?php foreach ($dialogs as $dialog_id => $dialog) : ?>
                     <li class="messages__contacts-item">
                         <a class="messages__contacts-tab
-            <?= ($active_dialog_id === $dialog_id) ? 'messages__contacts-tab--active tabs__item--active' : '' ?>
+                    <?= ($active_dialog_id === $dialog_id) ? 'messages__contacts-tab--active tabs__item--active' : '' ?>
             tabs__item " href="messages.php?id=<?= $dialog_id ?>">
                             <div class="messages__avatar-wrapper">
                                 <?php if (isset($dialog['avatar'])) : ?>
@@ -18,7 +18,7 @@
                             </div>
                             <div class="messages__info">
                 <span class="messages__contact-name">
-                  <?= htmlspecialchars($dialog['username'] ?? '') ?>
+                    <?= htmlspecialchars($dialog['username'] ?? '') ?>
                 </span>
                                 <div class="messages__preview">
                                     <p class="messages__preview-text">
@@ -34,7 +34,7 @@
                         </a>
                     </li>
                 <?php endforeach; ?>
-                <?php if ((isset($write_to)) && (!isset($dialogs[$active_dialog_id]))): ?>
+                <?php if ((isset($write_to)) && (!isset($dialogs[$active_dialog_id]))) : ?>
                     <a class="messages__contacts-tab messages__contacts-tab--active tabs__item--active tabs__item "
                        href="messages.php?id=<?= $active_dialog_id ?>">
                         <div class="messages__avatar-wrapper">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="messages__info">
                 <span class="messages__contact-name">
-                  <?= htmlspecialchars($write_to['username'] ?? '') ?>
+                    <?= htmlspecialchars($write_to['username'] ?? '') ?>
                 </span>
                         </div>
                     </a>
@@ -56,7 +56,7 @@
             <div class="messages__chat-wrapper">
                 <?php foreach ($dialogs as $dialog_id => $dialog) : ?>
                     <ul class="messages__list tabs__content
-            <?= ($active_dialog_id === $dialog_id) ? 'tabs__content--active' : '' ?>">
+                    <?= ($active_dialog_id === $dialog_id) ? 'tabs__content--active' : '' ?>">
                         <?php foreach ($dialog['messages'] as $message) : ?>
                             <li class="messages__item <?= ($user['id'] === $message['sender_id']) ? 'messages__item--my' : '' ?>">
                                 <div class="messages__info-wrapper">
@@ -115,6 +115,6 @@
                     </form>
                 </div>
             </div>
-            <?php endif; ?>
+        <?php endif; ?>
     </section>
 </main>

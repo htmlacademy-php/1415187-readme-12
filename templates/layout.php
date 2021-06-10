@@ -153,7 +153,7 @@
                                 </div>
                                 <div class="header__profile-name">
                     <span>
-                    <?= htmlspecialchars($user['name'] ?? '') ?>
+                        <?= htmlspecialchars($user['name'] ?? '') ?>
                     </span>
                                     <svg class="header__link-arrow" width="10" height="6">
                                         <use xlink:href="#icon-arrow-right-ad"></use>
@@ -174,7 +174,7 @@
                                             <a class="header__profile-nav-link" href="messages.php">
                         <span class="header__profile-nav-text">
                         Сообщения
-                        <?php if ($user['messages'] !== 0): ?>
+                        <?php if ($user['messages'] !== 0) : ?>
                             <i class="header__profile-indicator"><?= $user['messages'] ?></i>
                         <?php endif; ?>
                         </span>
@@ -204,7 +204,7 @@
                         <li>
                             <a class="header__user-button header__user-button--active header__register-button button">Регистрация</a>
                         </li>
-                    <?php else: ?>
+                    <?php else : ?>
                         </li>
                         <a class="header__post-button button button--transparent" href="add.php">Пост</a>
                         </li>

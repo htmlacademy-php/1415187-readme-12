@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </div>
-            <?php if (!empty($form_errors)): ?>
+            <?php if (!empty($form_errors)) : ?>
                 <div class="form__invalid-block">
                     <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                     <ul class="form__invalid-list">

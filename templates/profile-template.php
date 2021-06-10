@@ -75,8 +75,10 @@
                                     </h2>
                                 </header>
                                 <div class="post__main">
-                                    <?= include_template('posts/' . $post['type_class'] . '-post.php',
-                                        ['post' => $post]) ?>
+                                    <?= include_template(
+                                        'posts/' . $post['type_class'] . '-post.php',
+                                        ['post' => $post]
+                                    ) ?>
                                 </div>
                                 <footer class="post__footer">
                                     <div class="post__indicators">
@@ -102,7 +104,7 @@
                                                 <span><?= $post['reposts'] ?></span>
                                                 <span class="visually-hidden">количество репостов</span>
                                             </a>
-                                            <?php if (isset($post['author_original'])): ?>
+                                            <?php if (isset($post['author_original'])) : ?>
                                                 <a class="post__indicator"
                                                    href="post.php?id=<?= $post['original_post'] ?>"
                                                    title="Перейти к посту автора">
@@ -110,14 +112,12 @@
                                                 </a>
                                             <?php endif; ?>
                                         </div>
-                                        <time class="post__time"
-                                              datetime="<?= $post['dt_add'] ?? '' ?>"><?= time_difference($post['dt_add'],
-                                                $now_time) . ' назад' ?>
+                                        <time class="post__time" datetime="<?= $post['dt_add'] ?? '' ?>"><?= time_difference($post['dt_add'], $now_time) . ' назад' ?>
                                     </div>
                                     <?php if (!empty($post[0])) :
                                         $tags = explode(',', $post[0]); ?>
                                         <ul class="post__tags">
-                                            <?php foreach ($tags as $tag): ?>
+                                            <?php foreach ($tags as $tag) : ?>
                                                 <li>
                                                     <a href="search.php?keywords=<?= urlencode('#' . $tag) ?>">#<?= $tag ?></a>
                                                 </li>
@@ -163,7 +163,8 @@
                                         <a class="post-mini__link" href="post.php?id=<?= $like['post_id'] ?>"
                                            title="Перейти на публикацию">
                                             <?php switch ($like['type_class']) :
-                                                case 'photo': ?>
+                                                case 'photo':
+                                                    ?>
                                                     <span class="visually-hidden">Фото</span>
                                                     <div class="post-mini__image-wrapper">
                                                         <?php
@@ -174,37 +175,48 @@
                                                                  alt="Превью публикации" width="109" height="109">
                                                         <?php endif; ?>
                                                     </div>
-                                                    <?php break;
-                                                case 'video': ?>
+                                                    <?php
+                                                    break;
+                                                case 'video':
+                                                    ?>
                                                     <span class="visually-hidden">Видео</span>
                                                     <div class="post-mini__image-wrapper">
-                                                        <?= $like['youtube_url'] ? embed_youtube_cover($like['youtube_url'],
-                                                            100, 40) : '' ?>
+                                                        <?= $like['youtube_url'] ? embed_youtube_cover(
+                                                            $like['youtube_url'],
+                                                            100,
+                                                            40
+                                                        ) : '' ?>
                                                         <span class="post-mini__play-big">
                         <svg class="post-mini__play-big-icon" width="12" height="13">
                           <use xlink:href="#icon-video-play-big"></use>
                         </svg>
                       </span>
                                                     </div>
-                                                    <?php break;
-                                                case 'text': ?>
+                                                    <?php
+                                                    break;
+                                                case 'text':
+                                                    ?>
                                                     <span class="visually-hidden">Текст</span>
                                                     <svg class="post-mini__preview-icon" width="20" height="21">
                                                         <use xlink:href="#icon-filter-text"></use>
                                                     </svg>
-                                                    <?php break;
-                                                case 'link': ?>
+                                                    <?php
+                                                    break;
+                                                case 'link':
+                                                    ?>
                                                     <span class="visually-hidden">Ссылка</span>
                                                     <svg class="post-mini__preview-icon" width="21" height="18">
                                                         <use xlink:href="#icon-filter-link"></use>
                                                     </svg>
-                                                    <?php break;
-                                                case 'quote': ?>
+                                                    <?php
+                                                    break;
+                                                case 'quote':
+                                                    ?>
                                                     <span class="visually-hidden">Цитата</span>
                                                     <svg class="post-mini__preview-icon" width="21" height="20">
                                                         <use xlink:href="#icon-filter-quote"></use>
                                                     </svg>
-                                                <?php endswitch; ?>
+                                            <?php endswitch; ?>
                                         </a>
                                     </div>
                                 </li>
@@ -234,8 +246,8 @@
                                             </a>
                                             <time class="post-mini__time user__additional"
                                                   datetime="<?= $subscribe['dt_add'] ?? '' ?>">
-                                                <?= time_difference($subscribe['dt_add'],
-                                                    $now_time) . ' на сайте'; ?></time>
+                                                <?= time_difference($subscribe['dt_add'], $now_time) . ' на сайте'; ?>
+                                            </time>
                                         </div>
                                     </div>
                                     <div class="post-mini__rating user__rating">
@@ -243,13 +255,13 @@
                     <span
                         class="post-mini__rating-amount user__rating-amount"><?= $subscribe['post_count'] ?? '' ?></span>
                                             <span class="post-mini__rating-text user__rating-text">
-                    <?= get_noun_plural_form($subscribe['post_count'], 'публикация', 'публикации', 'публикаций') ?>
+                                <?= get_noun_plural_form($subscribe['post_count'], 'публикация', 'публикации', 'публикаций') ?>
                     </span>
                                         </p>
                                     </div>
                                     <div class="post-mini__user-buttons user__buttons">
                                         <a class="post-mini__user-button user__button user__button--subscription button
-                    <?= $subscribe['user_subscribe'] ? 'button--quartz' : 'button--main' ?>"
+                                <?= $subscribe['user_subscribe'] ? 'button--quartz' : 'button--main' ?>"
                                            href="subscribe.php?id=<?= $subscribe['user_id'] ?>">
                                             <?= $subscribe['user_subscribe'] ? 'Отписаться' : 'Подписаться' ?></a>
                                     </div>

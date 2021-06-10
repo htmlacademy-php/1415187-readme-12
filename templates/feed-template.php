@@ -21,7 +21,7 @@
                                     <div class="post__info">
                                         <b class="post__author-name"><?= htmlspecialchars($post['username'] ?? '') ?></b>
                                         <span class="post__time">
-                  <?= time_difference($post['dt_add'], $now_time) . ' назад' ?>
+                        <?= time_difference($post['dt_add'], $now_time) . ' назад' ?>
                   </span>
                                     </div>
                                 </a>
@@ -62,7 +62,7 @@
                                         <span><?= $post['reposts'] ?></span>
                                         <span class="visually-hidden">количество репостов</span>
                                     </a>
-                                    <?php if (isset($post['author_original'])): ?>
+                                    <?php if (isset($post['author_original'])) : ?>
                                         <a class="post__indicator" href="post.php?id=<?= $post['original_post'] ?>"
                                            title="Перейти к посту автора">
                                             <span>Репост автора <?= htmlspecialchars($post['author_original'] ?? '') ?></span>
@@ -73,7 +73,7 @@
                             <?php if (!empty($post[0] ?? null)) :
                                 $tags = explode(',', $post[0]); ?>
                                 <ul class="post__tags">
-                                    <?php foreach ($tags as $tag): ?>
+                                    <?php foreach ($tags as $tag) : ?>
                                         <li>
                                             <a href="search.php?keywords=<?= urlencode('#' . $tag ?? '') ?>">#<?= $tag ?? '' ?></a>
                                         </li>
