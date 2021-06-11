@@ -1225,8 +1225,8 @@ function get_dialogs($connection, $user_id)
         IF(receiver_id = ?, sender_id, receiver_id) AS dialog
         FROM messages
         WHERE sender_id = ? OR receiver_id = ?
-        GROUP BY dialog) AS groups
-        ON messages.dt_add = groups.last_message
+        GROUP BY dialog) grps
+        ON messages.dt_add = grps.last_message
         INNER JOIN users
         ON users.id = dialog
         ORDER BY last_message DESC ";

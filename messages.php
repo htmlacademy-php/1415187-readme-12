@@ -38,6 +38,7 @@ $dialogs = get_dialogs($connection, $user['id']);
 if (($dialogs !== null) || ($_GET['id'] !== null)) {
     $active_dialog_id = (int)($_GET['id'] ?? array_key_first($dialogs));
     read_messages($connection, $active_dialog_id, $user['id']);
+    $user = get_user();
 }
 
 $messages = get_messages($connection, $user['id']);
