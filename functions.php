@@ -972,7 +972,7 @@ function upload_file(array $form, string $img_folder)
  */
 function post_comment(mysqli $connection, int $user_id, int $post_id, string $comment)
 {
-    $add_comment_query = "INSERT into comments SET user_id = ?, post_id = ?, dt_add = ?, content = ?";
+    $add_comment_query = "INSERT INTO comments SET user_id = ?, post_id = ?, dt_add = ?, content = ?";
     $current_time = date('Y-m-d H:i:s');
 
     return secure_query_bind_result(
@@ -1222,10 +1222,10 @@ function get_dialogs($connection, $user_id)
             last_message
         FROM messages
         INNER JOIN (SELECT MAX(dt_add) AS last_message,
-        IF (receiver_id = ?, sender_id, receiver_id) AS dialog
+        IF(receiver_id = ?, sender_id, receiver_id) AS dialog
         FROM messages
         WHERE sender_id = ? OR receiver_id = ?
-        GROUP BY dialog) groups
+        GROUP BY dialog) AS groups
         ON messages.dt_add = groups.last_message
         INNER JOIN users
         ON users.id = dialog
