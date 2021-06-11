@@ -7,16 +7,16 @@ if (isset($_SESSION['id'])) {
 }
 
 $validation_rules = [
-    'email'           => 'filled|correct_email|exists:users,email',
-    'login'           => 'filled|length:3,25',
-    'password'        => 'filled|repeat_password|length:6,15',
+    'email' => 'filled|correct_email|exists:users,email',
+    'login' => 'filled|length:3,25',
+    'password' => 'filled|repeat_password|length:6,15',
     'password-repeat' => 'filled|repeat_password',
 ];
 
 $form_error_codes = [
-    'email'           => 'Email',
-    'login'           => 'Логин',
-    'password'        => 'Пароль',
+    'email' => 'Email',
+    'login' => 'Логин',
+    'password' => 'Пароль',
     'password-repeat' => 'Повтор пароля',
 ];
 
@@ -59,8 +59,8 @@ $form_values = $form['values'] ?? [];
 $page_content = include_template(
     'reg-template.php',
     [
-        'form_values'      => $form['values'] ?? [],
-        'form_errors'      => $form['errors'] ?? [],
+        'form_values' => $form['values'] ?? [],
+        'form_errors' => $form['errors'] ?? [],
         'form_error_codes' => $form_error_codes,
     ]
 );
@@ -68,8 +68,8 @@ $page_content = include_template(
 $layout_content = include_template(
     'layout.php',
     [
-        'content'        => $page_content,
-        'title'          => $title,
+        'content' => $page_content,
+        'title' => $title,
         'active_section' => $active_section,
     ]
 );

@@ -3,8 +3,8 @@
 /**
  * Возвращает укороченную версию текста с многоточием, если длина больше указанной.
  *
- * @param string $text   Полный текст
- * @param int    $length Длина укороченного текста
+ * @param string $text Полный текст
+ * @param int $length Длина укороченного текста
  * @return string Укороченный текст
  */
 function cut_text(string $text, int $length = 300)
@@ -20,7 +20,7 @@ function cut_text(string $text, int $length = 300)
 /**
  * Возвращает время относительно текущей даты.
  *
- * @param string   $time         Дата/время отсчета
+ * @param string $time Дата/время отсчета
  * @param DateTime $current_time Текущая дата/время
  * @return string Относительное время в общем формате (прим.: "4 дня *назад*", "3 недели *назад*")
  * @throws Exception
@@ -66,9 +66,9 @@ function display_404_page($user)
     $layout_content = include_template(
         'layout.php',
         [
-            'content'        => $page_content,
-            'user'           => $user,
-            'title'          => 'Ресурс не найден: 404',
+            'content' => $page_content,
+            'user' => $user,
+            'title' => 'Ресурс не найден: 404',
             'active_section' => ''
         ]
     );
@@ -84,15 +84,15 @@ function display_404_page($user)
  */
 function filter_size_ico(string $type)
 {
-    if ($type == 'photo') {
+    if ($type === 'photo') {
         $result = ['w' => 22, 'h' => 18];
-    } elseif ($type == 'video') {
+    } elseif ($type === 'video') {
         $result = ['w' => 24, 'h' => 16];
-    } elseif ($type == 'text') {
+    } elseif ($type === 'text') {
         $result = ['w' => 20, 'h' => 21];
-    } elseif ($type == 'quote') {
+    } elseif ($type === 'quote') {
         $result = ['w' => 21, 'h' => 20];
-    } elseif ($type == 'link') {
+    } elseif ($type === 'link') {
         $result = ['w' => 21, 'h' => 18];
     } else {
         $result = ['w' => 22, 'h' => 20];
@@ -116,16 +116,16 @@ function get_content_types(mysqli $connection)
  * Подготавливает и выполняет "безопасный" запрос (и производит сравнение $check)
  *
  * @param mysqli $connection Данные для подключения к БД
- * @param string $sql        Исходный запрос сплейсхолдерами
- * @param bool   $check      Сравнение с базой (true|false)
- * @param mixed  $params     Передаваемые параметры (integer|string)
+ * @param string $sql Исходный запрос сплейсхолдерами
+ * @param bool $check Сравнение с базой (true|false)
+ * @param mixed $params Передаваемые параметры (integer|string)
  * @return mixed Результат выполнения подготовленного запроса
  */
 function secure_query_bind_result(mysqli $connection, string $sql, bool $check, ...$params)
 {
     $param_types = '';
     foreach ($params as $param) {
-        $param_types .= (gettype($param) == 'integer') ? 'i' : 's';
+        $param_types .= (gettype($param) === 'integer') ? 'i' : 's';
     }
     $prepared_sql = mysqli_prepare($connection, $sql);
     mysqli_stmt_bind_param($prepared_sql, $param_types, ...$params);
@@ -187,7 +187,7 @@ function get_validation_name_and_parameters(string $rule): array
 /**
  * Валидация заполненого поля
  *
- * @param array  $input_array    Массив, полученный методом POST (из формы)
+ * @param array $input_array Массив, полученный методом POST (из формы)
  * @param string $parameter_name Параметр, по которому будет проводиться валидация
  * @return string Ошибка или NULL
  */
@@ -202,9 +202,9 @@ function validate_filled(array $input_array, string $parameter_name): ?string
 /**
  * Валидация длины поля
  *
- * @param array  $input_array    Массив, полученный методом POST
+ * @param array $input_array Массив, полученный методом POST
  * @param string $parameter_name Имя поля
- * @param array  $length         Массив с длиной поля ОТ и ДО
+ * @param array $length Массив с длиной поля ОТ и ДО
  * @return string Ошибка или NULL
  */
 function validate_length(array $input_array, string $parameter_name, array $length)
@@ -219,7 +219,7 @@ function validate_length(array $input_array, string $parameter_name, array $leng
 /**
  * Проверяет корректность URL-адреса
  *
- * @param array  $input_array    Массив, полученный методом POST (из формы)
+ * @param array $input_array Массив, полученный методом POST (из формы)
  * @param string $parameter_name Параметр, по которому будет проводиться валидация
  * @return string Ошибка либо NULL
  */
@@ -248,13 +248,13 @@ function validate_correct_url(array $input_array, string $parameter_name): ?stri
 /**
  * Проверяет загружен ли файл и является ли он изображением
  *
- * @param array  $input_array    Массив, полученный методом POST (из формы)
+ * @param array $input_array Массив, полученный методом POST (из формы)
  * @param string $parameter_name Имя поля, через которое загружен файл
  * @return string Ошибка либо NULL
  */
 function validate_img_loaded(array $input_array, string $parameter_name): ?string
 {
-    if ($input_array[$parameter_name]['error'] != 0) {
+    if ($input_array[$parameter_name]['error'] !== 0) {
         return 'Файл не получен';
     } else {
         if (!in_array(exif_imagetype($input_array[$parameter_name]['tmp_name']), [1, 2, 3])) {
@@ -267,7 +267,7 @@ function validate_img_loaded(array $input_array, string $parameter_name): ?strin
 /**
  * Сохраняет файл в папку "@host/$img_folder/"
  *
- * @param string $img        Название поля с изображением
+ * @param string $img Название поля с изображением
  * @param string $img_folder Путь сохранения изображений
  * @return string Путь к сохраненному файлу
  */
@@ -284,7 +284,7 @@ function save_image(string $img, string $img_folder): ?string
 /**
  * Проверяет наличие по ссылке изображения
  *
- * @param array  $input_array    Массив, полученный методом POST (из формы)
+ * @param array $input_array Массив, полученный методом POST (из формы)
  * @param string $parameter_name Имя поля, содержащего ссылку на изображение
  * @return string Ошибка либо NULL
  */
@@ -303,7 +303,7 @@ function validate_image_url_content(array $input_array, string $parameter_name):
 /**
  * Проверяет, что переданная ссылка ведет на доступное видео с youtube
  *
- * @param array  $input_array    Массив, полученный методом POST (из формы)
+ * @param array $input_array Массив, полученный методом POST (из формы)
  * @param string $parameter_name Ссылка на youtube видео
  * @return string Доступна или недоступна ссылка
  */
@@ -326,9 +326,9 @@ function validate_youtube_url(array $input_array, string $parameter_name): ?stri
 /**
  * Валидация массива значений из форм
  *
- * @param array  $fields           Проверяемый массив связками поле - значение
- * @param array  $validation_array Массив правил валидации вида поле - список правил валидации
- * @param mysqli $connection       Соединение с БД
+ * @param array $fields Проверяемый массив связками поле - значение
+ * @param array $validation_array Массив правил валидации вида поле - список правил валидации
+ * @param mysqli $connection Соединение с БД
  * @return array|string Массив со списком ошибок | Строка с ошибкой
  */
 function validate(array $fields, array $validation_array, mysqli $connection)
@@ -373,7 +373,7 @@ function validate_repeat_password(array $input_array): ?string
 /**
  * Проверяет корректность введенного email-адреса
  *
- * @param array  $input_array    Массив, полученный методом POST (из формы)
+ * @param array $input_array Массив, полученный методом POST (из формы)
  * @param string $parameter_name Проверяемый параметр, email
  * @return string Ошибка или NULL
  */
@@ -388,10 +388,10 @@ function validate_correct_email(array $input_array, string $parameter_name): ?st
 /**
  * Проверяет отсутствие|наличие значения в БД
  *
- * @param array  $validation_array   Проверяемый массив
- * @param string $parameter_name     Имя искомого параметра
- * @param array  $parameter_settings Установки параметров (где искать, и ищем отсутствие или наличие)
- * @param mysqli $connection         Параметры подключения к БД
+ * @param array $validation_array Проверяемый массив
+ * @param string $parameter_name Имя искомого параметра
+ * @param array $parameter_settings Установки параметров (где искать, и ищем отсутствие или наличие)
+ * @param mysqli $connection Параметры подключения к БД
  * @return string Сообщение об ошибке, если нет ошибки - NULL
  */
 function validate_exists(
@@ -415,10 +415,10 @@ function validate_exists(
 /**
  * Проверяет правильность введенного пароля
  *
- * @param array  $validation_array Валидируемый массив
- * @param string $parameter_name   Имя искомого параметра
+ * @param array $validation_array Валидируемый массив
+ * @param string $parameter_name Имя искомого параметра
  * @param        $parameter_settings
- * @param mysqli $connection       Данные для подключения к БД
+ * @param mysqli $connection Данные для подключения к БД
  * @return string Сообщение об ошибке или NULL
  */
 function validate_correct_password(
@@ -434,7 +434,7 @@ function validate_correct_password(
     $sql = "SELECT $password_column_name FROM $table_name WHERE $users_column_name = ?";
     $db_password = secure_query_bind_result($connection, $sql, false, $email);
     $password = mysqli_fetch_row($db_password)['password'] ?? null;
-    return ($password != null) ? (!password_verify(
+    return ($password !== null) ? (!password_verify(
         $validation_array[$parameter_name],
         $password
     ) ? "Вы ввели неверный пароль" : null) : null;
@@ -446,7 +446,7 @@ function validate_correct_password(
  * @param string $host Местоположение БД
  * @param string $user Логин
  * @param string $pass Пароль
- * @param string $db   Имя БД
+ * @param string $db Имя БД
  * @return mysqli Результат подключения или NULL
  */
 function db_connect(string $host, string $user, string $pass, string $db)
@@ -467,7 +467,7 @@ function db_connect(string $host, string $user, string $pass, string $db)
  * Ищет данные пользователя по email
  *
  * @param mysqli $connection подключение к БД
- * @param string $email      Почта/логин пользователя
+ * @param string $email Почта/логин пользователя
  * @return array ассоциативный массив с данными пользователя
  */
 function get_user_data(mysqli $connection, string $email)
@@ -480,13 +480,13 @@ function get_user_data(mysqli $connection, string $email)
 /**
  * Ищет данные пользователя в активном диалоге по id
  *
- * @param mysqli   $connection подключение к БД
- * @param int|null $id         ID пользователя
+ * @param mysqli $connection подключение к БД
+ * @param int|null $id ID пользователя
  * @return array ассоциативный массив с данными пользователя
  */
 function get_user_data_dialog(mysqli $connection, $id)
 {
-    if ($id != null) {
+    if ($id !== null) {
         $sql = "SELECT username, avatar FROM users WHERE id = ?";
         $result = secure_query_bind_result($connection, $sql, false, $id);
         return mysqli_fetch_assoc($result);
@@ -519,10 +519,10 @@ function get_user(): ?array
 /**
  * Производит подписку/отписку|возвращает статус подписки (true|false)
  *
- * @param mysqli $connection  Подключение к БД
- * @param bool   $check       Произвести подписку.отписку| Проверку (true|false)
- * @param int    $follower_id ID подписчика
- * @param int    $author_id   ID подписки
+ * @param mysqli $connection Подключение к БД
+ * @param bool $check Произвести подписку.отписку| Проверку (true|false)
+ * @param int $follower_id ID подписчика
+ * @param int $author_id ID подписки
  * @return NULL|bool В случае проверки подписки возвращает статус
  */
 function user_subscribe(mysqli $connection, bool $check, int $follower_id, int $author_id)
@@ -530,7 +530,7 @@ function user_subscribe(mysqli $connection, bool $check, int $follower_id, int $
     $subscribe_query = "SELECT * FROM subscribe WHERE follower_id = ? AND author_id = ?";
     $subscribe_mysqli = secure_query_bind_result($connection, $subscribe_query, false, $follower_id, $author_id);
     if ($check) {
-        if ($subscribe_mysqli->num_rows == 0) {
+        if ($subscribe_mysqli->num_rows === 0) {
             $subscribe_query = "INSERT INTO subscribe SET follower_id = ?, author_id = ?";
             secure_query_bind_result($connection, $subscribe_query, false, $follower_id, $author_id);
             return true;
@@ -548,9 +548,9 @@ function user_subscribe(mysqli $connection, bool $check, int $follower_id, int $
 /**
  * Собирает данные для ленты постов на странице feed
  *
- * @param mysqli      $connection  Подключение к БД
- * @param string|NULL $filter      Фильтр по типу контента
- * @param int         $follower_id id пользователя
+ * @param mysqli $connection Подключение к БД
+ * @param string|NULL $filter Фильтр по типу контента
+ * @param int $follower_id id пользователя
  * @return array Список постов
  */
 function get_feed_posts(mysqli $connection, $filter, int $follower_id)
@@ -589,7 +589,7 @@ function get_feed_posts(mysqli $connection, $filter, int $follower_id)
 /**
  * Возвращает значение, если оно содержится в массиве, иначе возвращает NULL
  *
- * @param mixed $value   Искомое значение
+ * @param mixed $value Искомое значение
  * @param array $options Массив, в котором ищем
  * @return mixed Исходное значение, если найдено в массиве. Иначе - NULL
  */
@@ -610,8 +610,8 @@ function get_filter($value, array $options)
  * В случае, если пользователь уже делал репост текущего поста (из любого источника), в нем обновится только дата.
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $user_id    ID пользователя
- * @param int    $post_id    ID поста
+ * @param int $user_id ID пользователя
+ * @param int $post_id ID поста
  * @return $repost_id ID of repost on current user
  */
 function repost_post(mysqli $connection, int $user_id, int $post_id)
@@ -673,7 +673,7 @@ function repost_post(mysqli $connection, int $user_id, int $post_id)
  * Если пост оригинальный - ведется подсчет всех репостов (то есть количество таких постов в базе - 1)
  *
  * @param mysqli $connection
- * @param array  $post Все данные поста, полученные ранее
+ * @param array $post Все данные поста, полученные ранее
  * @return mixed Количество репостов (опционально имя автора)
  */
 function count_reposts(mysqli $connection, array $post)
@@ -685,7 +685,7 @@ function count_reposts(mysqli $connection, array $post)
         $sql_count_reposts = "SELECT COUNT(*) FROM posts WHERE repost_from = ?";
         $sql_get_author_name = "SELECT users.username FROM users JOIN posts ON users.id = posts.author_id WHERE posts.id = ?";
         return [
-            'reposts'         => secure_query_bind_result($connection, $sql_count_reposts, true, $post['id']),
+            'reposts' => secure_query_bind_result($connection, $sql_count_reposts, true, $post['id']),
             'author_original' => secure_query_bind_result(
                 $connection,
                 $sql_get_author_name,
@@ -699,8 +699,8 @@ function count_reposts(mysqli $connection, array $post)
 /**
  * Получает пост по ID
  *
- * @param mysqli   $connection Соединение с БД
- * @param int|NULL $post_id    ID поста
+ * @param mysqli $connection Соединение с БД
+ * @param int|NULL $post_id ID поста
  * @return array|NULL Полученный из БД пост|NULL
  */
 function get_post(mysqli $connection, $post_id)
@@ -744,7 +744,7 @@ function get_hashtags(mysqli $connection, $post_id)
  * Получить данные автора поста по ID
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $author_id  ID автора
+ * @param int $author_id ID автора
  * @return array|NULL Полученный из БД массив с данными автора|NULL
  */
 function get_post_author(mysqli $connection, int $author_id)
@@ -767,7 +767,7 @@ function get_post_author(mysqli $connection, int $author_id)
  * Получить комментарии поста по ID
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $post_id    ID поста
+ * @param int $post_id ID поста
  * @return array|NULL Полученный из БД массив с комментариями|NULL
  */
 function get_post_comments(mysqli $connection, int $post_id)
@@ -790,7 +790,7 @@ function get_post_comments(mysqli $connection, int $post_id)
  * при этом не учитывает просмотры самого автора
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $post_id    ID поста
+ * @param int $post_id ID поста
  * @return NULL
  */
 function increase_post_views($connection, $user_id, $post_id)
@@ -809,8 +809,8 @@ function increase_post_views($connection, $user_id, $post_id)
  * Добавляет/удаляет лайк посту
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $user_id    ID пользователя
- * @param int    $post_id    ID поста
+ * @param int $user_id ID пользователя
+ * @param int $post_id ID поста
  * @return NULL
  */
 function like_post(mysqli $connection, int $user_id, int $post_id)
@@ -830,7 +830,7 @@ function like_post(mysqli $connection, int $user_id, int $post_id)
 /**
  * Удаляет значения для выбранного поля (игнорирует его)
  *
- * @param array  $form       Массив полей-значений из формы
+ * @param array $form Массив полей-значений из формы
  * @param string $field_name Название поля
  * @return array Полученный массив
  */
@@ -845,10 +845,10 @@ function ignore_field(array $form, string $field_name)
  * Проводит сохранение нового поста
  *
  * @param mysqli $connection Соединение с БД
- * @param array  $post       Данные поста
- * @param array  $post_types Возможные типы постов
- * @param array  $user       Данные автора поста
- * @param mixed  $file_url   Путь к файлу
+ * @param array $post Данные поста
+ * @param array $post_types Возможные типы постов
+ * @param array $user Данные автора поста
+ * @param mixed $file_url Путь к файлу
  * @return int ID поста в БД
  */
 function save_post(mysqli $connection, array $post, array $post_types, array $user, $file_url = null)
@@ -874,21 +874,21 @@ function save_post(mysqli $connection, array $post, array $post_types, array $us
         $current_time,
     ];
 
-    if ($post_type == 'link') {
+    if ($post_type === 'link') {
         $parameters[3] = $post['link-url'];
     }
 
-    if ($post_type == 'quote') {
+    if ($post_type === 'quote') {
         array_push($fields, 'quote_author');
         array_push($parameters, $post['quote-author']);
     }
 
-    if ($post_type == 'video') {
+    if ($post_type === 'video') {
         array_push($fields, 'youtube_url');
         array_push($parameters, $post['video-url']);
     }
 
-    if ($post_type == 'photo') {
+    if ($post_type === 'photo') {
         array_push($fields, 'img_url');
         array_push($parameters, $file_url);
     }
@@ -908,8 +908,8 @@ function save_post(mysqli $connection, array $post, array $post_types, array $us
 /**
  * Сохраняет теги для поста + добавляет новые, если таких тегов еще нет.
  *
- * @param mixed $new_tags   Строка с новыми тегами
- * @param mixed $post_id    ID поста
+ * @param mixed $new_tags Строка с новыми тегами
+ * @param mixed $post_id ID поста
  * @param mixed $connection Соединение с БД
  * @return NULL
  */
@@ -943,7 +943,7 @@ function add_tags(string $new_tags, $post_id, $connection)
 /**
  * Сохраняет изображение из формы или скачивает изображение по ссылке
  *
- * @param array  $form       Массив с данными формы
+ * @param array $form Массив с данными формы
  * @param string $img_folder Путь сохранения изображения
  * @return string Имя файла
  */
@@ -965,14 +965,14 @@ function upload_file(array $form, string $img_folder)
  * Сохраняет комментарий в БД
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $user_id    ID пользователя
- * @param int    $post_id    ID поста
- * @param string $comment    Комментарий
+ * @param int $user_id ID пользователя
+ * @param int $post_id ID поста
+ * @param string $comment Комментарий
  * @return NULL
  */
 function post_comment(mysqli $connection, int $user_id, int $post_id, string $comment)
 {
-    $add_comment_query = "INSERT into comments SET user_id = ?, post_id = ?, dt_add = ?, content = ?";
+    $add_comment_query = "INSERT INTO comments SET user_id = ?, post_id = ?, dt_add = ?, content = ?";
     $current_time = date('Y-m-d H:i:s');
 
     return secure_query_bind_result(
@@ -990,7 +990,7 @@ function post_comment(mysqli $connection, int $user_id, int $post_id, string $co
  * Получает из БД количество постов,
  *
  * @param mysqli $connection Соединение с БД
- * @param mixed  $filter     Фильтр по типу контента
+ * @param mixed $filter Фильтр по типу контента
  * @return int Количество постов
  */
 function get_total_posts(mysqli $connection, $filter)
@@ -1010,12 +1010,12 @@ function get_total_posts(mysqli $connection, $filter)
 /**
  * Получает из БД список популярных постов
  *
- * @param mysqli $connection  Соединение с БД
- * @param mixed  $filter      Фильтр по типу контента
- * @param string $sort        Порядок сортировки по лайкам/дате/просмотрам
- * @param bool   $reverse     Направление сортировки по возврастанию/убыванию
- * @param int    $page_limit  Количетство постов на страницу
- * @param int    $page_offset Сколько постов пропускаем
+ * @param mysqli $connection Соединение с БД
+ * @param mixed $filter Фильтр по типу контента
+ * @param string $sort Порядок сортировки по лайкам/дате/просмотрам
+ * @param bool $reverse Направление сортировки по возврастанию/убыванию
+ * @param int $page_limit Количетство постов на страницу
+ * @param int $page_offset Сколько постов пропускаем
  * @return array Список постов
  */
 function get_popular_posts(mysqli $connection, $filter, string $sort, bool $reverse, int $page_limit, int $page_offset)
@@ -1048,7 +1048,7 @@ function get_popular_posts(mysqli $connection, $filter, string $sort, bool $reve
  * Получает из БД данные профиля
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $profile_id ID Профиля
+ * @param int $profile_id ID Профиля
  * @return array|null Данные профиля
  */
 function get_profile(mysqli $connection, $profile_id)
@@ -1072,7 +1072,7 @@ function get_profile(mysqli $connection, $profile_id)
  * Получает список постов пользователя - владельца профиля
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $profile_id ID профиля
+ * @param int $profile_id ID профиля
  * @return array Список постов
  */
 function get_profile_posts(mysqli $connection, int $profile_id)
@@ -1106,7 +1106,7 @@ function get_profile_posts(mysqli $connection, int $profile_id)
  * Получает список лайков, поставленных пользователю
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $profile_id ID профиля
+ * @param int $profile_id ID профиля
  * @return array Список лайков(постов)
  */
 function get_profile_likes(mysqli $connection, int $profile_id)
@@ -1136,8 +1136,8 @@ function get_profile_likes(mysqli $connection, int $profile_id)
  * Получает список подписчиков пользователя
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $user_id    пользователя
- * @param int    $profile_id провиля
+ * @param int $user_id пользователя
+ * @param int $profile_id провиля
  * @return array Список подписчиков
  */
 function get_profile_subscribes(mysqli $connection, int $user_id, int $profile_id)
@@ -1191,7 +1191,7 @@ function search_posts(mysqli $connection, string $keywords)
     WHERE posts.id = post_tags.post_id AND hashtags.tag_name = ?";
     $search_by_keywords_query = $search_query . "WHERE MATCH(heading,content) AGAINST(?)";
     $search_results_mysqli =
-        (substr($keywords, 0, 1) == '#')
+        (substr($keywords, 0, 1) === '#')
             ? secure_query_bind_result($connection, $search_by_tag_query, false, substr($keywords, 1))
             : secure_query_bind_result($connection, $search_by_keywords_query, false, $keywords);
     $posts = mysqli_fetch_all($search_results_mysqli, MYSQLI_ASSOC);
@@ -1222,11 +1222,11 @@ function get_dialogs($connection, $user_id)
             last_message
         FROM messages
         INNER JOIN (SELECT MAX(dt_add) AS last_message,
-        IF (receiver_id = ?, sender_id, receiver_id) AS dialog
+        IF(receiver_id = ?, sender_id, receiver_id) AS dialog
         FROM messages
         WHERE sender_id = ? OR receiver_id = ?
-        GROUP BY dialog) groups
-        ON messages.dt_add = groups.last_message
+        GROUP BY dialog) grps
+        ON messages.dt_add = grps.last_message
         INNER JOIN users
         ON users.id = dialog
         ORDER BY last_message DESC ";
@@ -1274,9 +1274,9 @@ function get_messages($connection, $user_id)
  * Добавляет сообщение в БД
  *
  * @param mysqli $connection
- * @param mixed  $sender_id   Отправитель
- * @param mixed  $receiver_id Получатель
- * @param mixed  $message     Сообщение
+ * @param mixed $sender_id Отправитель
+ * @param mixed $receiver_id Получатель
+ * @param mixed $message Сообщение
  * @return mixed Результат выполнения запроса
  */
 function add_message($connection, $sender_id, $receiver_id, string $message)
@@ -1300,7 +1300,7 @@ function add_message($connection, $sender_id, $receiver_id, string $message)
  * Возвращает список подписчиков заданного пользователя
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $author_id  ID автора
+ * @param int $author_id ID автора
  * @return array Список подписчиков
  */
 function get_user_followers(mysqli $connection, $author_id): array
@@ -1317,7 +1317,7 @@ function get_user_followers(mysqli $connection, $author_id): array
  * Возвращает количество не прочитанных пользователем сообщений
  *
  * @param mysqli $connection Соединение с БД
- * @param int    $user_id    ID пользователя
+ * @param int $user_id ID пользователя
  * @return int Количество не прочитанных сообщений
  */
 function count_new_messages(mysqli $connection, $user_id)
@@ -1330,9 +1330,9 @@ function count_new_messages(mysqli $connection, $user_id)
 /**
  * Ставит отметку о прочтении, если пользователя открыл диалог с новыми сообщениями
  *
- * @param mysqli $connection       Соединение с БД
- * @param int    $active_dialog_id ID открытого диалога (= ID другого пользователя с которым диалог)
- * @param int    $user_id          ID пользователя
+ * @param mysqli $connection Соединение с БД
+ * @param int $active_dialog_id ID открытого диалога (= ID другого пользователя с которым диалог)
+ * @param int $user_id ID пользователя
  * @return NULL
  */
 function read_messages(mysqli $connection, $active_dialog_id, $user_id)
@@ -1347,7 +1347,7 @@ function read_messages(mysqli $connection, $active_dialog_id, $user_id)
  * Меняет направление сортировки/при переключении между фильтрами не меняет значение
  *
  * @param bool|NULL $direction Текущее направление
- * @param array     $params    Прошлые параметры фильтра и сортировки
+ * @param array $params Прошлые параметры фильтра и сортировки
  * @param string|NULL Текущая сортировка по лайкам/дате/просмотрам
  * @param string|NULL Текущий фильтр
  * @return bool|NULL Возвращает противоположное значение полученному, либо NULL
@@ -1357,9 +1357,9 @@ function get_reverse($direction, array $params, $sort, $filter)
     $params['sort'] = $params['sort'] ?? 'view_count';
     $params['filter'] = $params['filter'] ?? null;
     if (isset($direction)) {
-        if (($params['sort'] == $sort) && ($params['filter'] == $filter)) {
+        if (($params['sort'] === $sort) && ($params['filter'] === $filter)) {
             return $direction ? false : true;
-        } elseif (($params['sort'] == $sort) && ($params['filter'] != $filter)) {
+        } elseif (($params['sort'] === $sort) && ($params['filter'] !== $filter)) {
             return $direction;
         }
     }
@@ -1369,7 +1369,7 @@ function get_reverse($direction, array $params, $sort, $filter)
 /**
  * Производит подключение к почтовому серверу
  *
- * @param array  $settings  Настройки подключения к серверу
+ * @param array $settings Настройки подключения к серверу
  * @param string $site_name Имя сайта
  * @return NULL
  */
@@ -1390,10 +1390,10 @@ function apply_mail_settings(array $settings, string $site_name)
 /**
  * Отправляет уведомление о новом подписчике
  *
- * @param string $sender   Отправитель писем с сервера
- * @param array  $owner    Массив с именем и email пользователя
- * @param array  $follower Массив с данными подписчика
- * @param object $mailer   Объект Swift_Mailer
+ * @param string $sender Отправитель писем с сервера
+ * @param array $owner Массив с именем и email пользователя
+ * @param array $follower Массив с данными подписчика
+ * @param object $mailer Объект Swift_Mailer
  * @return NULL
  */
 function new_follower_notification($sender, $owner, $follower, $mailer)
@@ -1415,12 +1415,12 @@ function new_follower_notification($sender, $owner, $follower, $mailer)
 /**
  * Отправляет уведомление о новом посте
  *
- * @param string $sender       Отправитель писем с сервера
- * @param array  $post_author  Массив с именем и email автора поста
- * @param array  $mailing_list Массив со списком получателей
+ * @param string $sender Отправитель писем с сервера
+ * @param array $post_author Массив с именем и email автора поста
+ * @param array $mailing_list Массив со списком получателей
  * @param string $post_heading Заголовок поста
- * @param int    $post_id      ID поста
- * @param object $mailer       Объект Swift_Mailer
+ * @param int $post_id ID поста
+ * @param object $mailer Объект Swift_Mailer
  * @return NULL
  */
 function new_post_notification($sender, $post_author, $mailing_list, $post_heading, $post_id, $mailer)

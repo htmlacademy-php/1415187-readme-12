@@ -17,9 +17,9 @@ if (!isset($_GET['keywords'])) {
 
 $keywords = trim($_GET['keywords']);
 
-$search_results = search_posts($connection, $keywords);
+$search_results = search_posts($connection, $keywords) ?? null;
 
-if (count($search_results) == 0) {
+if (count($search_results) === 0) {
     $title .= ' (нет результатов)';
 }
 
@@ -27,7 +27,7 @@ $page_content = include_template(
     'search-template.php',
     [
         'keywords' => $keywords,
-        'posts'    => $search_results,
+        'posts' => $search_results,
         'now_time' => $now_time,
     ]
 );
@@ -35,9 +35,9 @@ $page_content = include_template(
 $layout_content = include_template(
     'layout.php',
     [
-        'title'          => $title,
-        'user'           => $user,
-        'content'        => $page_content,
+        'title' => $title,
+        'user' => $user,
+        'content' => $page_content,
         'active_section' => $active_section,
     ]
 );
